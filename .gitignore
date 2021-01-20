@@ -1,0 +1,8 @@
+*.bak
+/RGE/obj/*
+/RGE/bin/*
+/RGE/.vs/*
+Thumbs.db
+
+
+
