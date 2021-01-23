@@ -17,10 +17,10 @@ namespace RGE
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void bRun_Click(object sender, EventArgs e)
         {
 
-            this.tabControl1.SelectTab(this.tabResult);            
+            this.tabMainControl.SelectTab(this.tabResult);            
             string u = "file://" + Environment.CurrentDirectory + "\\result1.html";
             wResult.Navigate(u);
             
@@ -29,6 +29,32 @@ namespace RGE
         private void Form1_ResizeEnd(object sender, EventArgs e)
         {
             tCommand.Width = bRun.Left - tCommand.Margin.All - tCommand.Left;
+        }
+
+        private void bPCSelectAll_Click(object sender, EventArgs e)
+        {
+            for (int i=0; i!=chkList_PC.Items.Count;i++)
+            {
+                chkList_PC.SetItemChecked(i, true);
+            }
+        }
+
+        private void bPCUnSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (int indexChecked in chkList_PC.CheckedIndices)
+            {
+                chkList_PC.SetItemChecked(indexChecked, false);
+            }
+        }
+
+        private void bAddthisPC_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i != chkList_PC.Items.Count; i++)
+            {
+                if (chkList_PC.FindString(tThisPC.Text)== ListBox.NoMatches)
+                    chkList_PC.Items.Add(tThisPC.Text, CheckState.Checked);
+                
+            }
         }
     }
 }
