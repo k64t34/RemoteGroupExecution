@@ -29,33 +29,52 @@ namespace RGE
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabTask = new System.Windows.Forms.TabPage();
+            this.tThisPC = new System.Windows.Forms.TextBox();
             this.tPCMaskSelect = new System.Windows.Forms.TextBox();
             this.bPCSelectOnMask = new System.Windows.Forms.Button();
             this.bPCUnSelectAll = new System.Windows.Forms.Button();
             this.bPCSelectAll = new System.Windows.Forms.Button();
-            this.bRun = new System.Windows.Forms.Button();
+            this.bAddthisPC = new System.Windows.Forms.Button();
+            this.bDeletePCSelected = new System.Windows.Forms.Button();
+            this.bAddPCFromDomain = new System.Windows.Forms.Button();
             this.chkList_PC = new System.Windows.Forms.CheckedListBox();
-            this.tabCommand = new System.Windows.Forms.TabControl();
-            this.tabCopyFileFolder = new System.Windows.Forms.TabPage();
-            this.tabScript = new System.Windows.Forms.TabPage();
-            this.tabTaskCommand = new System.Windows.Forms.TabPage();
+            this.tabCommandControl = new System.Windows.Forms.TabControl();
+            this.tabCommandCopyFileFolder = new System.Windows.Forms.TabPage();
+            this.chkCopyOnlyNewer = new System.Windows.Forms.CheckBox();
+            this.chkCopyOverride = new System.Windows.Forms.CheckBox();
+            this.bSourceCopy = new System.Windows.Forms.Button();
+            this.bTargetCopy = new System.Windows.Forms.Button();
+            this.tTargetCopy = new System.Windows.Forms.TextBox();
+            this.tSourceCopy = new System.Windows.Forms.TextBox();
+            this.tabComandScript = new System.Windows.Forms.TabPage();
+            this.tabCommandCommand = new System.Windows.Forms.TabPage();
             this.tCommand = new System.Windows.Forms.TextBox();
             this.lCommand = new System.Windows.Forms.Label();
+            this.tabCommandInstall = new System.Windows.Forms.TabPage();
             this.tabResult = new System.Windows.Forms.TabPage();
             this.wResult = new System.Windows.Forms.WebBrowser();
             this.tabMainControl = new System.Windows.Forms.TabControl();
-            this.bAddPCFromDomain = new System.Windows.Forms.Button();
-            this.bAddthisPC = new System.Windows.Forms.Button();
-            this.tThisPC = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.process1 = new System.Diagnostics.Process();
+            this.tool = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolbGo = new System.Windows.Forms.ToolStripButton();
             this.tabTask.SuspendLayout();
-            this.tabCommand.SuspendLayout();
-            this.tabTaskCommand.SuspendLayout();
+            this.tabCommandControl.SuspendLayout();
+            this.tabCommandCopyFileFolder.SuspendLayout();
+            this.tabCommandCommand.SuspendLayout();
             this.tabResult.SuspendLayout();
             this.tabMainControl.SuspendLayout();
+            this.tool.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -80,25 +99,32 @@ namespace RGE
             this.tabTask.Controls.Add(this.bPCUnSelectAll);
             this.tabTask.Controls.Add(this.bPCSelectAll);
             this.tabTask.Controls.Add(this.bAddthisPC);
-            this.tabTask.Controls.Add(this.button3);
+            this.tabTask.Controls.Add(this.bDeletePCSelected);
             this.tabTask.Controls.Add(this.bAddPCFromDomain);
-            this.tabTask.Controls.Add(this.bRun);
             this.tabTask.Controls.Add(this.chkList_PC);
-            this.tabTask.Controls.Add(this.tabCommand);
-            this.tabTask.Location = new System.Drawing.Point(4, 26);
+            this.tabTask.Controls.Add(this.tabCommandControl);
+            this.tabTask.Location = new System.Drawing.Point(4, 31);
             this.tabTask.Name = "tabTask";
             this.tabTask.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTask.Size = new System.Drawing.Size(1176, 710);
+            this.tabTask.Size = new System.Drawing.Size(1176, 705);
             this.tabTask.TabIndex = 0;
             this.tabTask.Text = "Task";
             this.tabTask.UseVisualStyleBackColor = true;
+            // 
+            // tThisPC
+            // 
+            this.tThisPC.Location = new System.Drawing.Point(545, 115);
+            this.tThisPC.Name = "tThisPC";
+            this.tThisPC.Size = new System.Drawing.Size(129, 28);
+            this.tThisPC.TabIndex = 8;
+            this.tThisPC.Text = "pc100";
             // 
             // tPCMaskSelect
             // 
             this.tPCMaskSelect.Enabled = false;
             this.tPCMaskSelect.Location = new System.Drawing.Point(192, 7);
             this.tPCMaskSelect.Name = "tPCMaskSelect";
-            this.tPCMaskSelect.Size = new System.Drawing.Size(129, 24);
+            this.tPCMaskSelect.Size = new System.Drawing.Size(129, 28);
             this.tPCMaskSelect.TabIndex = 8;
             this.tPCMaskSelect.Text = "*";
             // 
@@ -107,9 +133,9 @@ namespace RGE
             this.bPCSelectOnMask.Enabled = false;
             this.bPCSelectOnMask.Location = new System.Drawing.Point(327, 6);
             this.bPCSelectOnMask.Name = "bPCSelectOnMask";
-            this.bPCSelectOnMask.Size = new System.Drawing.Size(94, 34);
+            this.bPCSelectOnMask.Size = new System.Drawing.Size(142, 34);
             this.bPCSelectOnMask.TabIndex = 7;
-            this.bPCSelectOnMask.Text = "Select ";
+            this.bPCSelectOnMask.Text = "Select suitable";
             this.bPCSelectOnMask.UseVisualStyleBackColor = true;
             // 
             // bPCUnSelectAll
@@ -132,16 +158,36 @@ namespace RGE
             this.bPCSelectAll.UseVisualStyleBackColor = true;
             this.bPCSelectAll.Click += new System.EventHandler(this.bPCSelectAll_Click);
             // 
-            // bRun
+            // bAddthisPC
             // 
-            this.bRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bRun.Location = new System.Drawing.Point(1055, 19);
-            this.bRun.Name = "bRun";
-            this.bRun.Size = new System.Drawing.Size(109, 34);
-            this.bRun.TabIndex = 6;
-            this.bRun.Text = "Go-go-go";
-            this.bRun.UseVisualStyleBackColor = true;
-            this.bRun.Click += new System.EventHandler(this.bRun_Click);
+            this.bAddthisPC.Location = new System.Drawing.Point(680, 109);
+            this.bAddthisPC.Name = "bAddthisPC";
+            this.bAddthisPC.Size = new System.Drawing.Size(74, 34);
+            this.bAddthisPC.TabIndex = 6;
+            this.bAddthisPC.Text = "Add this";
+            this.bAddthisPC.UseVisualStyleBackColor = true;
+            this.bAddthisPC.Click += new System.EventHandler(this.bAddthisPC_Click);
+            // 
+            // bDeletePCSelected
+            // 
+            this.bDeletePCSelected.Enabled = false;
+            this.bDeletePCSelected.Location = new System.Drawing.Point(545, 149);
+            this.bDeletePCSelected.Name = "bDeletePCSelected";
+            this.bDeletePCSelected.Size = new System.Drawing.Size(209, 34);
+            this.bDeletePCSelected.TabIndex = 6;
+            this.bDeletePCSelected.Text = "Delete Selected";
+            this.bDeletePCSelected.UseVisualStyleBackColor = true;
+            this.bDeletePCSelected.Click += new System.EventHandler(this.bRun_Click);
+            // 
+            // bAddPCFromDomain
+            // 
+            this.bAddPCFromDomain.Enabled = false;
+            this.bAddPCFromDomain.Location = new System.Drawing.Point(545, 71);
+            this.bAddPCFromDomain.Name = "bAddPCFromDomain";
+            this.bAddPCFromDomain.Size = new System.Drawing.Size(209, 34);
+            this.bAddPCFromDomain.TabIndex = 6;
+            this.bAddPCFromDomain.Text = "Add From Domain";
+            this.bAddPCFromDomain.UseVisualStyleBackColor = true;
             // 
             // chkList_PC
             // 
@@ -175,56 +221,124 @@ namespace RGE
             this.chkList_PC.Location = new System.Drawing.Point(23, 71);
             this.chkList_PC.MultiColumn = true;
             this.chkList_PC.Name = "chkList_PC";
-            this.chkList_PC.Size = new System.Drawing.Size(490, 232);
+            this.chkList_PC.Size = new System.Drawing.Size(490, 211);
             this.chkList_PC.TabIndex = 5;
             // 
-            // tabCommand
+            // tabCommandControl
             // 
-            this.tabCommand.Controls.Add(this.tabCopyFileFolder);
-            this.tabCommand.Controls.Add(this.tabScript);
-            this.tabCommand.Controls.Add(this.tabTaskCommand);
-            this.tabCommand.Location = new System.Drawing.Point(-4, 487);
-            this.tabCommand.Name = "tabCommand";
-            this.tabCommand.SelectedIndex = 0;
-            this.tabCommand.Size = new System.Drawing.Size(1172, 217);
-            this.tabCommand.TabIndex = 4;
+            this.tabCommandControl.Controls.Add(this.tabCommandCopyFileFolder);
+            this.tabCommandControl.Controls.Add(this.tabComandScript);
+            this.tabCommandControl.Controls.Add(this.tabCommandCommand);
+            this.tabCommandControl.Controls.Add(this.tabCommandInstall);
+            this.tabCommandControl.Location = new System.Drawing.Point(-4, 487);
+            this.tabCommandControl.Name = "tabCommandControl";
+            this.tabCommandControl.SelectedIndex = 0;
+            this.tabCommandControl.Size = new System.Drawing.Size(1172, 217);
+            this.tabCommandControl.TabIndex = 4;
+            this.tabCommandControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabCommandControl_DrawItem);
             // 
-            // tabCopyFileFolder
+            // tabCommandCopyFileFolder
             // 
-            this.tabCopyFileFolder.Location = new System.Drawing.Point(4, 26);
-            this.tabCopyFileFolder.Name = "tabCopyFileFolder";
-            this.tabCopyFileFolder.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCopyFileFolder.Size = new System.Drawing.Size(1164, 187);
-            this.tabCopyFileFolder.TabIndex = 0;
-            this.tabCopyFileFolder.Text = "Copy File/Folder";
-            this.tabCopyFileFolder.UseVisualStyleBackColor = true;
+            this.tabCommandCopyFileFolder.Controls.Add(this.chkCopyOnlyNewer);
+            this.tabCommandCopyFileFolder.Controls.Add(this.chkCopyOverride);
+            this.tabCommandCopyFileFolder.Controls.Add(this.bSourceCopy);
+            this.tabCommandCopyFileFolder.Controls.Add(this.bTargetCopy);
+            this.tabCommandCopyFileFolder.Controls.Add(this.tTargetCopy);
+            this.tabCommandCopyFileFolder.Controls.Add(this.tSourceCopy);
+            this.tabCommandCopyFileFolder.Location = new System.Drawing.Point(4, 31);
+            this.tabCommandCopyFileFolder.Name = "tabCommandCopyFileFolder";
+            this.tabCommandCopyFileFolder.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCommandCopyFileFolder.Size = new System.Drawing.Size(1164, 182);
+            this.tabCommandCopyFileFolder.TabIndex = 0;
+            this.tabCommandCopyFileFolder.Text = "Copy Folder";
+            this.tabCommandCopyFileFolder.UseVisualStyleBackColor = true;
             // 
-            // tabScript
+            // chkCopyOnlyNewer
             // 
-            this.tabScript.Location = new System.Drawing.Point(4, 26);
-            this.tabScript.Name = "tabScript";
-            this.tabScript.Padding = new System.Windows.Forms.Padding(3);
-            this.tabScript.Size = new System.Drawing.Size(1164, 187);
-            this.tabScript.TabIndex = 1;
-            this.tabScript.Text = "Script";
-            this.tabScript.UseVisualStyleBackColor = true;
+            this.chkCopyOnlyNewer.AutoSize = true;
+            this.chkCopyOnlyNewer.Checked = true;
+            this.chkCopyOnlyNewer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCopyOnlyNewer.Location = new System.Drawing.Point(245, 12);
+            this.chkCopyOnlyNewer.Name = "chkCopyOnlyNewer";
+            this.chkCopyOnlyNewer.Size = new System.Drawing.Size(129, 28);
+            this.chkCopyOnlyNewer.TabIndex = 3;
+            this.chkCopyOnlyNewer.Text = "Only newer";
+            this.chkCopyOnlyNewer.UseVisualStyleBackColor = true;
             // 
-            // tabTaskCommand
+            // chkCopyOverride
             // 
-            this.tabTaskCommand.Controls.Add(this.tCommand);
-            this.tabTaskCommand.Controls.Add(this.lCommand);
-            this.tabTaskCommand.Location = new System.Drawing.Point(4, 26);
-            this.tabTaskCommand.Name = "tabTaskCommand";
-            this.tabTaskCommand.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTaskCommand.Size = new System.Drawing.Size(1164, 187);
-            this.tabTaskCommand.TabIndex = 2;
-            this.tabTaskCommand.Text = "Command";
-            this.tabTaskCommand.UseVisualStyleBackColor = true;
+            this.chkCopyOverride.AutoSize = true;
+            this.chkCopyOverride.Checked = true;
+            this.chkCopyOverride.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCopyOverride.Location = new System.Drawing.Point(134, 10);
+            this.chkCopyOverride.Name = "chkCopyOverride";
+            this.chkCopyOverride.Size = new System.Drawing.Size(105, 28);
+            this.chkCopyOverride.TabIndex = 3;
+            this.chkCopyOverride.Text = "Override";
+            this.chkCopyOverride.UseVisualStyleBackColor = true;
+            // 
+            // bSourceCopy
+            // 
+            this.bSourceCopy.Location = new System.Drawing.Point(13, 10);
+            this.bSourceCopy.Name = "bSourceCopy";
+            this.bSourceCopy.Size = new System.Drawing.Size(100, 30);
+            this.bSourceCopy.TabIndex = 2;
+            this.bSourceCopy.Text = "Source...";
+            this.bSourceCopy.UseVisualStyleBackColor = true;
+            this.bSourceCopy.Click += new System.EventHandler(this.bSourceCopy_Click);
+            // 
+            // bTargetCopy
+            // 
+            this.bTargetCopy.Location = new System.Drawing.Point(13, 93);
+            this.bTargetCopy.Name = "bTargetCopy";
+            this.bTargetCopy.Size = new System.Drawing.Size(100, 30);
+            this.bTargetCopy.TabIndex = 2;
+            this.bTargetCopy.Text = "Target...";
+            this.bTargetCopy.UseVisualStyleBackColor = true;
+            this.bTargetCopy.Click += new System.EventHandler(this.bTargetCopy_Click);
+            // 
+            // tTargetCopy
+            // 
+            this.tTargetCopy.Location = new System.Drawing.Point(15, 129);
+            this.tTargetCopy.Name = "tTargetCopy";
+            this.tTargetCopy.Size = new System.Drawing.Size(1117, 28);
+            this.tTargetCopy.TabIndex = 1;
+            // 
+            // tSourceCopy
+            // 
+            this.tSourceCopy.Location = new System.Drawing.Point(13, 46);
+            this.tSourceCopy.Name = "tSourceCopy";
+            this.tSourceCopy.Size = new System.Drawing.Size(1117, 28);
+            this.tSourceCopy.TabIndex = 1;
+            // 
+            // tabComandScript
+            // 
+            this.tabComandScript.Location = new System.Drawing.Point(4, 31);
+            this.tabComandScript.Name = "tabComandScript";
+            this.tabComandScript.Padding = new System.Windows.Forms.Padding(3);
+            this.tabComandScript.Size = new System.Drawing.Size(1164, 182);
+            this.tabComandScript.TabIndex = 1;
+            this.tabComandScript.Text = "Script";
+            this.tabComandScript.UseVisualStyleBackColor = true;
+            this.tabComandScript.Enter += new System.EventHandler(this.tabComandScript_Click);
+            // 
+            // tabCommandCommand
+            // 
+            this.tabCommandCommand.Controls.Add(this.tCommand);
+            this.tabCommandCommand.Controls.Add(this.lCommand);
+            this.tabCommandCommand.Location = new System.Drawing.Point(4, 31);
+            this.tabCommandCommand.Name = "tabCommandCommand";
+            this.tabCommandCommand.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCommandCommand.Size = new System.Drawing.Size(1164, 182);
+            this.tabCommandCommand.TabIndex = 2;
+            this.tabCommandCommand.Text = "Command";
+            this.tabCommandCommand.UseVisualStyleBackColor = true;
+            this.tabCommandCommand.Enter += new System.EventHandler(this.tabComandScript_Click);
             // 
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 61);
+            this.tCommand.Location = new System.Drawing.Point(173, 86);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -235,20 +349,30 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 87);
+            this.lCommand.Location = new System.Drawing.Point(66, 112);
             this.lCommand.Name = "lCommand";
-            this.lCommand.Size = new System.Drawing.Size(78, 18);
+            this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
             this.lCommand.Text = "Command";
             this.lCommand.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // tabCommandInstall
+            // 
+            this.tabCommandInstall.Location = new System.Drawing.Point(4, 31);
+            this.tabCommandInstall.Name = "tabCommandInstall";
+            this.tabCommandInstall.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCommandInstall.Size = new System.Drawing.Size(1164, 182);
+            this.tabCommandInstall.TabIndex = 3;
+            this.tabCommandInstall.Text = "Install";
+            this.tabCommandInstall.UseVisualStyleBackColor = true;
+            // 
             // tabResult
             // 
             this.tabResult.Controls.Add(this.wResult);
-            this.tabResult.Location = new System.Drawing.Point(4, 26);
+            this.tabResult.Location = new System.Drawing.Point(4, 31);
             this.tabResult.Name = "tabResult";
             this.tabResult.Padding = new System.Windows.Forms.Padding(3);
-            this.tabResult.Size = new System.Drawing.Size(1176, 710);
+            this.tabResult.Size = new System.Drawing.Size(1176, 705);
             this.tabResult.TabIndex = 1;
             this.tabResult.Text = " Result ";
             this.tabResult.UseVisualStyleBackColor = true;
@@ -259,8 +383,9 @@ namespace RGE
             this.wResult.Location = new System.Drawing.Point(3, 3);
             this.wResult.MinimumSize = new System.Drawing.Size(20, 20);
             this.wResult.Name = "wResult";
-            this.wResult.Size = new System.Drawing.Size(1170, 704);
+            this.wResult.Size = new System.Drawing.Size(1170, 699);
             this.wResult.TabIndex = 1;
+            this.wResult.Url = new System.Uri("about:blank", System.UriKind.Absolute);
             // 
             // tabMainControl
             // 
@@ -273,51 +398,96 @@ namespace RGE
             this.tabMainControl.Size = new System.Drawing.Size(1184, 740);
             this.tabMainControl.TabIndex = 7;
             // 
-            // bAddPCFromDomain
+            // saveFileDialog1
             // 
-            this.bAddPCFromDomain.Enabled = false;
-            this.bAddPCFromDomain.Location = new System.Drawing.Point(545, 71);
-            this.bAddPCFromDomain.Name = "bAddPCFromDomain";
-            this.bAddPCFromDomain.Size = new System.Drawing.Size(209, 34);
-            this.bAddPCFromDomain.TabIndex = 6;
-            this.bAddPCFromDomain.Text = "Add From Domain";
-            this.bAddPCFromDomain.UseVisualStyleBackColor = true;
+            this.saveFileDialog1.Filter = "\"Directory | directory\"";
             // 
-            // bAddthisPC
+            // process1
             // 
-            this.bAddthisPC.Location = new System.Drawing.Point(680, 109);
-            this.bAddthisPC.Name = "bAddthisPC";
-            this.bAddthisPC.Size = new System.Drawing.Size(74, 34);
-            this.bAddthisPC.TabIndex = 6;
-            this.bAddthisPC.Text = "Add this";
-            this.bAddthisPC.UseVisualStyleBackColor = true;
-            this.bAddthisPC.Click += new System.EventHandler(this.bAddthisPC_Click);
+            this.process1.StartInfo.Domain = "";
+            this.process1.StartInfo.LoadUserProfile = false;
+            this.process1.StartInfo.Password = null;
+            this.process1.StartInfo.StandardErrorEncoding = null;
+            this.process1.StartInfo.StandardOutputEncoding = null;
+            this.process1.StartInfo.UserName = "";
+            this.process1.SynchronizingObject = this;
             // 
-            // tThisPC
+            // tool
             // 
-            this.tThisPC.Location = new System.Drawing.Point(545, 115);
-            this.tThisPC.Name = "tThisPC";
-            this.tThisPC.Size = new System.Drawing.Size(129, 24);
-            this.tThisPC.TabIndex = 8;
-            this.tThisPC.Text = "pc100";
+            this.tool.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.tool.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripButton2,
+            this.toolStripSeparator1,
+            this.toolStripButton3,
+            this.toolStripSeparator2,
+            this.ToolbGo});
+            this.tool.Location = new System.Drawing.Point(0, 0);
+            this.tool.Name = "tool";
+            this.tool.Size = new System.Drawing.Size(1184, 31);
+            this.tool.TabIndex = 8;
+            this.tool.Text = "toolStrip1";
             // 
-            // button3
+            // toolStripButton1
             // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(545, 149);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(209, 34);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Delete Selected";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.bRun_Click);
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(40, 28);
+            this.toolStripButton1.Text = "Task";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(53, 28);
+            this.toolStripButton2.Text = "Result";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton3.Text = "toolStripButton3";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
+            // 
+            // ToolbGo
+            // 
+            this.ToolbGo.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ToolbGo.BackColor = System.Drawing.Color.Lime;
+            this.ToolbGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ToolbGo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.ToolbGo.Image = ((System.Drawing.Image)(resources.GetObject("ToolbGo.Image")));
+            this.ToolbGo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ToolbGo.Name = "ToolbGo";
+            this.ToolbGo.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
+            this.ToolbGo.Size = new System.Drawing.Size(93, 28);
+            this.ToolbGo.Text = "     Go     ";
+            this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1184, 762);
+            this.Controls.Add(this.tool);
             this.Controls.Add(this.tabMainControl);
             this.Controls.Add(this.statusStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -329,11 +499,15 @@ namespace RGE
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.tabTask.ResumeLayout(false);
             this.tabTask.PerformLayout();
-            this.tabCommand.ResumeLayout(false);
-            this.tabTaskCommand.ResumeLayout(false);
-            this.tabTaskCommand.PerformLayout();
+            this.tabCommandControl.ResumeLayout(false);
+            this.tabCommandCopyFileFolder.ResumeLayout(false);
+            this.tabCommandCopyFileFolder.PerformLayout();
+            this.tabCommandCommand.ResumeLayout(false);
+            this.tabCommandCommand.PerformLayout();
             this.tabResult.ResumeLayout(false);
             this.tabMainControl.ResumeLayout(false);
+            this.tool.ResumeLayout(false);
+            this.tool.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -347,21 +521,37 @@ namespace RGE
         private System.Windows.Forms.Button bPCSelectOnMask;
         private System.Windows.Forms.Button bPCUnSelectAll;
         private System.Windows.Forms.Button bPCSelectAll;
-        private System.Windows.Forms.Button bRun;
         private System.Windows.Forms.CheckedListBox chkList_PC;
-        private System.Windows.Forms.TabControl tabCommand;
-        private System.Windows.Forms.TabPage tabCopyFileFolder;
-        private System.Windows.Forms.TabPage tabScript;
-        private System.Windows.Forms.TabPage tabTaskCommand;
+        private System.Windows.Forms.TabControl tabCommandControl;
+        private System.Windows.Forms.TabPage tabCommandCopyFileFolder;
+        private System.Windows.Forms.TabPage tabComandScript;
+        private System.Windows.Forms.TabPage tabCommandCommand;
         private System.Windows.Forms.TextBox tCommand;
         private System.Windows.Forms.Label lCommand;
         private System.Windows.Forms.TabPage tabResult;
-        private System.Windows.Forms.WebBrowser wResult;
         private System.Windows.Forms.TabControl tabMainControl;
         private System.Windows.Forms.TextBox tThisPC;
         private System.Windows.Forms.Button bAddthisPC;
         private System.Windows.Forms.Button bAddPCFromDomain;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button bDeletePCSelected;
+        private System.Windows.Forms.TextBox tTargetCopy;
+        private System.Windows.Forms.TextBox tSourceCopy;
+        private System.Windows.Forms.Button bTargetCopy;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Button bSourceCopy;
+        private System.Windows.Forms.CheckBox chkCopyOnlyNewer;
+        private System.Windows.Forms.CheckBox chkCopyOverride;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Diagnostics.Process process1;
+        private System.Windows.Forms.ToolStrip tool;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton ToolbGo;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.TabPage tabCommandInstall;
+        public System.Windows.Forms.WebBrowser wResult;
     }
 }
 
