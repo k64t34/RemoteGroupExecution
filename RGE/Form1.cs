@@ -110,19 +110,12 @@ namespace RGE
         {
             if (MainStatus == 0)
             {
-                MainStatus = 1;
-                ToolbGo.BackColor = Color.Red;
-                ToolbGo.Text = "    Stop    ";
-                ToolbGo.ForeColor = Color.White;
-                tabMainControl.SelectTab(this.tabResult);                
+                       
                 Begin_Run();
             }
             else if (MainStatus == 1)
             {
-                MainStatus = 0;
-                ToolbGo.BackColor = Color.Lime;
-                ToolbGo.Text = "     Go     ";
-                ToolbGo.ForeColor = Color.Black;
+                
                 Stop_Run();
             }
         }
@@ -138,6 +131,11 @@ namespace RGE
         }
         private void Begin_Run()
         {
+            MainStatus = 1;
+            ToolbGo.BackColor = Color.Red;
+            ToolbGo.Text = "    Stop    ";
+            ToolbGo.ForeColor = Color.White;
+            tabMainControl.SelectTab(this.tabResult);
             FileReport = Environment.CurrentDirectory + "\\" + DateTime.Now.ToString("ddMMyyyy-HHmmss") + ".html";
             string userNameWin, compName, compIP, myHost;
             try
@@ -152,19 +150,11 @@ namespace RGE
                 WriteLog("<html>\n<meta charset=\"utf-8\">\n<style>\nbody{background-color: black;color:grey;font-family: monospace;font-size:16;padding:0}\n</style>\n<body text=\"grey\" bgcolor=\"black\">\n");
                 WriteLog(D_T() + t_color("white", " Remote group execution start") + _BR+"\n");
                 WriteLog(t_color("white", "Report file:")+" "+FileReport + _BR + "\n");
-                WriteLog(t_color("yellow", "Host:") +_BR + "\n");
-                int i = 0;
-                foreach (int indexChecked in chkList_PC.CheckedIndices)
-                {
-                    WriteLog(String.Format("{0}.{1}<br>\n",++i,chkList_PC.Items[indexChecked].ToString()));                     
-                }
-                WriteLog(t_color("yellow", "Copy from:") +tSourceCopy.Text + _BR + "\n");
-                WriteLog(t_color("yellow", "Copy to  :") +tTargetCopy.Text + _BR + "\n");
-                WriteLog(t_color("yellow", "Override:") + chkCopyOverride.Checked+ _BR + "\n");
-                if (chkCopyOverride.Checked)
-                WriteLog(t_color("yellow", "Only newer:") + chkCopyOnlyNewer.Checked + _BR + "\n");
+                Run_Copy();
 
 
+
+                
 
                 Stop_Run();
             }
@@ -173,6 +163,10 @@ namespace RGE
         }
         private void Stop_Run()
         {
+            MainStatus = 0;
+            ToolbGo.BackColor = Color.Lime;
+            ToolbGo.Text = "     Go     ";
+            ToolbGo.ForeColor = Color.Black;
             WriteLog(D_T() + t_color("white", " Finish") + _BR+"\n");
             WriteLog("\n</body></html>");
             sw = new StreamWriter(FileReport);
@@ -191,10 +185,92 @@ namespace RGE
                 wResult.Document.Write(message);
             }
         }
+        void WriteLog(StringBuilder message)
+        {
+            if (wResult.InvokeRequired)
+            {
+                wResult.BeginInvoke(new Action<string>((s) => wResult.Document.Write(s)), message.ToString());
+            }
+            else
+            {
+                wResult.Document.Write(message.ToString());
+            }
+        }
+
+
+        
+
+        void Run_Copy()
+        {
+            StringBuilder Output = new StringBuilder();
+            Output.Append(t_color("yellow", "Host:") + _BR + "\n");
+            Output.Append(t_color("yellow", "Copy from:") + tSourceCopy.Text);                        
+            if (!Directory.Exists(tSourceCopy.Text))
+                { 
+                Output.Append(t_color("red", " Folder doesn't exist"));
+                Output.Append(_BR + "\n");
+                WriteLog(Output);
+                return;
+                }
+            Output.Append(_BR + "\n");
+            WriteLog(Output);
+            WriteLog(t_color("yellow", "Copy to  :") + tTargetCopy.Text + _BR + "\n");
+            WriteLog(t_color("yellow", "Override:") + chkCopyOverride.Checked + _BR + "\n");
+            if (chkCopyOverride.Checked)
+                WriteLog(t_color("yellow", "Only newer:") + chkCopyOnlyNewer.Checked + _BR + "\n");
+
+            int i = 0;
+            foreach (int indexChecked in chkList_PC.CheckedIndices)
+            {
+                WriteLog(String.Format("{0}.{1}<br>\n", ++i, chkList_PC.Items[indexChecked].ToString()));
+            }
+            WriteLog("<br>\n");
+            i = 0;
+            foreach (int indexChecked in chkList_PC.CheckedIndices) Do_Copy(indexChecked);
+            WriteLog("<br>\n");
+            /*While ThreadCount> 0
+            Console.Writeline("Ожидание завершения " + CStr(ThreadCount) + " процессов поиска МАК адресов")
+            Threading.Thread.Sleep(1000)
+            End While
+            Threading.Thread.Sleep(1000)*/
+
+            /*
+             https://habr.com/ru/post/165729/
+             ThreadPool Class https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool?redirectedfrom=MSDN&view=net-5.0
+             */
+
+        }
+        void Do_Copy(int Index)
+        {
+            StringBuilder Output = new StringBuilder();
+            Output.Append(chkList_PC.Items[Index].ToString());
+            //Работа с потоками в C# http://rsdn.org/article/dotnet/CSThreading1.xml
+
+            /*Public Dim  MAXThreadCount As Integer = 100
+            While ThreadCount> MAXThreadCount
+                Threading.Thread.Sleep(1000)
+            End While
+            Dim myTest As New ThreadsGetMACfromHOST(client.Name)
+            Dim bThreadStart As New ThreadStart(AddressOf myTest.GetMACfromHOST)
+            Dim bThread As New Thread(bThreadStart)
+            bThread.Start*/
+            Output.Append("<br>\n");
+            WriteLog(Output);
+
+        }
         string D_T() { return DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"); }
-        string t_color(string color, string format, params string[] text) { return String.Format("<font color=\"{0}\">{1}</font>", color, String.Format(format, text)); }
+        string t_color(string color, string format, params string[] text) { return "<font color=\""+ color + "\">"+ String.Format(format, text) + "</font>"; }
         string t_color(string color, string format) { return t_color(color, format, ""); }
 
+        private void chkCopyOverride_Validated(object sender, EventArgs e)
+        {
+            chkCopyOnlyNewer.Enabled = chkCopyOverride.Checked;            
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            bPCSelectAll_Click( sender,  e);
+        }
     }
 
    

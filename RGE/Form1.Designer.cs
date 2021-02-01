@@ -30,6 +30,7 @@ namespace RGE
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.Windows.Forms.ComboBox comboBox_LogLevel;
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabTask = new System.Windows.Forms.TabPage();
@@ -68,6 +69,8 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
+            this.label1 = new System.Windows.Forms.Label();
+            comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.tabTask.SuspendLayout();
             this.tabCommandControl.SuspendLayout();
             this.tabCommandCopyFileFolder.SuspendLayout();
@@ -93,6 +96,8 @@ namespace RGE
             // 
             // tabTask
             // 
+            this.tabTask.Controls.Add(this.label1);
+            this.tabTask.Controls.Add(comboBox_LogLevel);
             this.tabTask.Controls.Add(this.tThisPC);
             this.tabTask.Controls.Add(this.tPCMaskSelect);
             this.tabTask.Controls.Add(this.bPCSelectOnMask);
@@ -122,7 +127,7 @@ namespace RGE
             // tPCMaskSelect
             // 
             this.tPCMaskSelect.Enabled = false;
-            this.tPCMaskSelect.Location = new System.Drawing.Point(192, 7);
+            this.tPCMaskSelect.Location = new System.Drawing.Point(245, 6);
             this.tPCMaskSelect.Name = "tPCMaskSelect";
             this.tPCMaskSelect.Size = new System.Drawing.Size(129, 28);
             this.tPCMaskSelect.TabIndex = 8;
@@ -131,7 +136,7 @@ namespace RGE
             // bPCSelectOnMask
             // 
             this.bPCSelectOnMask.Enabled = false;
-            this.bPCSelectOnMask.Location = new System.Drawing.Point(327, 6);
+            this.bPCSelectOnMask.Location = new System.Drawing.Point(380, 3);
             this.bPCSelectOnMask.Name = "bPCSelectOnMask";
             this.bPCSelectOnMask.Size = new System.Drawing.Size(142, 34);
             this.bPCSelectOnMask.TabIndex = 7;
@@ -140,9 +145,9 @@ namespace RGE
             // 
             // bPCUnSelectAll
             // 
-            this.bPCUnSelectAll.Location = new System.Drawing.Point(91, 6);
+            this.bPCUnSelectAll.Location = new System.Drawing.Point(119, 4);
             this.bPCUnSelectAll.Name = "bPCUnSelectAll";
-            this.bPCUnSelectAll.Size = new System.Drawing.Size(94, 34);
+            this.bPCUnSelectAll.Size = new System.Drawing.Size(120, 34);
             this.bPCUnSelectAll.TabIndex = 7;
             this.bPCUnSelectAll.Text = "Unselect All";
             this.bPCUnSelectAll.UseVisualStyleBackColor = true;
@@ -152,7 +157,7 @@ namespace RGE
             // 
             this.bPCSelectAll.Location = new System.Drawing.Point(6, 6);
             this.bPCSelectAll.Name = "bPCSelectAll";
-            this.bPCSelectAll.Size = new System.Drawing.Size(79, 34);
+            this.bPCSelectAll.Size = new System.Drawing.Size(107, 34);
             this.bPCSelectAll.TabIndex = 7;
             this.bPCSelectAll.Text = "Select All";
             this.bPCSelectAll.UseVisualStyleBackColor = true;
@@ -258,7 +263,8 @@ namespace RGE
             this.chkCopyOnlyNewer.AutoSize = true;
             this.chkCopyOnlyNewer.Checked = true;
             this.chkCopyOnlyNewer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCopyOnlyNewer.Location = new System.Drawing.Point(245, 12);
+            this.chkCopyOnlyNewer.Enabled = false;
+            this.chkCopyOnlyNewer.Location = new System.Drawing.Point(283, 12);
             this.chkCopyOnlyNewer.Name = "chkCopyOnlyNewer";
             this.chkCopyOnlyNewer.Size = new System.Drawing.Size(129, 28);
             this.chkCopyOnlyNewer.TabIndex = 3;
@@ -268,14 +274,13 @@ namespace RGE
             // chkCopyOverride
             // 
             this.chkCopyOverride.AutoSize = true;
-            this.chkCopyOverride.Checked = true;
-            this.chkCopyOverride.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCopyOverride.Location = new System.Drawing.Point(134, 10);
+            this.chkCopyOverride.Location = new System.Drawing.Point(149, 12);
             this.chkCopyOverride.Name = "chkCopyOverride";
             this.chkCopyOverride.Size = new System.Drawing.Size(105, 28);
             this.chkCopyOverride.TabIndex = 3;
             this.chkCopyOverride.Text = "Override";
             this.chkCopyOverride.UseVisualStyleBackColor = true;
+            this.chkCopyOverride.Validated += new System.EventHandler(this.chkCopyOverride_Validated);
             // 
             // bSourceCopy
             // 
@@ -303,6 +308,7 @@ namespace RGE
             this.tTargetCopy.Name = "tTargetCopy";
             this.tTargetCopy.Size = new System.Drawing.Size(1117, 28);
             this.tTargetCopy.TabIndex = 1;
+            this.tTargetCopy.Text = "D:\\tmp\\target";
             // 
             // tSourceCopy
             // 
@@ -310,6 +316,7 @@ namespace RGE
             this.tSourceCopy.Name = "tSourceCopy";
             this.tSourceCopy.Size = new System.Drawing.Size(1117, 28);
             this.tSourceCopy.TabIndex = 1;
+            this.tSourceCopy.Text = "D:\\tmp\\source";
             // 
             // tabComandScript
             // 
@@ -338,7 +345,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 86);
+            this.tCommand.Location = new System.Drawing.Point(173, 104);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -349,7 +356,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 112);
+            this.lCommand.Location = new System.Drawing.Point(66, 130);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -424,7 +431,7 @@ namespace RGE
             this.ToolbGo});
             this.tool.Location = new System.Drawing.Point(0, 0);
             this.tool.Name = "tool";
-            this.tool.Size = new System.Drawing.Size(1184, 31);
+            this.tool.Size = new System.Drawing.Size(1184, 27);
             this.tool.TabIndex = 8;
             this.tool.Text = "toolStrip1";
             // 
@@ -434,7 +441,7 @@ namespace RGE
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(40, 28);
+            this.toolStripButton1.Size = new System.Drawing.Size(40, 24);
             this.toolStripButton1.Text = "Task";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -444,14 +451,14 @@ namespace RGE
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(53, 28);
+            this.toolStripButton2.Size = new System.Drawing.Size(53, 24);
             this.toolStripButton2.Text = "Result";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // toolStripButton3
             // 
@@ -459,13 +466,13 @@ namespace RGE
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton3.Size = new System.Drawing.Size(29, 24);
             this.toolStripButton3.Text = "toolStripButton3";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // ToolbGo
             // 
@@ -477,9 +484,31 @@ namespace RGE
             this.ToolbGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolbGo.Name = "ToolbGo";
             this.ToolbGo.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.ToolbGo.Size = new System.Drawing.Size(93, 28);
+            this.ToolbGo.Size = new System.Drawing.Size(93, 24);
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
+            // 
+            // comboBox_LogLevel
+            // 
+            comboBox_LogLevel.Items.AddRange(new object[] {
+            "Info",
+            "Sucess",
+            "Errors",
+            "Debug"});
+            comboBox_LogLevel.Location = new System.Drawing.Point(545, 228);
+            comboBox_LogLevel.Name = "comboBox_LogLevel";
+            comboBox_LogLevel.Size = new System.Drawing.Size(209, 30);
+            comboBox_LogLevel.TabIndex = 9;
+            comboBox_LogLevel.Text = "Info";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(541, 201);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 24);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "label1";
             // 
             // Form1
             // 
@@ -496,6 +525,7 @@ namespace RGE
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Remote Group Execution";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.tabTask.ResumeLayout(false);
             this.tabTask.PerformLayout();
@@ -552,6 +582,7 @@ namespace RGE
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.TabPage tabCommandInstall;
         public System.Windows.Forms.WebBrowser wResult;
+        private System.Windows.Forms.Label label1;
     }
 }
 
