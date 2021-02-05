@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGE", "RGE.csproj", "{8DD0B271-414B-4D9F-B7D2-E5F7CD4A8249}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EDA8BDD-D5F7-4D02-952A-1ECB917D5B4E}"
+	ProjectSection(SolutionItems) = preProject
+		Copy.cs = Copy.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

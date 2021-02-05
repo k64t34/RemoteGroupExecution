@@ -8,20 +8,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-
+using System.Diagnostics;
+using System.Threading;
 
 namespace RGE
 {
     
     public partial class Form1 : Form
     {
+        string __Error;
         const string _BR = "<BR>";
         const string _SP = "&nbsp;";
         const string _SP3 = "&nbsp;&nbsp;&nbsp;";
         int MainStatus = 0;// 0-stop, 1-run
         StreamWriter sw;
         string FileReport;
+        int __PROCESSOR_COUNT=2;
+        const int __CMDLineMaximumLength = 2047;//8191
+#if DEBUG
+        const int __THREAD_MULTI = 4;
+#else
+        const int __THREAD_MULTI = 8;
+#endif
+
+        int ThreadCount = 8;
+        int FreeThreadCount = 8;
+        List<Thread> Threads = new List<Thread>();
         public Form1()
         {
             InitializeComponent();
@@ -109,13 +121,11 @@ namespace RGE
         private void ToolbGo_Click(object sender, EventArgs e)
         {
             if (MainStatus == 0)
-            {
-                       
+            {                       
                 Begin_Run();
             }
             else if (MainStatus == 1)
-            {
-                
+            {                
                 Stop_Run();
             }
         }
@@ -150,13 +160,8 @@ namespace RGE
                 WriteLog("<html>\n<meta charset=\"utf-8\">\n<style>\nbody{background-color: black;color:grey;font-family: monospace;font-size:16;padding:0}\n</style>\n<body text=\"grey\" bgcolor=\"black\">\n");
                 WriteLog(D_T() + t_color("white", " Remote group execution start") + _BR+"\n");
                 WriteLog(t_color("white", "Report file:")+" "+FileReport + _BR + "\n");
+                wResult.Document.Body.ScrollIntoView(true);
                 Run_Copy();
-
-
-
-                
-
-                Stop_Run();
             }
             finally{}            
 
@@ -167,12 +172,25 @@ namespace RGE
             ToolbGo.BackColor = Color.Lime;
             ToolbGo.Text = "     Go     ";
             ToolbGo.ForeColor = Color.Black;
-            WriteLog(D_T() + t_color("white", " Finish") + _BR+"\n");
-            WriteLog("\n</body></html>");
-            sw = new StreamWriter(FileReport);
-            sw.Write(wResult.DocumentText);
+            WriteLog("<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
+            sw = new StreamWriter(FileReport);            
+            if (wResult.InvokeRequired)
+            {
+                //TODO: Stop all threads                
+                Invoke(new Action(() =>
+                {
+                    sw.Write(wResult.DocumentText);
+                    wResult.Document.GetElementById("finish").ScrollIntoView(true);                    
+                }));
+            }       
+            else
+            {    
+                //wResult.Document.Body.ScrollIntoView(false);
+                //wResult.Navigate("file://" + FileReport);            
+                sw.Write(wResult.DocumentText);
+                wResult.Document.GetElementById("finish").ScrollIntoView(true);
+            }            
             sw.Close();
-            wResult.Navigate("file://" + FileReport);
         }
         void WriteLog(string message)
         {
@@ -200,64 +218,8 @@ namespace RGE
 
         
 
-        void Run_Copy()
-        {
-            StringBuilder Output = new StringBuilder();
-            Output.Append(t_color("yellow", "Host:") + _BR + "\n");
-            Output.Append(t_color("yellow", "Copy from:") + tSourceCopy.Text);                        
-            if (!Directory.Exists(tSourceCopy.Text))
-                { 
-                Output.Append(t_color("red", " Folder doesn't exist"));
-                Output.Append(_BR + "\n");
-                WriteLog(Output);
-                return;
-                }
-            Output.Append(_BR + "\n");
-            WriteLog(Output);
-            WriteLog(t_color("yellow", "Copy to  :") + tTargetCopy.Text + _BR + "\n");
-            WriteLog(t_color("yellow", "Override:") + chkCopyOverride.Checked + _BR + "\n");
-            if (chkCopyOverride.Checked)
-                WriteLog(t_color("yellow", "Only newer:") + chkCopyOnlyNewer.Checked + _BR + "\n");
-
-            int i = 0;
-            foreach (int indexChecked in chkList_PC.CheckedIndices)
-            {
-                WriteLog(String.Format("{0}.{1}<br>\n", ++i, chkList_PC.Items[indexChecked].ToString()));
-            }
-            WriteLog("<br>\n");
-            i = 0;
-            foreach (int indexChecked in chkList_PC.CheckedIndices) Do_Copy(indexChecked);
-            WriteLog("<br>\n");
-            /*While ThreadCount> 0
-            Console.Writeline("Ожидание завершения " + CStr(ThreadCount) + " процессов поиска МАК адресов")
-            Threading.Thread.Sleep(1000)
-            End While
-            Threading.Thread.Sleep(1000)*/
-
-            /*
-             https://habr.com/ru/post/165729/
-             ThreadPool Class https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool?redirectedfrom=MSDN&view=net-5.0
-             */
-
-        }
-        void Do_Copy(int Index)
-        {
-            StringBuilder Output = new StringBuilder();
-            Output.Append(chkList_PC.Items[Index].ToString());
-            //Работа с потоками в C# http://rsdn.org/article/dotnet/CSThreading1.xml
-
-            /*Public Dim  MAXThreadCount As Integer = 100
-            While ThreadCount> MAXThreadCount
-                Threading.Thread.Sleep(1000)
-            End While
-            Dim myTest As New ThreadsGetMACfromHOST(client.Name)
-            Dim bThreadStart As New ThreadStart(AddressOf myTest.GetMACfromHOST)
-            Dim bThread As New Thread(bThreadStart)
-            bThread.Start*/
-            Output.Append("<br>\n");
-            WriteLog(Output);
-
-        }
+       
+      
         string D_T() { return DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"); }
         string t_color(string color, string format, params string[] text) { return "<font color=\""+ color + "\">"+ String.Format(format, text) + "</font>"; }
         string t_color(string color, string format) { return t_color(color, format, ""); }
@@ -270,6 +232,32 @@ namespace RGE
         private void Form1_Load(object sender, EventArgs e)
         {
             bPCSelectAll_Click( sender,  e);
+
+#if !DEBUG
+        __PROCESSOR_COUNT = Environment.ProcessorCount;
+#endif
+            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;
+            for (int i = 0; i != ThreadCount; i++) Threads.Add(new Thread());
+#if DEBUG
+            CheckForIllegalCrossThreadCalls = false;
+#endif
+
+#if DEBUG
+            Debug.WriteLine("Processor count: "+ __PROCESSOR_COUNT.ToString());
+#endif
+            
+        }
+        Boolean Ping(String Host)
+        {
+            bool Ping = false;
+            try
+            {
+                System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
+                System.Net.NetworkInformation.PingReply reply = ping.Send(Host);
+                if (reply.Status.ToString() == "Success") Ping = true;
+            }
+            catch (Exception e) { __Error = e.ToString(); }
+            return (Ping);
         }
     }
 
