@@ -3,8 +3,9 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace RGE
 {
@@ -13,6 +14,8 @@ namespace RGE
     {
         async void Run_Copy()
         {
+            await Task.Run(() =>
+            {
             StringBuilder Output = new StringBuilder();
             Output.Append(t_color("yellow", "Host:") + Environment.MachineName + _BR + "\n");
             Output.Append(t_color("yellow", "Copy from:") + tSourceCopy.Text);
@@ -24,82 +27,94 @@ namespace RGE
                 return;
             }
             Output.Append(_BR + "\n");
-
             Output.Append(t_color("yellow", "Copy to  :") + tTargetCopy.Text + _BR + "\n");
             Output.Append(t_color("yellow", "Override:") + chkCopyOverride.Checked + _BR + "\n");
             if (chkCopyOverride.Checked)
                 Output.Append(t_color("yellow", "Only newer:") + chkCopyOnlyNewer.Checked + _BR + "\n");            
-            int i = 0;
+            
             Output.Append(t_color("yellow", "Hosts:")+ _BR + "\n");
+            RunningThreadCount = 0;
             foreach (int indexChecked in chkList_PC.CheckedIndices)
             {
-                Output.Append(String.Format("{0}.{1}<br>\n", ++i, chkList_PC.Items[indexChecked].ToString()));
+                Output.Append(String.Format("{0}.{1}<br>\n", ++RunningThreadCount, chkList_PC.Items[indexChecked].ToString()));
             }
             Output.Append("<br>\n");
             WriteLog(Output);
-
-            await Task.Run(() =>
+            cts = new CancellationTokenSource();
+            var Token = cts.Token;
+            RunningThreadCount = 0;
+            Task task;
+            foreach (int indexChecked in chkList_PC.CheckedIndices)
             {
-                i = 0;
-                FreeThreadCount = ThreadCount;
-
-
-                foreach (int indexChecked in chkList_PC.CheckedIndices)
-                {
-                    while (FreeThreadCount == 0) Thread.Sleep(1000);
-                    FreeThreadCount--;
-                    Do_Copy(indexChecked);                    
-                }
-                while (FreeThreadCount != ThreadCount) 
-                    {
+                if (MainStatus == 0) { break; }
+                task = new Task(() => Do_Copy(indexChecked,Token)) ;
+                task.Start();
+                    
+                    
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(Do_Copy), indexChecked);                
+                Thread.Sleep(10);
+                }                
+                //Task.WhenAll(tasks);
+            while (RunningThreadCount!=0)
+            {
 #if DEBUG
-            Debug.WriteLine("Wait Thread finish: " + FreeThreadCount.ToString());
+                 Debug.WriteLine("Wait Thread finish: " + RunningThreadCount.ToString());
 #endif
-                    Thread.Sleep(1000); 
-                    }
-
-                WriteLog("<br>\n");
+                 Thread.Sleep(1000); 
+            }
+             WriteLog("<br>\n");
                 /*
                  https://habr.com/ru/post/165729/
                  ThreadPool Class https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool?redirectedfrom=MSDN&view=net-5.0
                  */
 #if DEBUG
-                Debug.WriteLine("All Thread finished");
+            Debug.WriteLine("All Thread finished");
 #endif
-                Stop_Run();
+                End_Run();                
             });
         }
-        async void Do_Copy(int Index)
-        {
-            
+        //************************************************************
+        static void Do_Copy(int Index, CancellationToken cancellationToken)                    {
+        //************************************************************
+            RunningThreadCount++;
+            string Host = THIS.chkList_PC.Items[(int)Index].ToString();
+#if DEBUG
+            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
+#endif
+            StringBuilder Output = new StringBuilder();
+            try
+            {               
+                Output.Append(t_color("white", Host));
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!Ping(Host)) Output.Append(" " + t_color("red", " no ping") + " " /*+ __Error*/);
+                cancellationToken.ThrowIfCancellationRequested();                
+                //Работа с потоками в C# http://rsdn.org/article/dotnet/CSThreading1.xml                
+                Output.Append("<br>\n");
 
-            await Task.Run(() =>
+            }
+            catch (OperationCanceledException e) 
             {
 #if DEBUG
-                Debug.WriteLine("Thread start: " + Index.ToString()+ " FreeThreadCount="+ FreeThreadCount.ToString());
+                Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif
-                StringBuilder Output = new StringBuilder();
-                string Host = chkList_PC.Items[Index].ToString();
-                Output.Append(t_color("white", Host) );
-
-                if (!Ping(Host)) Output.Append(" "+ t_color("red"," no ping")+" "+ __Error);
-                //Работа с потоками в C# http://rsdn.org/article/dotnet/CSThreading1.xml
-
-                /*Public Dim  MAXThreadCount As Integer = 100
-                While ThreadCount> MAXThreadCount
-                    Threading.Thread.Sleep(1000)
-                End While
-                Dim myTest As New ThreadsGetMACfromHOST(client.Name)
-                Dim bThreadStart As New ThreadStart(AddressOf myTest.GetMACfromHOST)
-                Dim bThread As New Thread(bThreadStart)
-                bThread.Start*/
-                Output.Append("<br>\n");
-                WriteLog(Output);
-                FreeThreadCount++;
+                Output.Append("<br>\nCanceled<br>\n" + e.ToString() + "<br>\n");
+            }
+            catch (Exception e)
+            {
 #if DEBUG
-                Debug.WriteLine("Thread stop: " + Index.ToString() + " FreeThreadCount=" + FreeThreadCount.ToString());
+                Debug.WriteLine("Thread Exception " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
+#endif 
+                Output.Append("<br>\nException<br>\n" + e.ToString() + "<br>\n");
+            }
+            finally
+            {
+                
+                RunningThreadCount--;
+                WriteLog(Output);
+#if DEBUG
+                Debug.WriteLine("Thread " + Host + " finally: " + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif
-            });
+            }
         }
     }
 }

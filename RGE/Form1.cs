@@ -14,13 +14,15 @@ using System.Threading;
 namespace RGE
 {
     
-    public partial class Form1 : Form
+    public  partial class Form1 : Form
     {
-        string __Error;
+        CancellationTokenSource cts;
+        static RGE.Form1 THIS;
+        static string __Error;
         const string _BR = "<BR>";
         const string _SP = "&nbsp;";
         const string _SP3 = "&nbsp;&nbsp;&nbsp;";
-        int MainStatus = 0;// 0-stop, 1-run
+        static int MainStatus = 0;// 0-stop, 1-run
         StreamWriter sw;
         string FileReport;
         int __PROCESSOR_COUNT=2;
@@ -31,6 +33,7 @@ namespace RGE
         const int __THREAD_MULTI = 8;
 #endif
 
+        static int RunningThreadCount = 0;
         int ThreadCount = 8;
         int FreeThreadCount = 8;
         List<Thread> Threads = new List<Thread>();
@@ -166,63 +169,85 @@ namespace RGE
             finally{}            
 
         }
-        private void Stop_Run()
+        private void End_Run()
         {
-            MainStatus = 0;
-            ToolbGo.BackColor = Color.Lime;
-            ToolbGo.Text = "     Go     ";
-            ToolbGo.ForeColor = Color.Black;
+            
+            cts.Dispose();
+
             WriteLog("<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
-            sw = new StreamWriter(FileReport);            
+            sw = new StreamWriter(FileReport);
             if (wResult.InvokeRequired)
             {
                 //TODO: Stop all threads                
                 Invoke(new Action(() =>
                 {
                     sw.Write(wResult.DocumentText);
-                    wResult.Document.GetElementById("finish").ScrollIntoView(true);                    
+                    wResult.Document.GetElementById("finish").ScrollIntoView(true);
                 }));
-            }       
+            }
             else
-            {    
+            {
                 //wResult.Document.Body.ScrollIntoView(false);
                 //wResult.Navigate("file://" + FileReport);            
                 sw.Write(wResult.DocumentText);
                 wResult.Document.GetElementById("finish").ScrollIntoView(true);
-            }            
+            }
             sw.Close();
+
+            MainStatus = 0;
+            ToolbGo.BackColor = Color.Lime;
+            ToolbGo.Text = "     Go     ";
+            ToolbGo.ForeColor = Color.Black;
+            ToolbGo.Enabled = true;
         }
-        void WriteLog(string message)
+        private void Stop_Run()
         {
-            if (wResult.InvokeRequired)
+            MainStatus = 0;
+            if (RunningThreadCount!=0)
             {
-                wResult.BeginInvoke(new Action<string>((s) => wResult.Document.Write(s)), message);
+#if DEBUG
+                Debug.WriteLine("CANCEL");
+#endif                                
+                WriteLog(D_T() + t_color("red", " Cancel") + _BR + "\n");                
+                ToolbGo.Enabled = false;
+                ToolbGo.BackColor = Color.Yellow;
+                ToolbGo.Text = " Waiting.. ";
+                ToolbGo.ForeColor = Color.Black;
+                cts.Cancel();
+            }
+        }
+        static void WriteLog(string message)
+        {
+            if (THIS.wResult.InvokeRequired)
+            {
+                THIS.wResult.BeginInvoke(new Action<string>((s) => THIS.wResult.Document.Write(s)), message);
             }
             else
             {
-                wResult.Document.Write(message);
+                THIS.wResult.Document.Write(message);
             }
         }
-        void WriteLog(StringBuilder message)
+        static void WriteLog(StringBuilder message)
         {
-            if (wResult.InvokeRequired)
+            if (THIS.wResult.InvokeRequired)
             {
-                wResult.BeginInvoke(new Action<string>((s) => wResult.Document.Write(s)), message.ToString());
+                THIS.wResult.BeginInvoke(new Action<string>((s) => THIS.wResult.Document.Write(s)), message.ToString());
             }
             else
             {
-                wResult.Document.Write(message.ToString());
+                THIS.wResult.Document.Write(message.ToString());
             }
         }
-
-
         
 
-       
-      
-        string D_T() { return DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"); }
-        string t_color(string color, string format, params string[] text) { return "<font color=\""+ color + "\">"+ String.Format(format, text) + "</font>"; }
-        string t_color(string color, string format) { return t_color(color, format, ""); }
+
+
+
+
+
+        static string D_T() { return DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"); }
+        static string t_color(string color, string format, params string[] text) { return "<font color=\""+ color + "\">"+ String.Format(format, text) + "</font>"; }
+        static string t_color(string color, string format) { return t_color(color, format, ""); }
 
         private void chkCopyOverride_Validated(object sender, EventArgs e)
         {
@@ -231,13 +256,14 @@ namespace RGE
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            THIS = this;
             bPCSelectAll_Click( sender,  e);
 
 #if !DEBUG
         __PROCESSOR_COUNT = Environment.ProcessorCount;
 #endif
             ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;
-            for (int i = 0; i != ThreadCount; i++) Threads.Add(new Thread());
+            //for (int i = 0; i != ThreadCount; i++) Threads.Add(new Thread());
 #if DEBUG
             CheckForIllegalCrossThreadCalls = false;
 #endif
@@ -247,7 +273,7 @@ namespace RGE
 #endif
             
         }
-        Boolean Ping(String Host)
+        static Boolean Ping(String Host)
         {
             bool Ping = false;
             try
@@ -256,7 +282,7 @@ namespace RGE
                 System.Net.NetworkInformation.PingReply reply = ping.Send(Host);
                 if (reply.Status.ToString() == "Success") Ping = true;
             }
-            catch (Exception e) { __Error = e.ToString(); }
+            catch (Exception e) { /*__Error = e.ToString();*/ }
             return (Ping);
         }
     }
