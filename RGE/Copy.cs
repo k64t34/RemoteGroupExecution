@@ -9,7 +9,6 @@ using System.Drawing;
 
 namespace RGE
 {
-
     public partial class Form1
     {
         async void Run_Copy()
@@ -40,33 +39,24 @@ namespace RGE
             }
             Output.Append("<br>\n");
             WriteLog(Output);
-            cts = new CancellationTokenSource();
-            var Token = cts.Token;
+            
             RunningThreadCount = 0;
             Task task;
             foreach (int indexChecked in chkList_PC.CheckedIndices)
             {
                 if (MainStatus == 0) { break; }
-                task = new Task(() => Do_Copy(indexChecked,Token)) ;
+                task = new Task(() => Do_Copy(indexChecked, cts.Token)) ;
                 task.Start();
-                    
-                    
-                //ThreadPool.QueueUserWorkItem(new WaitCallback(Do_Copy), indexChecked);                
-                Thread.Sleep(10);
-                }                
-                //Task.WhenAll(tasks);
+                Thread.Sleep(1);
+                }                                
             while (RunningThreadCount!=0)
             {
 #if DEBUG
                  Debug.WriteLine("Wait Thread finish: " + RunningThreadCount.ToString());
 #endif
-                 Thread.Sleep(1000); 
+                 Thread.Sleep(1000);                     
             }
-             WriteLog("<br>\n");
-                /*
-                 https://habr.com/ru/post/165729/
-                 ThreadPool Class https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool?redirectedfrom=MSDN&view=net-5.0
-                 */
+             WriteLog("<br>\n");                
 #if DEBUG
             Debug.WriteLine("All Thread finished");
 #endif
@@ -82,34 +72,34 @@ namespace RGE
             Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
 #endif
             StringBuilder Output = new StringBuilder();
+            Output.Append(@"<detaildsh>");
             try
             {               
-                Output.Append(t_color("white", Host));
+                Output.Append(@"<summary>" + t_color("white", Host)+ @"</summary>");
                 cancellationToken.ThrowIfCancellationRequested();
                 if (!Ping(Host)) Output.Append(" " + t_color("red", " no ping") + " " /*+ __Error*/);
-                cancellationToken.ThrowIfCancellationRequested();                
-                //Работа с потоками в C# http://rsdn.org/article/dotnet/CSThreading1.xml                
+                cancellationToken.ThrowIfCancellationRequested();                                
                 Output.Append("<br>\n");
-
             }
             catch (OperationCanceledException e) 
             {
 #if DEBUG
                 Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif
-                Output.Append("<br>\nCanceled<br>\n" + e.ToString() + "<br>\n");
+                Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
             }
             catch (Exception e)
             {
 #if DEBUG
                 Debug.WriteLine("Thread Exception " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif 
-                Output.Append("<br>\nException<br>\n" + e.ToString() + "<br>\n");
+                Output.Append("<br>\nException<br>\n" + e.Message + "<br>\n");
             }
             finally
             {
                 
                 RunningThreadCount--;
+                Output.Append(@"</details>");
                 WriteLog(Output);
 #if DEBUG
                 Debug.WriteLine("Thread " + Host + " finally: " + " RunningThreadCount=" + RunningThreadCount.ToString());

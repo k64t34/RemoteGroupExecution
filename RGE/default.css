@@ -1,0 +1,91 @@
+body{
+	height: auto;
+	width: auto;
+	overflow: hidden;
+	/*background: #020202;*/
+	border: 0px solid #dbdbdb;
+	margin: 0px;
+	padding: 0px;
+	font-family: Consolas;
+	font-size: 19px;				
+	color: #dcdccc;
+	background-color: #3f3f3f;	
+ }
+			
+.PC{
+display: none; 	
+}
+.PC+ label ~ div{
+    display: none;
+}
+/* оформляем текст label */
+.PC + label {
+    border-bottom: 1px dotted green;
+    padding: 0;
+    color: #f0f0f9;
+    cursor: pointer;
+    display: inline-block; 
+}
+/* вид текста label при активном переключателе */
+.PC:checked + label {
+    color: white;
+    border-bottom: 0;
+}
+/* когда чекбокс активен показываем блоки с содержанием  */
+.PC:checked + label + div {
+    display: block; 
+	color: silver;
+    /*background: black;*/
+	border: 1px solid black;
+    -moz-box-shadow: inset 1px 1px 10px #7d8e8f;
+    -webkit-box-shadow: inset 1px 1px 10px #7d8e8f;
+    box-shadow: inset 1px 1px 1px #7d8e8f;
+    padding: 10px; 
+	margin-left:20px;
+	margin-right:5px;
+}
+.OK{
+color:lime;
+}
+.FAULT{
+color:red;
+}
+.EVENT{
+/*color:fuchsia*/
+color:#f18c96;
+}
+
+.hide {
+    display: none; 
+}
+.hide + label ~ div{
+    display: none;
+}
+/* оформляем текст label */
+.hide + label {
+    border-bottom: 1px dotted green;
+    padding: 0;
+    color: yellow;
+    cursor: pointer;
+    display: inline-block; 
+}
+/* вид текста label при активном переключателе */
+.hide:checked + label {
+    color: red;
+    border-bottom: 0;
+}
+/* когда чекбокс активен показываем блоки с содержанием  */
+.hide:checked + label + div {
+    display: block; 
+    background: #efefef;
+    -moz-box-shadow: inset 3px 3px 10px #7d8e8f;
+    -webkit-box-shadow: inset 3px 3px 10px #7d8e8f;
+    box-shadow: inset 3px 3px 10px #7d8e8f;
+    padding: 10px; 
+}
+
+/* demo контейнер */
+.demo {
+    margin: 5% 10%;
+}
+
