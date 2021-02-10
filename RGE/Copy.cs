@@ -23,7 +23,8 @@ namespace RGE
                 Output.Append(t_color("red", " Folder doesn't exist"));
                 Output.Append(_BR + "\n");
                 WriteLog(Output);
-                return;
+                goto Run_Copy_End_Run;
+                //return;
             }
             Output.Append(_BR + "\n");
             Output.Append(t_color("yellow", "Copy to  :") + tTargetCopy.Text + _BR + "\n");
@@ -60,7 +61,7 @@ namespace RGE
 #if DEBUG
             Debug.WriteLine("All Thread finished");
 #endif
-                End_Run();                
+                Run_Copy_End_Run:End_Run();                
             });
         }
         //************************************************************

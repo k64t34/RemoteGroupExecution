@@ -54,6 +54,9 @@ color:red;
 /*color:fuchsia*/
 color:#f18c96;
 }
+.BaseHighLight{
+	color:#e3ceab;	
+}
 
 .hide {
     display: none; 
