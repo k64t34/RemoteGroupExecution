@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+
 
 namespace RGE
 {
@@ -16,29 +20,26 @@ namespace RGE
             await Task.Run(() =>
             {
             StringBuilder Output = new StringBuilder();
-            Output.Append(t_color("yellow", "Host:") + Environment.MachineName + _BR + "\n");
-            Output.Append(t_color("yellow", "Copy from:") + tSourceCopy.Text);
+            //Output.Append(HTMLTagSpan(" Host:", CSS_BaseHighLight)  +Environment.MachineName + _BRLF);
+            Output.Append(HTMLTagSpan(" Copy from:", CSS_BaseHighLight) + tSourceCopy.Text );                
             if (!Directory.Exists(tSourceCopy.Text))
             {
-                Output.Append(t_color("red", " Folder doesn't exist"));
-                Output.Append(_BR + "\n");
+                Output.Append(HTMLTagSpan(" Folder doesn't exist", CSS_FAULT)+ _BRLF);                
                 WriteLog(Output);
                 goto Run_Copy_End_Run;
                 //return;
             }
-            Output.Append(_BR + "\n");
-            Output.Append(t_color("yellow", "Copy to  :") + tTargetCopy.Text + _BR + "\n");
-            Output.Append(t_color("yellow", "Override:") + chkCopyOverride.Checked + _BR + "\n");
-            if (chkCopyOverride.Checked)
-                Output.Append(t_color("yellow", "Only newer:") + chkCopyOnlyNewer.Checked + _BR + "\n");            
-            
-            Output.Append(t_color("yellow", "Hosts:")+ _BR + "\n");
+            Output.Append(HTMLSpanOK() + _BRLF);
+            Output.Append(HTMLTagSpan("Copy to  :", CSS_BaseHighLight) + tTargetCopy.Text + _BRLF);
+            Output.Append(HTMLTagSpan("Override:", CSS_BaseHighLight) + chkCopyOverride.Checked + _BRLF);                
+            if (chkCopyOverride.Checked)Output.Append(HTMLTagSpan("Only newer:", CSS_BaseHighLight) + chkCopyOnlyNewer.Checked + _BRLF);
+            Output.Append(HTMLTagSpan("Hosts:", CSS_BaseHighLight) + _BRLF);                
             RunningThreadCount = 0;
             foreach (int indexChecked in chkList_PC.CheckedIndices)
             {
                 Output.Append(String.Format("{0}.{1}<br>\n", ++RunningThreadCount, chkList_PC.Items[indexChecked].ToString()));
             }
-            Output.Append("<br>\n");
+            Output.Append(_BRLF);
             WriteLog(Output);
             
             RunningThreadCount = 0;
@@ -57,7 +58,7 @@ namespace RGE
 #endif
                  Thread.Sleep(1000);                     
             }
-             WriteLog("<br>\n");                
+             WriteLog(_BRLF);                
 #if DEBUG
             Debug.WriteLine("All Thread finished");
 #endif
@@ -68,12 +69,15 @@ namespace RGE
         static void Do_Copy(int Index, CancellationToken cancellationToken)                    {
         //************************************************************
             RunningThreadCount++;
+            bool result = false;
             string Host = THIS.chkList_PC.Items[(int)Index].ToString();
 #if DEBUG
             Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
 #endif
             StringBuilder Output = new StringBuilder();
-            Output.Append(@"<detaildsh>");
+            Output.Append("<input type=\"checkbox\" id="+ Host + " class=\"PC\"/>");
+            Output.Append("<label for=\"" + Host + "\">" + Host + "</label>");
+            var div = new System.Web.Mvc.TagBuilder("div");
             try
             {               
                 Output.Append(@"<summary>" + t_color("white", Host)+ @"</summary>");

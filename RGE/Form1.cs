@@ -27,6 +27,10 @@ namespace RGE
         const string _TAB = "\t";
         const string _SP = "&nbsp;";
         const string _SP3 = "&nbsp;&nbsp;&nbsp;";
+        const string CSS_BaseHighLight = "BaseHighLight";
+        const string CSS_BaseAlert = "BaseAlert";
+        const string CSS_FAULT = "FAULT";
+        const string CSS_OK = "OK";
         static int MainStatus = 0;// 0-stop, 1-run
         StreamWriter sw;
         string FileReport;
@@ -174,7 +178,7 @@ namespace RGE
                     "<style>\n" + File.ReadAllText("default.css") + "\n</style>\n" +
                     "<body>\n" +
                     D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
-                    HTMLTagSpan("Report file:", "BaseHighLight") + FileReport + _BRLF);
+                    HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF);
                 WriteLog(Output);
                 //WriteLog(D_T() + t_color("white", " Remote group execution start") + _BR + "\n");
                 //WriteLog(t_color("white", "Report file:") + " " + FileReport + _BR + "\n");
@@ -373,7 +377,8 @@ namespace RGE
         static string t_color(string color, string format) { return t_color(color, format, ""); }
 
         Func<String, String, String> HTMLTagSpan = (String InnerText, String Class) =>  "<span class=\"" + Class + "\">" + InnerText + "</span>";
-        
+        Func<String>                 HTMLSpanOK  =                               () => "<span class=\"" + CSS_OK + "\"> OK </span>";
+
         private void chkCopyOverride_Validated(object sender, EventArgs e)
         {
             chkCopyOnlyNewer.Enabled = chkCopyOverride.Checked;            

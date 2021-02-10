@@ -45,10 +45,13 @@ display: none;
 	margin-right:5px;
 }
 .OK{
+/*background-color:lime;
+color:white;*/
 color:lime;
 }
 .FAULT{
-color:red;
+color:white;
+background-color:red;
 }
 .EVENT{
 /*color:fuchsia*/
@@ -57,6 +60,10 @@ color:#f18c96;
 .BaseHighLight{
 	color:#e3ceab;	
 }
+.BaseAlert{
+	color:red;	
+}
+
 
 .hide {
     display: none; 
