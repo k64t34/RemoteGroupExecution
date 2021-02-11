@@ -7,8 +7,8 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+
+
 
 
 namespace RGE
@@ -74,38 +74,33 @@ namespace RGE
 #if DEBUG
             Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
 #endif
-            StringBuilder Output = new StringBuilder();
-            Output.Append("<input type=\"checkbox\" id="+ Host + " class=\"PC\"/>");
-            Output.Append("<label for=\"" + Host + "\">" + Host + "</label>");
-            var div = new System.Web.Mvc.TagBuilder("div");
+            var block = new PCHTMLBlock(Host);            
             try
-            {               
-                Output.Append(@"<summary>" + t_color("white", Host)+ @"</summary>");
+            {              
                 cancellationToken.ThrowIfCancellationRequested();
-                if (!Ping(Host)) Output.Append(" " + t_color("red", " no ping") + " " /*+ __Error*/);
-                cancellationToken.ThrowIfCancellationRequested();                                
-                Output.Append("<br>\n");
+                //if (!Ping(Host)) Output.Append(" " + t_color("red", " no ping") + " " /*+ __Error*/);
+                cancellationToken.ThrowIfCancellationRequested();
+                //Output.Append("<br>\n");
+                result= true;
             }
             catch (OperationCanceledException e) 
             {
 #if DEBUG
                 Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif
-                Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
+                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
             }
             catch (Exception e)
             {
 #if DEBUG
                 Debug.WriteLine("Thread Exception " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif 
-                Output.Append("<br>\nException<br>\n" + e.Message + "<br>\n");
+                //Output.Append("<br>\nException<br>\n" + e.Message + "<br>\n");
             }
             finally
-            {
-                
-                RunningThreadCount--;
-                Output.Append(@"</details>");
-                WriteLog(Output);
+            {                
+                RunningThreadCount--;                
+                WriteLog(block.ToString());
 #if DEBUG
                 Debug.WriteLine("Thread " + Host + " finally: " + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif

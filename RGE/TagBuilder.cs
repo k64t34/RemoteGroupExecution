@@ -1,0 +1,107 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace HTMLBuilder {
+    class TagBuilder //TagBuilder Class https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.tagbuilder?view=aspnet-webpages-3.2
+    {
+        String TagName;
+        bool SelfClosing = false; // true - <tag> or <tag />; false - <tag></tag> 
+        public System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<string, string>> Attributes { get; }
+        InnerHtmlBlock InnerHtmlBlock = new InnerHtmlBlock();
+        //IDictionary Интерфейс https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.idictionary?view=net-5.0
+        public TagBuilder(String TagName)
+        {
+            this.TagName = TagName;
+        }
+        public override string ToString()
+        {
+            StringBuilder Output = new StringBuilder();
+            Output.Append("<" + TagName + ">");
+            if (!SelfClosing) Output.Append("</" + TagName + ">");
+            return Output.ToString();
+        }
+        public void Add(String InnerHTML) 
+        {
+            InnerHtmlBlock.Add(InnerHTML);
+        }
+
+    }
+    
+    class InnerHtmlBlock : System.Collections.IList //IList Интерфейс https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=net-5.0
+    {
+
+        private object[] _contents = new object[8];
+        private int _count;
+
+        public InnerHtmlBlock()
+        {
+            
+        }
+        public int Add(object value) { return 1; }
+        public int Add(String value) { return 1; }
+        public int Add(TagBuilder value) { return 1; }
+
+        public void Clear()        {        }
+        public bool Contains(object value) { return true; }
+        public int IndexOf(object value){ return 1; }
+        public void Insert(int index, object value) { }
+        public void Remove(object value) { }
+        public void RemoveAt(int index) { }
+
+        public bool IsFixedSize
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public void Remove(object value)
+        {
+            RemoveAt(IndexOf(value));
+        }
+
+        public void RemoveAt(int index)
+        {
+            if ((index >= 0) && (index < Count))
+            {
+                for (int i = index; i < Count - 1; i++)
+                {
+                    _contents[i] = _contents[i + 1];
+                }
+                _count--;
+            }
+        }
+
+        public object this[int index]
+        {
+            get
+            {
+                return _contents[index];
+            }
+            set
+            {
+                _contents[index] = value;
+            }
+        }
+
+    }
+
+    
+
+
+
+}
