@@ -11,8 +11,9 @@ namespace HTMLBuilder {
     {
         String TagName;
         bool SelfClosing = false; // true - <tag> or <tag />; false - <tag></tag> 
-        public System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<string, string>> Attributes { get; }
-        InnerHtmlBlock InnerHtmlBlock = new InnerHtmlBlock();
+        //public System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<string, string>> Attributes { get; }
+        public ArrayList InnerHtmlBlock = new ArrayList();
+        public Dictionary<String,String> Attribute = new Dictionary<String, String>();
         //IDictionary Интерфейс https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.idictionary?view=net-5.0
         public TagBuilder(String TagName)
         {
@@ -21,18 +22,19 @@ namespace HTMLBuilder {
         public override string ToString()
         {
             StringBuilder Output = new StringBuilder();
-            Output.Append("<" + TagName + ">");
+            Output.Append("<" + TagName);
+            foreach(KeyValuePair<String,String> kvp in Attribute) Output.Append(" "+kvp.Key+"="+kvp.Value);
+            Output.Append( ">");
+            foreach (object o in InnerHtmlBlock) Output.Append(o.ToString());
             if (!SelfClosing) Output.Append("</" + TagName + ">");
             return Output.ToString();
         }
-        public void Add(String InnerHTML) 
-        {
-            InnerHtmlBlock.Add(InnerHTML);
-        }
+        public void Add(String InnerHTML){InnerHtmlBlock.Add(InnerHTML);        }
+        public void Add(TagBuilder InnerHTML)        {            InnerHtmlBlock.Add(InnerHTML);        }
 
     }
-    
-    class InnerHtmlBlock : System.Collections.IList //IList Интерфейс https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=net-5.0
+
+    /*class InnerHtmlBlock : System.Collections.IList //IList Интерфейс https://docs.microsoft.com/ru-ru/dotnet/api/system.collections.ilist?view=net-5.0
     {
 
         private object[] _contents = new object[8];
@@ -98,9 +100,9 @@ namespace HTMLBuilder {
             }
         }
 
-    }
+    }*/
 
-    
+
 
 
 

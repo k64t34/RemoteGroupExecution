@@ -1,7 +1,6 @@
 body{
 	height: auto;
-	width: auto;
-	overflow: hidden;
+	width: auto;	
 	/*background: #020202;*/
 	border: 0px solid #dbdbdb;
 	margin: 0px;
@@ -10,6 +9,7 @@ body{
 	font-size: 19px;				
 	color: #dcdccc;
 	background-color: #3f3f3f;	
+	overflow: auto;/*overflow: hidden;*/
  }
 			
 .PC{
@@ -50,8 +50,13 @@ color:white;*/
 color:lime;
 }
 .FAULT{
-color:white;
-background-color:red;
+color:red;
+/*background-color:red;*/
+}
+.CANCEL{
+/*background-color:lime;
+color:white;*/
+color:#f18c96;
 }
 .EVENT{
 /*color:fuchsia*/

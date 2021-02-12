@@ -9,8 +9,6 @@ using System.Drawing;
 using System.Web;
 
 
-
-
 namespace RGE
 {
     public partial class Form1
@@ -19,15 +17,13 @@ namespace RGE
         {
             await Task.Run(() =>
             {
-            StringBuilder Output = new StringBuilder();
-            //Output.Append(HTMLTagSpan(" Host:", CSS_BaseHighLight)  +Environment.MachineName + _BRLF);
+            StringBuilder Output = new StringBuilder();            
             Output.Append(HTMLTagSpan(" Copy from:", CSS_BaseHighLight) + tSourceCopy.Text );                
             if (!Directory.Exists(tSourceCopy.Text))
             {
                 Output.Append(HTMLTagSpan(" Folder doesn't exist", CSS_FAULT)+ _BRLF);                
                 WriteLog(Output);
-                goto Run_Copy_End_Run;
-                //return;
+                goto Run_Copy_End_Run;                //return;
             }
             Output.Append(HTMLSpanOK() + _BRLF);
             Output.Append(HTMLTagSpan("Copy to  :", CSS_BaseHighLight) + tTargetCopy.Text + _BRLF);
@@ -78,17 +74,23 @@ namespace RGE
             try
             {              
                 cancellationToken.ThrowIfCancellationRequested();
-                //if (!Ping(Host)) Output.Append(" " + t_color("red", " no ping") + " " /*+ __Error*/);
-                cancellationToken.ThrowIfCancellationRequested();
-                //Output.Append("<br>\n");
-                result= true;
+                block.Div.Add("Ping ");
+                if (!Ping(Host))
+                    block.Div.Add(HTMLSpanFAULT());
+                else
+                {
+                    block.Div.Add(HTMLSpanOK());
+                    cancellationToken.ThrowIfCancellationRequested();
+                    //Output.Append("<br>\n");
+                    result = true;
+                }
             }
             catch (OperationCanceledException e) 
             {
 #if DEBUG
                 Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif
-                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
+                block.Div.Add(_BRLF + HTMLSpanCANCEL()+_BRLF);                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
             }
             catch (Exception e)
             {
@@ -99,7 +101,16 @@ namespace RGE
             }
             finally
             {                
-                RunningThreadCount--;                
+                RunningThreadCount--;
+                if (result)
+                    block.Label.InnerHtmlBlock.Add(HTMLSpanOK());
+                else
+                    if (cancellationToken.IsCancellationRequested)
+                    block.Label.InnerHtmlBlock.Add(HTMLSpanCANCEL());
+                else
+                    block.Label.InnerHtmlBlock.Add(HTMLSpanFAULT());
+
+
                 WriteLog(block.ToString());
 #if DEBUG
                 Debug.WriteLine("Thread " + Host + " finally: " + " RunningThreadCount=" + RunningThreadCount.ToString());

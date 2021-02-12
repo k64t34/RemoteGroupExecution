@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Beep.cs" />
     <Compile Include="HTMLBlock.cs" />
     <Compile Include="TagBuilder.cs" />
     <Compile Include="Copy.cs">

@@ -31,6 +31,7 @@ namespace RGE
         const string CSS_BaseAlert = "BaseAlert";
         const string CSS_FAULT = "FAULT";
         const string CSS_OK = "OK";
+        const string CSS_CANCEL = "CANCEL";
         static int MainStatus = 0;// 0-stop, 1-run
         StreamWriter sw;
         string FileReport;
@@ -44,8 +45,8 @@ namespace RGE
 
         static int RunningThreadCount = 0;
         int ThreadCount = 8;
-        int FreeThreadCount = 8;
-        List<Thread> Threads = new List<Thread>();
+        //int FreeThreadCount = 8;
+        //List<Thread> Threads = new List<Thread>();
         public Form1()
         {
             InitializeComponent();
@@ -179,10 +180,8 @@ namespace RGE
                     "<body>\n" +
                     D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
                     HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF);
-                WriteLog(Output);
-                //WriteLog(D_T() + t_color("white", " Remote group execution start") + _BR + "\n");
-                //WriteLog(t_color("white", "Report file:") + " " + FileReport + _BR + "\n");
-                wResult.Document.Body.ScrollIntoView(true);
+                WriteLog(Output);                
+                wResult.Document.Body.ScrollIntoView(false);
                 cts = new CancellationTokenSource();
                 Run_Copy();
             }
@@ -275,28 +274,34 @@ namespace RGE
         private void End_Run()
         {            
             cts.Dispose();
-            WriteLog(D_T() + HTMLTagSpan(" Finish", "EVENT") + _BRLF + "\n\n</body></html>");                 //"<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
+            WriteLog(D_T() + HTMLTagSpanID(" Finish", "EVENT","Finish") + _BRLF + "\n\n</body></html>");                 //"<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
+            sw = new StreamWriter(FileReport);
             
-            //if (wResult.InvokeRequired)
-            //{
-                
+            if (wResult.InvokeRequired)
+            {                
                 Invoke(new Action(() =>
                 {
-                    //sw.Write(wResult.DocumentText);
-                    //wResult.Navigate(FileReport);
-                    //Thread.Sleep(100);
-                    //wResult.Document.GetElementById("finish").ScrollIntoView(true);
-                }));
-            //}
-            //else
-            //{
-            //    //wResult.Document.Body.ScrollIntoView(false);
-            //    //wResult.Navigate("file://" + FileReport);            
-            //    sw.Write(wResult.DocumentText);
-            //    wResult.Document.GetElementById("finish").ScrollIntoView(true);
-            //}
-            //sw.Close();
+                    sw.Write(wResult.DocumentText);
+                    wResult.Navigate("file://" + FileReport);
+                    //Thread.Sleep(1000);
+                    //wResult.Document.Body.ScrollIntoView(false);
+                    //THIS.wResult.Document.GetElementById("finish").ScrollIntoView(false);
+                    //Thread.Sleep(1000);
+                    //THIS.wResult.Document.GetElementById("finish").ScrollIntoView(false);
+                    //Thread.Sleep(1000);
+                    //THIS.wResult.Document.GetElementById("finish").ScrollIntoView(true);
 
+                }));
+            }
+            else
+            {
+                sw.Write(wResult.DocumentText);
+                wResult.Navigate("file://" + FileReport);
+                //Thread.Sleep(1000);
+                //wResult.Document.Body.ScrollIntoView(false);
+                //wResult.Document.GetElementById("finish").ScrollIntoView(false);
+            }
+            sw.Close();
             MainStatus = 0;
             ToolbGo.BackColor = Color.Lime;
             ToolbGo.Text = "     Go     ";
@@ -349,35 +354,44 @@ namespace RGE
         {
             if (THIS.wResult.InvokeRequired)
             {
-                THIS.wResult.BeginInvoke(new Action<string>((s) => THIS.wResult.Document.Write(s)), message);
+                THIS.wResult.BeginInvoke(new Action<string>((s) => {
+                    THIS.wResult.Document.Write(s);
+                    THIS.wResult.Document.Body.ScrollIntoView(false);
+                }), message);
+                
             }
             else
             {
                 THIS.wResult.Document.Write(message);
+                THIS.wResult.Document.Body.ScrollIntoView(false);
             }
         }
         static void WriteLog(StringBuilder message)
         {
             if (THIS.wResult.InvokeRequired)
             {
-                THIS.wResult.BeginInvoke(new Action<string>((s) => THIS.wResult.Document.Write(s)), message.ToString());
+                THIS.wResult.BeginInvoke(new Action<string>((s) => {
+                    THIS.wResult.Document.Write(s);
+                    THIS.wResult.Document.Body.ScrollIntoView(false);
+                }), message.ToString());
+                
             }
             else
             {
                 THIS.wResult.Document.Write(message.ToString());
+                THIS.wResult.Document.Body.ScrollIntoView(false);
             }
         }
-
-
-
-
 
         static string D_T() { return DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"); }
         static string t_color(string color, string format, params string[] text) { return "<font color=\""+ color + "\">"+ String.Format(format, text) + "</font>"; }
         static string t_color(string color, string format) { return t_color(color, format, ""); }
 
         Func<String, String, String> HTMLTagSpan = (String InnerText, String Class) =>  "<span class=\"" + Class + "\">" + InnerText + "</span>";
-        Func<String>                 HTMLSpanOK  =                               () => "<span class=\"" + CSS_OK + "\"> OK </span>";
+        Func<String, String, String,String> HTMLTagSpanID = (String InnerText, String Class, String ID) => "<span id=\""+ID+"\" class=\"" + Class + "\">" + InnerText + "</span>";
+        static Func<String>                 HTMLSpanOK   =                               () => "<span class=\"" + CSS_OK    + "\"> OK </span>";
+        static Func<String> HTMLSpanFAULT =                               () => "<span class=\"" + CSS_FAULT + "\"> FAULT </span>";
+        static Func<String> HTMLSpanCANCEL = () => "<span class=\"" + CSS_CANCEL + "\"> CANCEL </span>";
 
         private void chkCopyOverride_Validated(object sender, EventArgs e)
         {
@@ -414,6 +428,32 @@ namespace RGE
             }
             catch (Exception e) { /*__Error = e.ToString();*/ }
             return (Ping);
+        }
+      
+        private void bDeletePCSelected_Click(object sender, EventArgs e)
+        {
+            //https://docs.microsoft.com/ru-ru/dotnet/api/system.console.beep?view=net-5.0
+
+            /*Note[] Major ={
+                new Note(Tone.C, Duration.SIXTEENTH),
+                new Note(Tone.E, Duration.SIXTEENTH),
+                new Note(Tone.G, Duration.SIXTEENTH),
+                new Note(Tone.E, Duration.SIXTEENTH),
+                new Note(Tone.C, Duration.HALF)
+            };Play(Major);
+            Note[] Minor ={
+                new Note(Tone.E, Duration.SIXTEENTH),
+                new Note(Tone.E, Duration.SIXTEENTH),
+                new Note(Tone.E, Duration.SIXTEENTH),
+                new Note(Tone.C, Duration.EIGHTH),                
+            }; Play(Minor);*/
+            Note[] Start ={
+                new Note(Tone.C, Duration.SIXTEENTH),
+                new Note(Tone.E, Duration.SIXTEENTH),
+                new Note(Tone.F, Duration.SIXTEENTH),
+                new Note(Tone.G, Duration.EIGHTH),
+            }; Beep.Play(Start);
+            
         }
     }
 
