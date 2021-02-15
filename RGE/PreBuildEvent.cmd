@@ -29,7 +29,9 @@ echo %FileConfig%
 IF EXIST "%FileConfig%" copy /y "%FileConfig%" "%FolderScript%%App_config%"&goto :EOF
 
 :ALL
-copy /y "%FolderScript%\default.css" "%FolderScript%\BIN\%ConfigurationName%"&goto :EOF
+copy /y "%FolderScript%\default.css" "%FolderScript%\BIN\%ConfigurationName%"
+copy /y "%FolderScript%\xcopy01.cmd" "%FolderScript%\BIN\%ConfigurationName%"
+goto :EOF 
 
 :NO_CONFIG
 Echo NO App.config

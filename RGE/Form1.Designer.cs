@@ -70,10 +70,14 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tTimeout = new System.Windows.Forms.TextBox();
+            this.tScriptFile = new System.Windows.Forms.TextBox();
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.tabTask.SuspendLayout();
             this.tabCommandControl.SuspendLayout();
             this.tabCommandCopyFileFolder.SuspendLayout();
+            this.tabComandScript.SuspendLayout();
             this.tabCommandCommand.SuspendLayout();
             this.tabResult.SuspendLayout();
             this.tabMainControl.SuspendLayout();
@@ -82,6 +86,7 @@ namespace RGE
             // 
             // comboBox_LogLevel
             // 
+            comboBox_LogLevel.Enabled = false;
             comboBox_LogLevel.Items.AddRange(new object[] {
             "Info",
             "Sucess",
@@ -109,6 +114,8 @@ namespace RGE
             // 
             // tabTask
             // 
+            this.tabTask.Controls.Add(this.tTimeout);
+            this.tabTask.Controls.Add(this.label2);
             this.tabTask.Controls.Add(this.label1);
             this.tabTask.Controls.Add(comboBox_LogLevel);
             this.tabTask.Controls.Add(this.tThisPC);
@@ -134,9 +141,9 @@ namespace RGE
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(541, 201);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 24);
+            this.label1.Size = new System.Drawing.Size(86, 24);
             this.label1.TabIndex = 12;
-            this.label1.Text = "label1";
+            this.label1.Text = "Log level";
             // 
             // tThisPC
             // 
@@ -246,7 +253,7 @@ namespace RGE
             this.chkList_PC.Location = new System.Drawing.Point(23, 71);
             this.chkList_PC.MultiColumn = true;
             this.chkList_PC.Name = "chkList_PC";
-            this.chkList_PC.Size = new System.Drawing.Size(490, 211);
+            this.chkList_PC.Size = new System.Drawing.Size(490, 303);
             this.chkList_PC.TabIndex = 5;
             // 
             // tabCommandControl
@@ -294,6 +301,7 @@ namespace RGE
             // chkCopyOverride
             // 
             this.chkCopyOverride.AutoSize = true;
+            this.chkCopyOverride.Enabled = false;
             this.chkCopyOverride.Location = new System.Drawing.Point(149, 12);
             this.chkCopyOverride.Name = "chkCopyOverride";
             this.chkCopyOverride.Size = new System.Drawing.Size(105, 28);
@@ -340,6 +348,7 @@ namespace RGE
             // 
             // tabComandScript
             // 
+            this.tabComandScript.Controls.Add(this.tScriptFile);
             this.tabComandScript.Location = new System.Drawing.Point(4, 31);
             this.tabComandScript.Name = "tabComandScript";
             this.tabComandScript.Padding = new System.Windows.Forms.Padding(3);
@@ -365,7 +374,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 134);
+            this.tCommand.Location = new System.Drawing.Point(173, 140);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -376,7 +385,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 160);
+            this.lCommand.Location = new System.Drawing.Point(66, 166);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -454,7 +463,7 @@ namespace RGE
             this.ToolbGo});
             this.tool.Location = new System.Drawing.Point(0, 0);
             this.tool.Name = "tool";
-            this.tool.Size = new System.Drawing.Size(1184, 31);
+            this.tool.Size = new System.Drawing.Size(1184, 27);
             this.tool.TabIndex = 8;
             this.tool.Text = "toolStrip1";
             // 
@@ -464,7 +473,7 @@ namespace RGE
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(40, 28);
+            this.toolStripButton1.Size = new System.Drawing.Size(40, 24);
             this.toolStripButton1.Text = "Task";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -474,14 +483,14 @@ namespace RGE
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(53, 28);
+            this.toolStripButton2.Size = new System.Drawing.Size(53, 24);
             this.toolStripButton2.Text = "Result";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
             // toolStripButton3
             // 
@@ -489,13 +498,13 @@ namespace RGE
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(29, 28);
+            this.toolStripButton3.Size = new System.Drawing.Size(29, 24);
             this.toolStripButton3.Text = "toolStripButton3";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // ToolbGo
             // 
@@ -507,9 +516,35 @@ namespace RGE
             this.ToolbGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolbGo.Name = "ToolbGo";
             this.ToolbGo.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.ToolbGo.Size = new System.Drawing.Size(93, 28);
+            this.ToolbGo.Size = new System.Drawing.Size(93, 24);
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(541, 273);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 24);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Timeout";
+            // 
+            // tTimeout
+            // 
+            this.tTimeout.Enabled = false;
+            this.tTimeout.Location = new System.Drawing.Point(633, 273);
+            this.tTimeout.Name = "tTimeout";
+            this.tTimeout.Size = new System.Drawing.Size(121, 28);
+            this.tTimeout.TabIndex = 14;
+            this.tTimeout.Text = "60";
+            // 
+            // tScriptFile
+            // 
+            this.tScriptFile.Location = new System.Drawing.Point(8, 6);
+            this.tScriptFile.Name = "tScriptFile";
+            this.tScriptFile.Size = new System.Drawing.Size(1117, 28);
+            this.tScriptFile.TabIndex = 2;
+            this.tScriptFile.Text = "xcopy01.cmd";
             // 
             // Form1
             // 
@@ -533,6 +568,8 @@ namespace RGE
             this.tabCommandControl.ResumeLayout(false);
             this.tabCommandCopyFileFolder.ResumeLayout(false);
             this.tabCommandCopyFileFolder.PerformLayout();
+            this.tabComandScript.ResumeLayout(false);
+            this.tabComandScript.PerformLayout();
             this.tabCommandCommand.ResumeLayout(false);
             this.tabCommandCommand.PerformLayout();
             this.tabResult.ResumeLayout(false);
@@ -584,6 +621,9 @@ namespace RGE
         private System.Windows.Forms.TabPage tabCommandInstall;
         public System.Windows.Forms.WebBrowser wResult;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tTimeout;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox tScriptFile;
     }
 }
 

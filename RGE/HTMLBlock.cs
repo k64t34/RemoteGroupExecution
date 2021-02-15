@@ -32,4 +32,33 @@ class PCHTMLBlock
         return Output.ToString();
     }
 }
+/*
+<input type="checkbox" id="m16" class="PC"/>
+    <label for=m16>m16<span class="OK"> OK </span></label>
+        <div>
+            Ping <span class="OK"> OK </span><BR>
+            Copy script D:\Users\Andrew\Project\RemoteGroupExecution\RGE\bin\Debug\xcopy01.cmd to remote host \\m16\c$\xcopy01.cmd<span class="OK"> OK </span><BR>
+            Run remote  script 
+        </div>
 
+cancellationToken.ThrowIfCancellationRequested();
+local_result = false;
+var subBlock = new PCHTMLBlock(Host + ".WMI");
+subBlock.Label.InnerHtml("Execute remote script ");
+try
+{
+    ...Do something ...
+    local_result = true;
+    subBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
+}
+catch (Exception e) { subBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); subBlock.Div.Add(e.Message); }
+finally {block.Div.Add(subBlock.ToString());                        }
+if (local_result)
+{
+ ...Continue...
+}
+
+
+ 
+ 
+*/

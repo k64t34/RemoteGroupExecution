@@ -50,7 +50,7 @@ color:white;*/
 color:lime;
 }
 .FAULT{
-color:red;
+color:#f18c96;
 /*background-color:red;*/
 }
 .CANCEL{
@@ -60,7 +60,7 @@ color:#f18c96;
 }
 .EVENT{
 /*color:fuchsia*/
-color:#f18c96;
+color:cyan;
 }
 .BaseHighLight{
 	color:#e3ceab;	

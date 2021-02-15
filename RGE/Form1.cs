@@ -45,8 +45,8 @@ namespace RGE
 
         static int RunningThreadCount = 0;
         int ThreadCount = 8;
-        //int FreeThreadCount = 8;
-        //List<Thread> Threads = new List<Thread>();
+        static String ScriptFullPathName = Application.ExecutablePath;
+        static String ScriptFolder = Path.GetDirectoryName(ScriptFullPathName); 
         public Form1()
         {
             InitializeComponent();
