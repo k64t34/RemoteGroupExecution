@@ -415,7 +415,32 @@ namespace RGE
 #if DEBUG
             Debug.WriteLine("Processor count: "+ __PROCESSOR_COUNT.ToString());
 #endif
-            
+
+            #region Config 
+            static string Distrib_Folder = @"\\fs2-oduyu\CK2007\СК-11\";
+            static string Distrib_Folder_Runtime = @"Runtimes";
+            static string Distrib_Folder_CK11 = @"Дистрибутив клиента  СК-11";
+            static string autoinstaller_CK11 = "AutoInstall CK11.exe";
+            static string installer_CK11 = "SetupClient.exe";
+            static string Service_User = "Svc-ck11cl-oduyu";
+            static string Service_domain = "oduyu";
+            static string MailServer = "";
+            static string emailOikAdmin = "";
+            #endregion
+            #region Read setting
+            ReadSetting("Distrib_Folder", ref Distrib_Folder);
+            ReadSetting("Distrib_Folder_Runtime", ref Distrib_Folder_Runtime);
+            ReadSetting("Distrib_Folder_CK11", ref Distrib_Folder_CK11);
+            ReadSetting("autoinstaller_CK11", ref autoinstaller_CK11);
+            ReadSetting("installer_CK11", ref installer_CK11);
+            ReadSetting("Service_User", ref Service_User);
+            ReadSetting("Service_domain", ref Service_domain);
+            ReadSetting("MailServer", ref MailServer);
+            ReadSetting("emailOikAdmin", ref emailOikAdmin);
+            #endregion
+
+
+
         }
         static Boolean Ping(String Host)
         {

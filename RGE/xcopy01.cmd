@@ -1,5 +1,7 @@
-rem cmd /c xcopy01.cmd 12345 \\t90\tmp\source d:\tmp\target 1> xcopy01.cmd.12345.tmp 2> xcopy01.cmd.12345.tmp
 @echo off
+
+rem cmd /c xcopy01.cmd 12345 \\t90\tmp\source d:\tmp\target 1> xcopy01.cmd.12345.tmp 2> xcopy01.cmd.12345.tmp
+
 set Result=1
 set DateTimeStamp=%1
 set SourceFolder=%2
