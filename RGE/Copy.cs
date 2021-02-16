@@ -91,14 +91,14 @@ namespace RGE
                 else
                 {
                     block.Div.Add(HTMLSpanOK() + _BRLF);
-
                     cancellationToken.ThrowIfCancellationRequested();
                     local_result = false;
                     var subBlock = new PCHTMLBlock(Host + ".CopyScript");
                     subBlock.Label.InnerHtml("Copy script to remote host ");
                     String Source = Path.Combine(ScriptFolder, THIS.tScriptFile.Text);
                     String Target = Path.Combine(@"\\" + Host + @"\c$\", THIS.tScriptFile.Text);
-                    subBlock.Div.Add("Copy "+Source+" to "+Target);
+                    String RemoteTMPFolder = ProcessWMI.GetRemoteEnvironmentVariable(Host, "tmp");                    
+                    subBlock.Div.Add("Copy "+Source+" to "+Target+ " RemoteTMPFolder=" + RemoteTMPFolder);
                     try
                     {
                         File.Copy(Source, Target, true);

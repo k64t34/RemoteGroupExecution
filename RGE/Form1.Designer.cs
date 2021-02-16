@@ -34,6 +34,8 @@ namespace RGE
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabTask = new System.Windows.Forms.TabPage();
+            this.tTimeout = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tThisPC = new System.Windows.Forms.TextBox();
             this.tPCMaskSelect = new System.Windows.Forms.TextBox();
@@ -53,6 +55,7 @@ namespace RGE
             this.tTargetCopy = new System.Windows.Forms.TextBox();
             this.tSourceCopy = new System.Windows.Forms.TextBox();
             this.tabComandScript = new System.Windows.Forms.TabPage();
+            this.tScriptFile = new System.Windows.Forms.TextBox();
             this.tabCommandCommand = new System.Windows.Forms.TabPage();
             this.tCommand = new System.Windows.Forms.TextBox();
             this.lCommand = new System.Windows.Forms.Label();
@@ -70,9 +73,6 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tTimeout = new System.Windows.Forms.TextBox();
-            this.tScriptFile = new System.Windows.Forms.TextBox();
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.tabTask.SuspendLayout();
             this.tabCommandControl.SuspendLayout();
@@ -135,6 +135,24 @@ namespace RGE
             this.tabTask.TabIndex = 0;
             this.tabTask.Text = "Task";
             this.tabTask.UseVisualStyleBackColor = true;
+            // 
+            // tTimeout
+            // 
+            this.tTimeout.Enabled = false;
+            this.tTimeout.Location = new System.Drawing.Point(633, 273);
+            this.tTimeout.Name = "tTimeout";
+            this.tTimeout.Size = new System.Drawing.Size(121, 28);
+            this.tTimeout.TabIndex = 14;
+            this.tTimeout.Text = "60";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(541, 273);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 24);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Timeout";
             // 
             // label1
             // 
@@ -231,6 +249,9 @@ namespace RGE
             "m16",
             "riga",
             "t90",
+            "10.80.68.220",
+            "skorik10",
+            "dp-print",
             "pc1",
             "pc2",
             "pc3",
@@ -358,6 +379,14 @@ namespace RGE
             this.tabComandScript.UseVisualStyleBackColor = true;
             this.tabComandScript.Enter += new System.EventHandler(this.tabComandScript_Click);
             // 
+            // tScriptFile
+            // 
+            this.tScriptFile.Location = new System.Drawing.Point(8, 6);
+            this.tScriptFile.Name = "tScriptFile";
+            this.tScriptFile.Size = new System.Drawing.Size(1117, 28);
+            this.tScriptFile.TabIndex = 2;
+            this.tScriptFile.Text = "xcopy01.cmd";
+            // 
             // tabCommandCommand
             // 
             this.tabCommandCommand.Controls.Add(this.tCommand);
@@ -374,7 +403,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 140);
+            this.tCommand.Location = new System.Drawing.Point(173, 146);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -385,7 +414,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 166);
+            this.lCommand.Location = new System.Drawing.Point(66, 172);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -519,32 +548,6 @@ namespace RGE
             this.ToolbGo.Size = new System.Drawing.Size(93, 24);
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(541, 273);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 24);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Timeout";
-            // 
-            // tTimeout
-            // 
-            this.tTimeout.Enabled = false;
-            this.tTimeout.Location = new System.Drawing.Point(633, 273);
-            this.tTimeout.Name = "tTimeout";
-            this.tTimeout.Size = new System.Drawing.Size(121, 28);
-            this.tTimeout.TabIndex = 14;
-            this.tTimeout.Text = "60";
-            // 
-            // tScriptFile
-            // 
-            this.tScriptFile.Location = new System.Drawing.Point(8, 6);
-            this.tScriptFile.Name = "tScriptFile";
-            this.tScriptFile.Size = new System.Drawing.Size(1117, 28);
-            this.tScriptFile.TabIndex = 2;
-            this.tScriptFile.Text = "xcopy01.cmd";
             // 
             // Form1
             // 
