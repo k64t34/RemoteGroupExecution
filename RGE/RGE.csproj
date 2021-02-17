@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Beep.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="CopyFilesQueue.cs" />
     <Compile Include="HTMLBlock.cs" />
     <Compile Include="TagBuilder.cs" />
     <Compile Include="Copy.cs">

@@ -184,7 +184,9 @@ namespace RGE
                 WriteLog(Output);                
                 wResult.Document.Body.ScrollIntoView(false);
                 cts = new CancellationTokenSource();
-                Run_Copy();
+                //Run_Copy();
+                Task task = new Task(() => CopyFilesQueue.CopyFiles(tSourceCopy.Text, cts.Token));
+                task.Start();                
             }
             catch (Exception e)
             {
@@ -272,7 +274,7 @@ namespace RGE
 #endregion
 
         }
-        private void End_Run()
+        public void End_Run()
         {            
             cts.Dispose();
             WriteLog(D_T() + HTMLTagSpanID(" Finish", "EVENT","Finish") + _BRLF + "\n\n</body></html>");                 //"<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
