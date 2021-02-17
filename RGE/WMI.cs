@@ -44,7 +44,7 @@ public class ProcessWMI
 
             connOptions.Impersonation = ImpersonationLevel.Impersonate;
             connOptions.EnablePrivileges = true;
-            ManagementScope manScope = new ManagementScope(@"\\"+ remoteComputerName + ROOT_CIMv2, connOptions);
+            ManagementScope manScope = new ManagementScope(@"\\" + remoteComputerName + ROOT_CIMv2, connOptions);
 
             try
             {
@@ -125,7 +125,8 @@ public class ProcessWMI
             throw new Exception(string.Format("Execute process failed Machinename {0}, ProcessName {1}, RunAs {2}, Error is {3}, Stack trace {4}", remoteComputerName, arguments, strUserName, e.Message, e.StackTrace), e);
         }
     }
-    static public string GetRemoteEnvironmentVariable(string remoteComputerName,string varName)
+}
+    /*static public string GetRemoteEnvironmentVariable(string remoteComputerName,string varName)//Бесполезная функция получилась. 
     {
         string result="";
         try
@@ -139,19 +140,30 @@ public class ProcessWMI
             connOptions.EnablePrivileges = true;
             ManagementScope manScope = new ManagementScope(@"\\" + remoteComputerName + ROOT_CIMv2, connOptions);
             manScope.Connect();
-            SelectQuery q = new SelectQuery("Win32_Environment");
+            //SelectQuery q = new SelectQuery("Win32_Environment");
+            SelectQuery q = new SelectQuery("Win32_EnvironmentSpecification");
+
+            
             ManagementObjectSearcher query =  new ManagementObjectSearcher(manScope, q, null);
             ManagementObjectCollection queryCollection = queryCollection = query.Get();
+#if DEBUG
             Debug.WriteLine("queryCollection Count =" + queryCollection.Count);
+#endif
 
             //TODO: Try start  “Remote Procedure Call (RPC) Locator” and “Remote Procedure Call (RPC)” service should be start on remote machine.
             //– To start above services, type services.msc on run prompt and search for above services. Right click on each service and set it to automatic and start it.
-            varName = varName.Trim();            
+            varName = varName.Trim().ToUpper();            
             foreach (ManagementObject envVar in queryCollection)
             {
-                if (envVar["Name"].ToString() == varName)
-                {   
-                    result = envVar["VariableValue"].ToString();            
+#if DEBUG
+                Debug.WriteLine("envVar[\"Name\"]=" + envVar["Name"] + " envVar[\"Value\"]=" + envVar["Value"]);
+#endif
+                if (String.Compare(envVar["Name"].ToString(),varName,true)==0)
+                {
+#if DEBUG
+                    Debug.WriteLine("envVar[\"Name\"]="+ envVar["Name"] + " envVar[\"Value\"]=" + envVar["Value"]);
+#endif
+                    result = envVar["Value"].ToString();            
                     break;
                 }
             }                        
@@ -159,7 +171,7 @@ public class ProcessWMI
         catch {  }
         return result;
     }
-}
+}*/
 
 
 

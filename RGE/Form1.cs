@@ -32,6 +32,7 @@ namespace RGE
         const string CSS_FAULT = "FAULT";
         const string CSS_OK = "OK";
         const string CSS_CANCEL = "CANCEL";
+        const string CSS_WARM = "WARM";
         static int MainStatus = 0;// 0-stop, 1-run
         StreamWriter sw;
         string FileReport;
@@ -387,9 +388,9 @@ namespace RGE
         static string t_color(string color, string format, params string[] text) { return "<font color=\""+ color + "\">"+ String.Format(format, text) + "</font>"; }
         static string t_color(string color, string format) { return t_color(color, format, ""); }
 
-        Func<String, String, String> HTMLTagSpan = (String InnerText, String Class) =>  "<span class=\"" + Class + "\">" + InnerText + "</span>";
+        static Func<String, String, String> HTMLTagSpan = (String InnerText, String Class) =>  "<span class=\"" + Class + "\">" + InnerText + "</span>";
         Func<String, String, String,String> HTMLTagSpanID = (String InnerText, String Class, String ID) => "<span id=\""+ID+"\" class=\"" + Class + "\">" + InnerText + "</span>";
-        static Func<String>                 HTMLSpanOK   =                               () => "<span class=\"" + CSS_OK    + "\"> OK </span>";
+        static Func<String> HTMLSpanOK   =                               () => "<span class=\"" + CSS_OK    + "\"> OK </span>";
         static Func<String> HTMLSpanFAULT =                               () => "<span class=\"" + CSS_FAULT + "\"> FAULT </span>";
         static Func<String> HTMLSpanCANCEL = () => "<span class=\"" + CSS_CANCEL + "\"> CANCEL </span>";
 
@@ -415,6 +416,7 @@ namespace RGE
 #if DEBUG
             Debug.WriteLine("Processor count: "+ __PROCESSOR_COUNT.ToString());
 #endif
+            //\\deploy2\tmp\source
 
             #region Config 
             /*static string Distrib_Folder = @"\\fs2-oduyu\CK2007\СК-11\";
@@ -480,6 +482,7 @@ namespace RGE
             }; Beep.Play(Start);
             
         }
+        static public string ConvertLocalDiskLetterToUNC(string Path, string Host)        {           return @"\\" + Host + @"\$" + Path.Substring(0, 1) + Path.Substring(2);         }
     }
 
    

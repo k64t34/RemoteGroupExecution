@@ -1,3 +1,4 @@
+/*HTML Color Calc https://html5css.ru/colors/colors_hexadecimal.php*/
 body{
 	height: auto;
 	width: auto;	
@@ -57,6 +58,10 @@ color:#f18c96;
 /*background-color:lime;
 color:white;*/
 color:#f18c96;
+}
+.WARM{
+color:#ff7548;
+font-style: italic;
 }
 .EVENT{
 /*color:fuchsia*/

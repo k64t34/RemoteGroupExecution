@@ -67,18 +67,18 @@ namespace RGE
         //catch {}
         }
         //************************************************************
-        static void Do_Copy(int Index, CancellationToken cancellationToken)                    {
-        //************************************************************
+        static void Do_Copy(int Index, CancellationToken cancellationToken) {
+            //************************************************************
             RunningThreadCount++;
             bool result = false;
             string Host = THIS.chkList_PC.Items[(int)Index].ToString();
 #if DEBUG
             Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
 #endif
-            var block = new PCHTMLBlock(Host);            
+            var block = new PCHTMLBlock(Host);
             try
-            {              
-                cancellationToken.ThrowIfCancellationRequested();                
+            {
+                cancellationToken.ThrowIfCancellationRequested();
                 block.Div.Add("Ping ");
                 bool local_result = false;
                 try
@@ -96,19 +96,20 @@ namespace RGE
                     var subBlock = new PCHTMLBlock(Host + ".CopyScript");
                     subBlock.Label.InnerHtml("Copy script to remote host ");
                     String Source = Path.Combine(ScriptFolder, THIS.tScriptFile.Text);
-                    String Target = Path.Combine(@"\\" + Host + @"\c$\", THIS.tScriptFile.Text);
-                    String RemoteTMPFolder = ProcessWMI.GetRemoteEnvironmentVariable(Host, "tmp");                    
-                    subBlock.Div.Add("Copy "+Source+" to "+Target+ " RemoteTMPFolder=" + RemoteTMPFolder);
+                    String Target = Path.Combine(@"\\" + Host + @"\c$\Windows\temp", THIS.tScriptFile.Text);
+                    String DateTimeStamp = DateTime.Now.ToString("ddMMyyyyHHmmss");
+                    String LogFile = Target + "." + DateTimeStamp + ".log";
+                    subBlock.Div.Add("Copy " + Source + " to " + Target);
                     try
                     {
                         File.Copy(Source, Target, true);
                         local_result = true;
                         subBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
                     }
-                    catch (Exception e) { subBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); subBlock.Div.Add(_BRLF+e.Message); }
+                    catch (Exception e) { subBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); subBlock.Div.Add(_BRLF + e.Message); }
                     finally { block.Div.Add(subBlock.ToString()); }
-                    if (local_result)                    
-                    {                        
+                    if (local_result)
+                    {
                         cancellationToken.ThrowIfCancellationRequested();
                         local_result = false;
                         var WMIBlock = new PCHTMLBlock(Host + ".WMI");
@@ -117,16 +118,36 @@ namespace RGE
                         {
                             ProcessWMI WMIProcess = new ProcessWMI();
                             int timer = Convert.ToInt32(THIS.tTimeout.Text) * 1000;
-                            String TMPFolder=@"c:\";
-                            String DateTimeStamp= DateTime.Now.ToString("ddMMyyyyHHmmss");
+                            String TMPFolder = @"c:\windows\temp\";
+
                             WMIProcess.ExecuteRemoteProcessWMI(Host,
-                                @"c:\Windows\System32\cmd.exe  /c "+ TMPFolder + THIS.tScriptFile.Text+" "+ DateTimeStamp+@" \\t90\tmp\source d:\tmp\target >"+ TMPFolder + THIS.tScriptFile.Text + "." + DateTimeStamp+".tmp"
+                                @"c:\Windows\System32\cmd.exe /c " + TMPFolder + THIS.tScriptFile.Text + " " + DateTimeStamp + " " + THIS.tSourceCopy.Text + " " + THIS.tTargetCopy.Text + " >" + TMPFolder + THIS.tScriptFile.Text + "." + DateTimeStamp + ".log 2>&1"
                                 , timer);
+
+
                             local_result = true;
                             WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
                         }
-                        catch (Exception e) { WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); WMIBlock.Div.Add(e.Message); }
-                        finally {block.Div.Add(WMIBlock.ToString());                        }
+                        catch (Exception e) { WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); WMIBlock.Div.Add(e.Message+_BRLF); }
+                        finally
+                        {
+                            if (File.Exists(Target))
+                                try
+                                { File.Delete(Target); }
+                                catch { WMIBlock.Div.Add(HTMLTagSpan("Failed to delete script " + Target + _BRLF, CSS_WARM)); }
+                            if (File.Exists(LogFile) )
+                            {
+                                try {
+                                    WMIBlock.Div.Add("<pre>"+File.ReadAllText(LogFile) +"</pre>"+ _BRLF);
+                                    File.Delete(LogFile);
+                                }
+                                catch { WMIBlock.Div.Add(HTMLTagSpan("Failed to delete log " + LogFile + _BRLF, CSS_WARM)); }
+        }
+                            else
+                            { WMIBlock.Div.Add(HTMLTagSpan("No log file" + _BRLF, CSS_WARM)); }
+
+                            block.Div.Add(WMIBlock.ToString());                        
+                        }
                         if (local_result)
                         {
                             /*block.Div.Add(_BRLF+"Copy ");
