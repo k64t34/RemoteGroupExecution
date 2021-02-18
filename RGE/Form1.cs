@@ -185,8 +185,7 @@ namespace RGE
                 wResult.Document.Body.ScrollIntoView(false);
                 cts = new CancellationTokenSource();
                 //Run_Copy();
-                Task task = new Task(() => CopyFilesQueue.CopyFiles(tSourceCopy.Text, cts.Token));
-                task.Start();                
+                CopyFiles();                                
             }
             catch (Exception e)
             {
@@ -274,6 +273,16 @@ namespace RGE
 #endregion
 
         }
+        async void CopyFiles()
+        {
+            await Task.Run(() =>
+            {
+                CopyFilesQueue.CopyFiles(tSourceCopy.Text, tTargetCopy.Text, this, cts.Token);
+                cts.Cancel();
+            Run_Copy_End_Run: End_Run();
+            });
+            }
+                
         public void End_Run()
         {            
             cts.Dispose();

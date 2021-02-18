@@ -592,7 +592,7 @@ namespace RGE
         private System.Windows.Forms.Button bPCSelectOnMask;
         private System.Windows.Forms.Button bPCUnSelectAll;
         private System.Windows.Forms.Button bPCSelectAll;
-        private System.Windows.Forms.CheckedListBox chkList_PC;
+        public System.Windows.Forms.CheckedListBox chkList_PC;
         private System.Windows.Forms.TabControl tabCommandControl;
         private System.Windows.Forms.TabPage tabCommandCopyFileFolder;
         private System.Windows.Forms.TabPage tabComandScript;
