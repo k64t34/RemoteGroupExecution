@@ -16,11 +16,8 @@ namespace RGE
         public string Name;
         public bool Ping;
         public bool Done;
-
-        
         public HostInfo(string Name) { this.Name = Name.Trim(); this.Ping = false; this.Done = false; }
-    }
-    
+    }    
 
     class HostQueue 
     {
@@ -61,17 +58,6 @@ namespace RGE
                     if (!H.Done) 
                     {
                         Task task = new Task(() => this.Ping(H)); task.Start();
-
-                        /* 
-                         * resultPing = false;
-                         * try
-                          {
-                              System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
-                              System.Net.NetworkInformation.PingReply reply = ping.Send(H.Name);
-                              if (reply.Status.ToString() == "Success") resultPing = true;
-                          }
-                          catch {}
-                      H.Ping = resultPing;*/
                     }
                 }
                 //if (cancellationToken.IsCancellationRequested) break;
@@ -85,13 +71,13 @@ namespace RGE
 #if DEBUG
             Debug.WriteLine("\tThread " + Thread.CurrentThread.ManagedThreadId + " HostQueue start: ");
 #endif
-            CountDone = 0;
+            
             foreach (int indexChecked in chkList.CheckedIndices)
             {
                 if (cancellationToken.IsCancellationRequested) break;                    
-                Host.Add(new HostInfo (chkList.Items[indexChecked].ToString()));
-                CountDone++;
+                Host.Add(new HostInfo (chkList.Items[indexChecked].ToString()));                
             }
+            CountDone = Host.Count;
 #if DEBUG
             Debug.WriteLine("\tThread " + Thread.CurrentThread.ManagedThreadId + " HostQueue finish: \n\t Host count="+Host.Count.ToString());
 #endif
@@ -116,27 +102,21 @@ namespace RGE
 
         CopyFilesQueue(string SourceFolder) 
         {
-            GetFolder(SourceFolder);            
+            GetFolder(SourceFolder);
         }
         void GetFolder(string Folder) 
         {
+            CountDone = 0;
             try
             {
                 if (System.IO.Directory.Exists(Folder))
-                {
-                    //GetFiles(path)
+                {                    
                     string[] files = System.IO.Directory.GetFiles(Folder);
-                    foreach (string s in files)
-                    {
-                        File.Add(new FileInfo(s));
-                    }
-                    //GetDirectories
+                    foreach (string s in files){this.File.Add(new FileInfo(s));}                    
                     string[] dirs = System.IO.Directory.GetDirectories(Folder);
-                    foreach (string s in dirs)
-                    {
-                        GetFolder(s);
-                    }                    
+                    foreach (string s in dirs){GetFolder(s);}                    
                 }
+                CountDone = this.File.Count;
             }
             catch { }
         }
@@ -147,12 +127,21 @@ namespace RGE
 #if DEBUG
             Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " CopyFiles start: " );
 #endif
-            cancellationToken.ThrowIfCancellationRequested();
-            HostQueue HostQ = new HostQueue(UIForm.chkList_PC, cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
-            Task task =new Task(() => HostQ.Pinging(cancellationToken));task.Start();
-            CopyFilesQueue FilesQ = new CopyFilesQueue(SourceFolder);
-            Thread.Sleep(3000);
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                HostQueue HostQ = new HostQueue(UIForm.chkList_PC, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+                Task task = new Task(() => HostQ.Pinging(cancellationToken)); task.Start();
+                cancellationToken.ThrowIfCancellationRequested();
+                CopyFilesQueue FilesQ = new CopyFilesQueue(SourceFolder);
+
+                for (int f = 0; f != FilesQ.File.Count; f++)
+                { 
+                }
+
+            }
+            catch { }
 #if DEBUG
             Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " CopyFiles finish: ");
 #endif
