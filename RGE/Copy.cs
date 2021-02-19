@@ -187,7 +187,7 @@ namespace RGE
 #if DEBUG
                 Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
 #endif
-                block.Div.Add(_BRLF + HTMLSpanCANCEL()+_BRLF);                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
+                block.Div.Add(_BRLF + HTMLSpanCANCEL()+" "+e.Message+_BRLF);                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
             }
             catch (Exception e)
             {

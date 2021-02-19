@@ -94,7 +94,7 @@ namespace RGE
             "Debug"});
             comboBox_LogLevel.Location = new System.Drawing.Point(545, 228);
             comboBox_LogLevel.Name = "comboBox_LogLevel";
-            comboBox_LogLevel.Size = new System.Drawing.Size(209, 30);
+            comboBox_LogLevel.Size = new System.Drawing.Size(209, 25);
             comboBox_LogLevel.TabIndex = 9;
             comboBox_LogLevel.Text = "Info";
             // 
@@ -128,10 +128,10 @@ namespace RGE
             this.tabTask.Controls.Add(this.bAddPCFromDomain);
             this.tabTask.Controls.Add(this.chkList_PC);
             this.tabTask.Controls.Add(this.tabCommandControl);
-            this.tabTask.Location = new System.Drawing.Point(4, 31);
+            this.tabTask.Location = new System.Drawing.Point(4, 26);
             this.tabTask.Name = "tabTask";
             this.tabTask.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTask.Size = new System.Drawing.Size(1176, 705);
+            this.tabTask.Size = new System.Drawing.Size(1176, 710);
             this.tabTask.TabIndex = 0;
             this.tabTask.Text = "Task";
             this.tabTask.UseVisualStyleBackColor = true;
@@ -141,7 +141,7 @@ namespace RGE
             this.tTimeout.Enabled = false;
             this.tTimeout.Location = new System.Drawing.Point(633, 273);
             this.tTimeout.Name = "tTimeout";
-            this.tTimeout.Size = new System.Drawing.Size(121, 28);
+            this.tTimeout.Size = new System.Drawing.Size(121, 24);
             this.tTimeout.TabIndex = 14;
             this.tTimeout.Text = "60";
             // 
@@ -150,7 +150,7 @@ namespace RGE
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(541, 273);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 24);
+            this.label2.Size = new System.Drawing.Size(62, 18);
             this.label2.TabIndex = 13;
             this.label2.Text = "Timeout";
             // 
@@ -159,7 +159,7 @@ namespace RGE
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(541, 201);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 24);
+            this.label1.Size = new System.Drawing.Size(66, 18);
             this.label1.TabIndex = 12;
             this.label1.Text = "Log level";
             // 
@@ -167,7 +167,7 @@ namespace RGE
             // 
             this.tThisPC.Location = new System.Drawing.Point(545, 115);
             this.tThisPC.Name = "tThisPC";
-            this.tThisPC.Size = new System.Drawing.Size(129, 28);
+            this.tThisPC.Size = new System.Drawing.Size(129, 24);
             this.tThisPC.TabIndex = 8;
             this.tThisPC.Text = "pc100";
             // 
@@ -176,7 +176,7 @@ namespace RGE
             this.tPCMaskSelect.Enabled = false;
             this.tPCMaskSelect.Location = new System.Drawing.Point(245, 6);
             this.tPCMaskSelect.Name = "tPCMaskSelect";
-            this.tPCMaskSelect.Size = new System.Drawing.Size(129, 28);
+            this.tPCMaskSelect.Size = new System.Drawing.Size(129, 24);
             this.tPCMaskSelect.TabIndex = 8;
             this.tPCMaskSelect.Text = "*";
             // 
@@ -274,7 +274,7 @@ namespace RGE
             this.chkList_PC.Location = new System.Drawing.Point(23, 71);
             this.chkList_PC.MultiColumn = true;
             this.chkList_PC.Name = "chkList_PC";
-            this.chkList_PC.Size = new System.Drawing.Size(490, 303);
+            this.chkList_PC.Size = new System.Drawing.Size(490, 289);
             this.chkList_PC.TabIndex = 5;
             // 
             // tabCommandControl
@@ -298,10 +298,10 @@ namespace RGE
             this.tabCommandCopyFileFolder.Controls.Add(this.bTargetCopy);
             this.tabCommandCopyFileFolder.Controls.Add(this.tTargetCopy);
             this.tabCommandCopyFileFolder.Controls.Add(this.tSourceCopy);
-            this.tabCommandCopyFileFolder.Location = new System.Drawing.Point(4, 31);
+            this.tabCommandCopyFileFolder.Location = new System.Drawing.Point(4, 26);
             this.tabCommandCopyFileFolder.Name = "tabCommandCopyFileFolder";
             this.tabCommandCopyFileFolder.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCommandCopyFileFolder.Size = new System.Drawing.Size(1164, 182);
+            this.tabCommandCopyFileFolder.Size = new System.Drawing.Size(1164, 187);
             this.tabCommandCopyFileFolder.TabIndex = 0;
             this.tabCommandCopyFileFolder.Text = "Copy Folder";
             this.tabCommandCopyFileFolder.UseVisualStyleBackColor = true;
@@ -314,7 +314,7 @@ namespace RGE
             this.chkCopyOnlyNewer.Enabled = false;
             this.chkCopyOnlyNewer.Location = new System.Drawing.Point(283, 12);
             this.chkCopyOnlyNewer.Name = "chkCopyOnlyNewer";
-            this.chkCopyOnlyNewer.Size = new System.Drawing.Size(129, 28);
+            this.chkCopyOnlyNewer.Size = new System.Drawing.Size(101, 22);
             this.chkCopyOnlyNewer.TabIndex = 3;
             this.chkCopyOnlyNewer.Text = "Only newer";
             this.chkCopyOnlyNewer.UseVisualStyleBackColor = true;
@@ -325,7 +325,7 @@ namespace RGE
             this.chkCopyOverride.Enabled = false;
             this.chkCopyOverride.Location = new System.Drawing.Point(149, 12);
             this.chkCopyOverride.Name = "chkCopyOverride";
-            this.chkCopyOverride.Size = new System.Drawing.Size(105, 28);
+            this.chkCopyOverride.Size = new System.Drawing.Size(83, 22);
             this.chkCopyOverride.TabIndex = 3;
             this.chkCopyOverride.Text = "Override";
             this.chkCopyOverride.UseVisualStyleBackColor = true;
@@ -355,7 +355,7 @@ namespace RGE
             // 
             this.tTargetCopy.Location = new System.Drawing.Point(15, 129);
             this.tTargetCopy.Name = "tTargetCopy";
-            this.tTargetCopy.Size = new System.Drawing.Size(1117, 28);
+            this.tTargetCopy.Size = new System.Drawing.Size(1117, 24);
             this.tTargetCopy.TabIndex = 1;
             this.tTargetCopy.Text = "D:\\tmp\\target";
             // 
@@ -363,17 +363,17 @@ namespace RGE
             // 
             this.tSourceCopy.Location = new System.Drawing.Point(13, 46);
             this.tSourceCopy.Name = "tSourceCopy";
-            this.tSourceCopy.Size = new System.Drawing.Size(1117, 28);
+            this.tSourceCopy.Size = new System.Drawing.Size(1117, 24);
             this.tSourceCopy.TabIndex = 1;
             this.tSourceCopy.Text = "D:\\tmp\\source";
             // 
             // tabComandScript
             // 
             this.tabComandScript.Controls.Add(this.tScriptFile);
-            this.tabComandScript.Location = new System.Drawing.Point(4, 31);
+            this.tabComandScript.Location = new System.Drawing.Point(4, 26);
             this.tabComandScript.Name = "tabComandScript";
             this.tabComandScript.Padding = new System.Windows.Forms.Padding(3);
-            this.tabComandScript.Size = new System.Drawing.Size(1164, 182);
+            this.tabComandScript.Size = new System.Drawing.Size(1164, 187);
             this.tabComandScript.TabIndex = 1;
             this.tabComandScript.Text = "Script";
             this.tabComandScript.UseVisualStyleBackColor = true;
@@ -383,7 +383,7 @@ namespace RGE
             // 
             this.tScriptFile.Location = new System.Drawing.Point(8, 6);
             this.tScriptFile.Name = "tScriptFile";
-            this.tScriptFile.Size = new System.Drawing.Size(1117, 28);
+            this.tScriptFile.Size = new System.Drawing.Size(1117, 24);
             this.tScriptFile.TabIndex = 2;
             this.tScriptFile.Text = "xcopy01.cmd";
             // 
@@ -391,10 +391,10 @@ namespace RGE
             // 
             this.tabCommandCommand.Controls.Add(this.tCommand);
             this.tabCommandCommand.Controls.Add(this.lCommand);
-            this.tabCommandCommand.Location = new System.Drawing.Point(4, 31);
+            this.tabCommandCommand.Location = new System.Drawing.Point(4, 26);
             this.tabCommandCommand.Name = "tabCommandCommand";
             this.tabCommandCommand.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCommandCommand.Size = new System.Drawing.Size(1164, 182);
+            this.tabCommandCommand.Size = new System.Drawing.Size(1164, 187);
             this.tabCommandCommand.TabIndex = 2;
             this.tabCommandCommand.Text = "Command";
             this.tabCommandCommand.UseVisualStyleBackColor = true;
@@ -403,7 +403,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 146);
+            this.tCommand.Location = new System.Drawing.Point(173, 155);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -414,19 +414,19 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 172);
+            this.lCommand.Location = new System.Drawing.Point(66, 181);
             this.lCommand.Name = "lCommand";
-            this.lCommand.Size = new System.Drawing.Size(98, 24);
+            this.lCommand.Size = new System.Drawing.Size(78, 18);
             this.lCommand.TabIndex = 3;
             this.lCommand.Text = "Command";
             this.lCommand.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // tabCommandInstall
             // 
-            this.tabCommandInstall.Location = new System.Drawing.Point(4, 31);
+            this.tabCommandInstall.Location = new System.Drawing.Point(4, 26);
             this.tabCommandInstall.Name = "tabCommandInstall";
             this.tabCommandInstall.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCommandInstall.Size = new System.Drawing.Size(1164, 182);
+            this.tabCommandInstall.Size = new System.Drawing.Size(1164, 187);
             this.tabCommandInstall.TabIndex = 3;
             this.tabCommandInstall.Text = "Install";
             this.tabCommandInstall.UseVisualStyleBackColor = true;
@@ -434,10 +434,10 @@ namespace RGE
             // tabResult
             // 
             this.tabResult.Controls.Add(this.wResult);
-            this.tabResult.Location = new System.Drawing.Point(4, 31);
+            this.tabResult.Location = new System.Drawing.Point(4, 26);
             this.tabResult.Name = "tabResult";
             this.tabResult.Padding = new System.Windows.Forms.Padding(3);
-            this.tabResult.Size = new System.Drawing.Size(1176, 705);
+            this.tabResult.Size = new System.Drawing.Size(1176, 710);
             this.tabResult.TabIndex = 1;
             this.tabResult.Text = " Result ";
             this.tabResult.UseVisualStyleBackColor = true;
@@ -451,7 +451,7 @@ namespace RGE
             this.wResult.Name = "wResult";
             this.wResult.ScriptErrorsSuppressed = true;
             this.wResult.ScrollBarsEnabled = false;
-            this.wResult.Size = new System.Drawing.Size(1170, 699);
+            this.wResult.Size = new System.Drawing.Size(1170, 704);
             this.wResult.TabIndex = 1;
             this.wResult.Url = new System.Uri("about:blank", System.UriKind.Absolute);
             // 
@@ -502,7 +502,7 @@ namespace RGE
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(40, 24);
+            this.toolStripButton1.Size = new System.Drawing.Size(34, 24);
             this.toolStripButton1.Text = "Task";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -512,7 +512,7 @@ namespace RGE
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(53, 24);
+            this.toolStripButton2.Size = new System.Drawing.Size(43, 24);
             this.toolStripButton2.Text = "Result";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
@@ -527,7 +527,7 @@ namespace RGE
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton3.Size = new System.Drawing.Size(24, 24);
             this.toolStripButton3.Text = "toolStripButton3";
             // 
             // toolStripSeparator2
@@ -545,13 +545,13 @@ namespace RGE
             this.ToolbGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolbGo.Name = "ToolbGo";
             this.ToolbGo.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.ToolbGo.Size = new System.Drawing.Size(93, 24);
+            this.ToolbGo.Size = new System.Drawing.Size(77, 24);
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1184, 762);
@@ -559,6 +559,7 @@ namespace RGE
             this.Controls.Add(this.tabMainControl);
             this.Controls.Add(this.statusStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1200, 800);
             this.Name = "Form1";

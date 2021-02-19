@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+
 //namespace CopyFilesQueue
 namespace RGE
 {
@@ -50,7 +52,7 @@ namespace RGE
             //while (CountDone != 0)
             {
                 HostInfo H;
-                bool resultPing;
+                //bool resultPing;
                 for (int iH=0;iH!=Host.Count;iH++)                
                 {
                     H = Host[iH];
@@ -97,23 +99,54 @@ namespace RGE
     }
     class CopyFilesQueue
     {
-        CancellationTokenSource cts;
-        PCHTMLBlock HTMLBlock;
+        CancellationToken cancellationToken;
+        //HtmlDocument Document;
+        WebBrowser Browser;
         List<FileInfo> File = new List<FileInfo>();
         List<HostInfo> Host = new List<HostInfo>();
+        //HtmlElement divHost;
+        HtmlElement divFile;
+        HtmlElement divHost;
 
 
-        CopyFilesQueue(string SourceFolder) 
+        CopyFilesQueue(string SourceFolder, String TargetFolder, WebBrowser B, CheckedListBox chkList, CancellationToken cancellationToken) 
         {
+            this.Browser = B;
+            this.cancellationToken = cancellationToken;
+
+            //if (Browser.InvokeRequired){Browser.Invoke(new Action(() =>{divFile = Browser.Document.CreateElement("<div>");}));}
+            //else{ divFile = Browser.Document.CreateElement("<div>"); }
+            Browser.Invoke((MethodInvoker)delegate
+            {
+                divFile = Browser.Document.CreateElement("<div>");
+            });
+            
+
+            divFile.InnerHtml = "<br>sdfg<br>";
+            divFile.SetAttribute("id", "div.Files");
             GetFolder(SourceFolder);
-            GetHost();
+
+
+            Browser.Invoke((MethodInvoker)delegate
+            {                
+                Browser.Document.Body.AppendChild(divFile);
+            });
+
+
+            //if (Browser.InvokeRequired) { Browser.Invoke(new Action(() => { Browser.Document.Body.AppendChild(divFile); })); }
+            //else { Browser.Document.Body.AppendChild(divFile); }
+            if (Browser.InvokeRequired) { Browser.Invoke(new Action(() => { divHost = Browser.Document.CreateElement("<div>"); })); }
+            else { divHost = Browser.Document.CreateElement("<div>"); }
+            GetHost(chkList);
+            if (Browser.InvokeRequired) { Browser.Invoke(new Action(() => { Browser.Document.Body.AppendChild(divHost); })); }
+            else { Browser.Document.Body.AppendChild(divHost); }
 
         }
         void GetHost(CheckedListBox chkList)
         {
             foreach (int indexChecked in chkList.CheckedIndices)
             {
-                //if (cancellationToken.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested) break;
                 Host.Add(new HostInfo(chkList.Items[indexChecked].ToString()));
             }
             //CountDone = Host.Count;
@@ -126,7 +159,7 @@ namespace RGE
                 if (System.IO.Directory.Exists(Folder))
                 {                    
                     string[] files = System.IO.Directory.GetFiles(Folder);
-                    foreach (string s in files){this.File.Add(new FileInfo(s));}                    
+                    foreach (string s in files){this.File.Add(new FileInfo(s)); divFile.InnerHtml += s + HTMLBuilder.TagBuilder._BR; }                    
                     string[] dirs = System.IO.Directory.GetDirectories(Folder);
                     foreach (string s in dirs){GetFolder(s);}                    
                 }                
@@ -134,29 +167,26 @@ namespace RGE
             catch { }
         }
 
-        public static void CopyFiles(String SourceFolder, String TargetFolder, Form1 UIForm, CancellationToken cancellationToken)
-        {
-#if DEBUG
-            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " CopyFiles start: " );
-#endif
-            try
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                HostQueue HostQ = new HostQueue(UIForm.chkList_PC, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-                Task task = new Task(() => HostQ.Pinging(cancellationToken)); task.Start();
-                cancellationToken.ThrowIfCancellationRequested();
-                CopyFilesQueue FilesQ = new CopyFilesQueue(SourceFolder);
+         public static void CopyFiles(string SourceFolder, String TargetFolder, /*HtmlDocument Document*/ WebBrowser Browser, CheckedListBox chkList, CancellationToken cancellationToken)
+        { 
+                try
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    //Task task = new Task(() => HostQ.Pinging(cancellationToken)); task.Start();                
+                    CopyFilesQueue CopyQ = new CopyFilesQueue(SourceFolder, TargetFolder, Browser, chkList, cancellationToken);
+                    //*for (int f = 0; f != FilesQ.File.Count; f++)
+                    //{ 
+                    //}
 
-                for (int f = 0; f != FilesQ.File.Count; f++)
-                { 
                 }
-
+                catch (Exception e) {
+                Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " Exeption: "+e.Message);
             }
-            catch { }
 #if DEBUG
-            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " CopyFiles finish: ");
+                Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " CopyFiles finish");
 #endif
+            
+            
         }
     }    
 }

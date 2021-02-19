@@ -180,12 +180,15 @@ namespace RGE
                     "<style>\n" + File.ReadAllText("default.css") + "\n</style>\n" +
                     "<body>\n" +
                     D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
-                    HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF);
+                    HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF+
+                    "</body></html>"
+                    );
+
                 WriteLog(Output);                
                 wResult.Document.Body.ScrollIntoView(false);
                 cts = new CancellationTokenSource();
-                //Run_Copy();
-                CopyFiles();                                
+                //Run_Copy();                
+                CopyFiles();
             }
             catch (Exception e)
             {
@@ -277,9 +280,9 @@ namespace RGE
         {
             await Task.Run(() =>
             {
-                CopyFilesQueue.CopyFiles(tSourceCopy.Text, tTargetCopy.Text, this, cts.Token);
+                CopyFilesQueue.CopyFiles(tSourceCopy.Text, tTargetCopy.Text, wResult/*.Document*/, chkList_PC, cts.Token);
                 cts.Cancel();
-            Run_Copy_End_Run: End_Run();
+                End_Run();
             });
             }
                 
@@ -464,7 +467,7 @@ namespace RGE
                 System.Net.NetworkInformation.PingReply reply = ping.Send(Host);
                 if (reply.Status.ToString() == "Success") Ping = true;
             }
-            catch (Exception e) { /*__Error = e.ToString();*/ }
+            catch /*(Exception e)*/ { /*__Error = e.ToString();*/ }
             return (Ping);
         }
       

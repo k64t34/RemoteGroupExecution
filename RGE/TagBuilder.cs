@@ -8,8 +8,19 @@ using System.Threading.Tasks;
 
 namespace HTMLBuilder
 {
+     
     class TagBuilder //TagBuilder Class https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.tagbuilder?view=aspnet-webpages-3.2
     {
+        public const string _BR = "<BR>";
+        public const string _BRLF = "<BR>\n";
+        public const string _LF = "\n";
+        public const string _CR = "\r";
+        public const string _CRLF = "\r\n";
+        public const string _TAB = "\t";
+        public const string _SP = "&nbsp;";
+        public const string _SP3 = "&nbsp;&nbsp;&nbsp;";
+
+
         String TagName;
         bool SelfClosing = false; // true - <tag> or <tag />; false - <tag></tag> 
         //public System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<string, string>> Attributes { get; }
