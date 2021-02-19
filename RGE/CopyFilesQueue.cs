@@ -97,16 +97,30 @@ namespace RGE
     }
     class CopyFilesQueue
     {
+        CancellationTokenSource cts;
+        PCHTMLBlock HTMLBlock;
         List<FileInfo> File = new List<FileInfo>();
-        int CountDone;
+        List<HostInfo> Host = new List<HostInfo>();
+
 
         CopyFilesQueue(string SourceFolder) 
         {
             GetFolder(SourceFolder);
+            GetHost();
+
         }
-        void GetFolder(string Folder) 
+        void GetHost(CheckedListBox chkList)
         {
-            CountDone = 0;
+            foreach (int indexChecked in chkList.CheckedIndices)
+            {
+                //if (cancellationToken.IsCancellationRequested) break;
+                Host.Add(new HostInfo(chkList.Items[indexChecked].ToString()));
+            }
+            //CountDone = Host.Count;
+        }
+        
+        void GetFolder(string Folder) 
+        {            
             try
             {
                 if (System.IO.Directory.Exists(Folder))
@@ -115,12 +129,10 @@ namespace RGE
                     foreach (string s in files){this.File.Add(new FileInfo(s));}                    
                     string[] dirs = System.IO.Directory.GetDirectories(Folder);
                     foreach (string s in dirs){GetFolder(s);}                    
-                }
-                CountDone = this.File.Count;
+                }                
             }
             catch { }
         }
-
 
         public static void CopyFiles(String SourceFolder, String TargetFolder, Form1 UIForm, CancellationToken cancellationToken)
         {
