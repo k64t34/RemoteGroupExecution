@@ -13,9 +13,10 @@ using System.Threading;
 
 namespace RGE
 {
-    
+    public delegate System.Windows.Forms.HtmlElement delegateCreateElement(string elementTag);
+    public delegate void delegateUpdateElement(HtmlElement htmlElement);
     public  partial class Form1 : Form
-    {
+    {        
         CancellationTokenSource cts;
         static RGE.Form1 THIS;
         static string __Error;
@@ -153,8 +154,10 @@ namespace RGE
         {
             tabMainControl.SelectTab(this.tabTask);
         }
+       
         private void Begin_Run()
-        {            
+        {
+            
             MainStatus = 1;
             ToolbGo.BackColor = Color.Red;
             ToolbGo.Text = "    Stop    ";
@@ -183,12 +186,25 @@ namespace RGE
                     HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF+
                     "</body></html>"
                     );
+                    WriteLog(Output);                
+                    wResult.Document.Body.ScrollIntoView(false);
 
-                WriteLog(Output);                
-                wResult.Document.Body.ScrollIntoView(false);
+
+                /*HtmlElement divFile = wResult.Document.CreateElement("div");
+                divFile.SetAttribute("id", "l1");
+                divFile.InnerHtml = "Level 1";
+                HtmlElement divFile2 = wResult.Document.CreateElement("div");
+                divFile2.SetAttribute("id", "l2");
+                divFile2.InnerHtml = "Level 2";
+                divFile.AppendChild(divFile2);
+                wResult.Document.Body.AppendChild(divFile);
+                divFile = wResult.Document.GetElementById("l1");
+                divFile.InnerHtml += " add";
+                divFile = wResult.Document.GetElementById("l2");
+                divFile.InnerHtml += " add2";*/
                 cts = new CancellationTokenSource();
-                //Run_Copy();                
-                CopyFiles();
+                
+                CopyFiles();                    
             }
             catch (Exception e)
             {
@@ -199,89 +215,112 @@ namespace RGE
 #endif
             }
             finally { }
-#region 
-            /* Didn't work
-            MainStatus = 1;
-            ToolbGo.BackColor = Color.Red;
-            ToolbGo.Text = "    Stop    ";
-            ToolbGo.ForeColor = Color.White;
-            tabMainControl.SelectTab(this.tabResult);          
-            String DateReport = DateTime.Now.ToString("ddMMyyyy-HHmmss");            
-            string userNameWin, compName, compIP, myHost;
-            StringBuilder Output = new StringBuilder();           
-            try
-            {
-                FileReport = Environment.CurrentDirectory + "\\" + DateReport + ".html";
-                sw = new StreamWriter(FileReport);
-                wResult.DocumentText = "";
-                // имя хоста
-                myHost = System.Net.Dns.GetHostName();
-                // IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
-                compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();
-                userNameWin = System.Environment.UserName;
-                compName = System.Environment.MachineName;
-                Output.Append("<!--  "+ myHost + " " + compIP + " " + userNameWin + " " + compName+ "-->" + _LF);
-                Output.Append("<html>\n" +
-                    "\t<head>\n" +
-                    "\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                    "\t\t<meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\">\n"+
-                    //"\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"default.css\">\n" +
-                    //"\t\t<title> Отчет "+ DateReport + "</title>\n"+                    
-                    "\t</head>\n"+
-                    "<style>\n" + File.ReadAllText("default.css")+ "\n</style>\n" +
-                    "<body>\n");                
-                Output.Append(D_T() + HTMLTagSpan(" Remote group execution start","EVENT") + _BR+"\n");
-                
-                WriteLog(Output);
-                
-                //sw.Write(Output);
-                //sw.Close();
-                //wResult.Navigate(FileReport);
-                //sw = new StreamWriter(FileReport, true);
+                #region 
+                /* Didn't work
+                MainStatus = 1;
+                ToolbGo.BackColor = Color.Red;
+                ToolbGo.Text = "    Stop    ";
+                ToolbGo.ForeColor = Color.White;
+                tabMainControl.SelectTab(this.tabResult);          
+                String DateReport = DateTime.Now.ToString("ddMMyyyy-HHmmss");            
+                string userNameWin, compName, compIP, myHost;
+                StringBuilder Output = new StringBuilder();           
+                try
+                {
+                    FileReport = Environment.CurrentDirectory + "\\" + DateReport + ".html";
+                    sw = new StreamWriter(FileReport);
+                    wResult.DocumentText = "";
+                    // имя хоста
+                    myHost = System.Net.Dns.GetHostName();
+                    // IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
+                    compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();
+                    userNameWin = System.Environment.UserName;
+                    compName = System.Environment.MachineName;
+                    Output.Append("<!--  "+ myHost + " " + compIP + " " + userNameWin + " " + compName+ "-->" + _LF);
+                    Output.Append("<html>\n" +
+                        "\t<head>\n" +
+                        "\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                        "\t\t<meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\">\n"+
+                        //"\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"default.css\">\n" +
+                        //"\t\t<title> Отчет "+ DateReport + "</title>\n"+                    
+                        "\t</head>\n"+
+                        "<style>\n" + File.ReadAllText("default.css")+ "\n</style>\n" +
+                        "<body>\n");                
+                    Output.Append(D_T() + HTMLTagSpan(" Remote group execution start","EVENT") + _BR+"\n");
 
-                WriteLog(t_color("white", "Report file:")+" "+FileReport + _BR + "\n");
+                    WriteLog(Output);
 
-                //wResult.Document.Body.ScrollIntoView(true); 
-                
-                cts = new CancellationTokenSource();
-                //var Token = cts.Token;
-                //Run_Copy();
-            }
-            finally{}  */
-            /* It's work good
-             MainStatus = 1;
-            ToolbGo.BackColor = Color.Red;
-            ToolbGo.Text = "    Stop    ";
-            ToolbGo.ForeColor = Color.White;
-            tabMainControl.SelectTab(this.tabResult);
-            FileReport = Environment.CurrentDirectory + "\\" + DateTime.Now.ToString("ddMMyyyy-HHmmss") + ".html";
-            string userNameWin, compName, compIP, myHost;
-            try
-            {
-                // имя хоста
-                myHost = System.Net.Dns.GetHostName();
-                // IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
-                compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();
-                userNameWin = System.Environment.UserName;
-                compName = System.Environment.MachineName;
-                WriteLog(String.Format("<!--{0} {1} {2} {3} -->\n", myHost, compIP, userNameWin, compName));
-                WriteLog("<html>\n<meta charset=\"utf-8\">\n<style>\nbody{background-color: black;color:grey;font-family: monospace;font-size:16;padding:0}\n</style>\n<body text=\"grey\" bgcolor=\"black\">\n");
-                WriteLog(D_T() + t_color("white", " Remote group execution start") + _BR+"\n");
-                WriteLog(t_color("white", "Report file:")+" "+FileReport + _BR + "\n");
-                wResult.Document.Body.ScrollIntoView(true);
-                Run_Copy();
-            }
-            finally{}    
-             */
-#endregion
+                    //sw.Write(Output);
+                    //sw.Close();
+                    //wResult.Navigate(FileReport);
+                    //sw = new StreamWriter(FileReport, true);
 
+                    WriteLog(t_color("white", "Report file:")+" "+FileReport + _BR + "\n");
+
+                    //wResult.Document.Body.ScrollIntoView(true); 
+
+                    cts = new CancellationTokenSource();
+                    //var Token = cts.Token;
+                    //Run_Copy();
+                }
+                finally{}  */
+                /* It's work good
+                 MainStatus = 1;
+                ToolbGo.BackColor = Color.Red;
+                ToolbGo.Text = "    Stop    ";
+                ToolbGo.ForeColor = Color.White;
+                tabMainControl.SelectTab(this.tabResult);
+                FileReport = Environment.CurrentDirectory + "\\" + DateTime.Now.ToString("ddMMyyyy-HHmmss") + ".html";
+                string userNameWin, compName, compIP, myHost;
+                try
+                {
+                    // имя хоста
+                    myHost = System.Net.Dns.GetHostName();
+                    // IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
+                    compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();
+                    userNameWin = System.Environment.UserName;
+                    compName = System.Environment.MachineName;
+                    WriteLog(String.Format("<!--{0} {1} {2} {3} -->\n", myHost, compIP, userNameWin, compName));
+                    WriteLog("<html>\n<meta charset=\"utf-8\">\n<style>\nbody{background-color: black;color:grey;font-family: monospace;font-size:16;padding:0}\n</style>\n<body text=\"grey\" bgcolor=\"black\">\n");
+                    WriteLog(D_T() + t_color("white", " Remote group execution start") + _BR+"\n");
+                    WriteLog(t_color("white", "Report file:")+" "+FileReport + _BR + "\n");
+                    wResult.Document.Body.ScrollIntoView(true);
+                    Run_Copy();
+                }
+                finally{}    
+                 */
+                #endregion
+
+            
+        }
+        public  HtmlElement CreateHtmlElement(String elementTag)
+        {
+            HtmlElement Result = wResult.Document.CreateElement(elementTag);
+            return  (HtmlElement)Result;
+        }
+        public void UpdateHtmlElement(HtmlElement div)
+        {
+            wResult.Document.Body.AppendChild(div);
+            //wResult.Refresh();
         }
         async void CopyFiles()
         {
             await Task.Run(() =>
             {
-                CopyFilesQueue.CopyFiles(tSourceCopy.Text, tTargetCopy.Text, wResult/*.Document*/, chkList_PC, cts.Token);
-                cts.Cancel();
+                
+                
+                delegateCreateElement c = new delegateCreateElement(CreateHtmlElement);
+                delegateUpdateElement u = new delegateUpdateElement(UpdateHtmlElement);                
+                /*
+                HtmlElement divFile;
+                divFile = (HtmlElement)THIS.Invoke(c, "div");                
+                divFile.SetAttribute("id", "div.Files");
+                divFile.InnerHtml = "FILES";
+                BeginInvoke(u, divFile);               */
+
+                CopyFilesQueue CopyQ = new CopyFilesQueue(tSourceCopy.Text, tTargetCopy.Text/*, wResult/*.Document*/, chkList_PC,cts.Token,c,u);
+                //CopyQ.Copy();                
+                cts.Cancel();                
                 End_Run();
             });
             }
@@ -289,14 +328,17 @@ namespace RGE
         public void End_Run()
         {            
             cts.Dispose();
-            WriteLog(D_T() + HTMLTagSpanID(" Finish", "EVENT","Finish") + _BRLF + "\n\n</body></html>");                 //"<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
+            //WriteLog(D_T() + HTMLTagSpanID(" Finish", "EVENT","Finish") + _BRLF + "\n\n</body></html>");                 //"<p /ID=\"finish\"/>" + D_T() + t_color("white", " Finish") + "</p>" + _BR + "\n\n</body></html>");
             sw = new StreamWriter(FileReport);
             
             if (wResult.InvokeRequired)
             {                
                 Invoke(new Action(() =>
                 {
-                    sw.Write(wResult.DocumentText);
+                    wResult.Document.Body.InnerHtml+=
+                    _BR + D_T() + HTMLTagSpanID(" Finish", "EVENT", "Finish");
+                    sw.Write(wResult.Document.Body.Parent.OuterHtml);
+                    sw.Close();
                     wResult.Navigate("file://" + FileReport);
                     //Thread.Sleep(1000);
                     //wResult.Document.Body.ScrollIntoView(false);
@@ -310,13 +352,16 @@ namespace RGE
             }
             else
             {
-                sw.Write(wResult.DocumentText);
+                wResult.Document.Body.InnerHtml +=
+                    _BR+D_T() + HTMLTagSpanID(" Finish", "EVENT", "Finish") ;
+                sw.Write(wResult.Document.Body.Parent.OuterHtml);
+                sw.Close();
                 wResult.Navigate("file://" + FileReport);
                 //Thread.Sleep(1000);
                 //wResult.Document.Body.ScrollIntoView(false);
                 //wResult.Document.GetElementById("finish").ScrollIntoView(false);
             }
-            sw.Close();
+            //sw.Close();
             MainStatus = 0;
             ToolbGo.BackColor = Color.Lime;
             ToolbGo.Text = "     Go     ";

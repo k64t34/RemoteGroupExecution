@@ -4,12 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 namespace HTMLBuilder
 {
-     
-    class TagBuilder //TagBuilder Class https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.tagbuilder?view=aspnet-webpages-3.2
+    class HtmlElementBuilder //: TagBuilder
+    {
+        public HtmlElement htmlElement;
+        //public Dictionary<String, HtmlElement> Elements = new Dictionary<String, HtmlElement>();
+        public HtmlElementBuilder(HtmlElement htmlElement)
+        {
+            this.htmlElement = htmlElement;
+        }
+        public void Add(HtmlElement htmlElement) { htmlElement.AppendChild(htmlElement); }
+        public void Uppdate(HtmlElement BODY) { BODY.AppendChild(htmlElement); }
+    }
+
+        class TagBuilder //TagBuilder Class https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.tagbuilder?view=aspnet-webpages-3.2
     {
         public const string _BR = "<BR>";
         public const string _BRLF = "<BR>\n";
