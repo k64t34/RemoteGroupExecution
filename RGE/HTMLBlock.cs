@@ -5,20 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-class PCHTMLBlock
+
+    class HTMLBlock1
 {
     //public String InnerHtml;
     String TagId;
     public HTMLBuilder.TagBuilder Label;
     public HTMLBuilder.TagBuilder Div;
     
-    public PCHTMLBlock(String TagId) 
+    public HTMLBlock1(String TagId) 
     {
         this.TagId = TagId;
         Label = new HTMLBuilder.TagBuilder("label");
         Label.InnerHtmlBlock.Add(TagId);
-        Label.Attribute.Add("for",TagId);        
+        Label.Attribute.Add("for",TagId);
+        Label.Attribute.Add("id", "l."+TagId);
         Div = new HTMLBuilder.TagBuilder("div");
+        Div.Attribute.Add("id","d."+TagId);
 
     }
     public override string ToString()
@@ -27,6 +30,7 @@ class PCHTMLBlock
         Output.Append("<input type=\"checkbox\" id=\"" + TagId + "\" class=\"PC\"/>");        
         Output.Append(Label.ToString());
         Output.Append("\n");
+        //if (Div.InnerHtmlBlock.Count!=0)
         Output.Append(Div.ToString());
         Output.Append("<BR>\n");
         return Output.ToString();

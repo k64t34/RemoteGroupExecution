@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
+using System.Text;
 
 
 
@@ -92,13 +93,9 @@ namespace RGE
             public string TargetPath;
             public string Name;
             public int Count;
-            public FileInfo(string SourcePath)
-            {
-                this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0;
-#if DEBUG
-                Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " Add Files" + SourcePath);
-#endif
-            }
+            public int ID;
+            public FileInfo(string SourcePath){this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0;this.ID = -1; }
+            public FileInfo(string SourcePath,int ID) { this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0; this.ID = ID; }
         }
         public class CopyFilesQueue
         {
@@ -112,21 +109,20 @@ namespace RGE
             HtmlElement divHost;
             public delegateCreateElement CreateElement;
             public delegateUpdateElement UpdateElement;
+            public delegateGetElement GetElement;
+            String tmpFolder;
             public CopyFilesQueue(string SourceFolder, String TargetFolder/*, WebBrowser Browser*/,
                 CheckedListBox chkList, CancellationToken cancellationToken,
-                delegateCreateElement c,delegateUpdateElement u
+                delegateCreateElement c,delegateUpdateElement u, delegateGetElement GetElement
                )
             {
-                //this.Browser = Browser;
-                //this.cancellationToken = cancellationToken;
-                //this.CreateElement = CreateElement;
-
-
-
-                
+                this.cancellationToken = cancellationToken;
+                this.GetElement = GetElement;
                 divFile = (HtmlElement)THIS.Invoke(c, "div");
                 divFile.SetAttribute("id", "div.Files");
-                GetFolder(SourceFolder);
+                StringBuilder Output = new StringBuilder();
+                GetFolder(SourceFolder, Output);
+                divFile.InnerHtml = Output.ToString();
                 THIS.BeginInvoke(u, divFile);
 
                 divHost = (HtmlElement)THIS.Invoke(c, "div");
@@ -138,27 +134,46 @@ namespace RGE
             }
             void GetHost(CheckedListBox chkList)
             {
+                HTMLBlock1 HTMLblock;
+                StringBuilder Output = new StringBuilder();
                 string s;
                 foreach (int indexChecked in chkList.CheckedIndices)
                 {
-                    if (cancellationToken.IsCancellationRequested) break;
+                    if (cancellationToken.IsCancellationRequested) break;                    
                     s = chkList.Items[indexChecked].ToString();
-                    divHost.InnerHtml += s + HTMLBuilder.TagBuilder._BR;
+                    HTMLblock = new HTMLBlock1("HOST." + s);
+                    HTMLblock.Label.InnerHtml(s);
+                    Output.Append(HTMLblock.ToString());//                    divHost.InnerHtml += HTMLblock.ToString();// s + HTMLBuilder.TagBuilder._BR;
                     Host.Add(new HostInfo(s));
                 }
+                divHost.InnerHtml = Output.ToString();
                 //CountDone = Host.Count;
             }
 
-            void GetFolder(string Folder)
+            void GetFolder(string Folder, StringBuilder Output)
             {
+                HTMLBlock1 HTMLblock;                
                 try
                 {
                     if (System.IO.Directory.Exists(Folder))
                     {
                         string[] files = System.IO.Directory.GetFiles(Folder);
-                        foreach (string s in files) { this.File.Add(new FileInfo(s)); divFile.InnerHtml += s + HTMLBuilder.TagBuilder._BR; }
+                        int Count = File.Count;
+                        foreach (string s in files) 
+                         {
+                            if (cancellationToken.IsCancellationRequested) break;                            
+                            this.File.Add(new FileInfo(s, Count));
+                            HTMLblock = new HTMLBlock1("file." + Count);
+                            HTMLblock.Label.InnerHtml(s);
+                            Count++;
+                            Output.Append(HTMLblock.ToString());//                            divFile.InnerHtml += HTMLblock.ToString();//                                s + HTMLBuilder.TagBuilder._BR; 
+                          }                        
                         string[] dirs = System.IO.Directory.GetDirectories(Folder);
-                        foreach (string s in dirs) { GetFolder(s); }
+                        foreach (string s in dirs) 
+                        {
+                            if (cancellationToken.IsCancellationRequested) break; 
+                            GetFolder(s,Output); 
+                        }
                     }
                 }
                 catch { }
@@ -184,6 +199,67 @@ namespace RGE
 
 
             //        }
+            public void Copy()
+            {
+                try
+                {
+                    String tmpFolder = Environment.GetEnvironmentVariable("tmp");
+                    if (String.IsNullOrEmpty(tmpFolder))
+                    {
+                        tmpFolder = Environment.GetEnvironmentVariable("temp");
+                        if (String.IsNullOrEmpty(tmpFolder))
+                        {
+                            tmpFolder = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                            if (String.IsNullOrEmpty(tmpFolder))
+                            {
+                                tmpFolder = "C:"; 
+                            }
+                            tmpFolder +=  @"\TMP";                            
+                        }
+                    }
+                    tmpFolder += @"\" + DateTime.Now.ToString("ddMMyyyyHHmmss")+".TMP"; 
+                    System.IO.Directory.CreateDirectory(tmpFolder);
+
+                    foreach (FileInfo f in File)
+                    {
+                        if (!CashFile(f.ID))
+                        {
+                            divFile = (HtmlElement)THIS.Invoke(GetElement, "l.file." + f.ID);
+                            divFile.InnerHtml += HTMLSpanFAULT();
+                        }
+                        else
+                        {
+                            foreach (HostInfo h in Host)
+                            {
+
+                            }
+                        }
+                    }
+                }
+                catch { }
+                finally
+                {
+                    if (System.IO.Directory.Exists(tmpFolder)) System.IO.Directory.Delete(tmpFolder);
+                }
+            }
+            bool CashFile(int ID)
+            {
+                bool result = false;
+                divFile = (HtmlElement)THIS.Invoke(GetElement, "d.file." + ID);
+                try {
+                    
+
+                    //FileInfo f = File.Find(ID);
+                    //if (f == null)
+                    System.IO.File.Copy("", tmpFolder,true);
+                    result = true;
+                    divFile.InnerHtml += "Cash " + HTMLSpanOK();
+                }
+                catch (Exception e){divFile.InnerHtml += "Cash " + HTMLSpanFAULT() + " "+HTMLTagSpan(e.Message,CSS_BaseAlert);}
+                return result;
+
+            }
         }
+        
     }
 }

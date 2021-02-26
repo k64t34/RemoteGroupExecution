@@ -47,9 +47,9 @@ namespace RGE
                 foreach (int indexChecked in chkList_PC.CheckedIndices)
                 {
                     if (MainStatus == 0) { break; }
-                    task = new Task(() => Do_Copy(indexChecked, cts.Token));
-                    task.Start();
-                    Thread.Sleep(1);
+                    //task = new Task(() => Do_Copy(indexChecked, cts.Token));
+                    //task.Start();
+                    //Thread.Sleep(1);
                 }
                 Thread.Sleep(1000);
                 while (RunningThreadCount != 0)
@@ -68,154 +68,154 @@ namespace RGE
         //}
         //catch {}
         }
-        //************************************************************
-        static void Do_Copy(int Index, CancellationToken cancellationToken) {
-            //************************************************************
-            RunningThreadCount++;
-            bool result = false;
-            string Host = THIS.chkList_PC.Items[(int)Index].ToString();
-#if DEBUG
-            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
-#endif
-            var block = new PCHTMLBlock(Host);
-            try
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                block.Div.Add("Ping ");
-                bool local_result = false;
-                try
-                {
-                    if (Ping(Host)) local_result = true;
-                }
-                catch { }
-                if (!local_result)
-                    block.Div.Add(HTMLSpanFAULT());
-                else
-                {
-                    block.Div.Add(HTMLSpanOK() + _BRLF);
-                    cancellationToken.ThrowIfCancellationRequested();
-                    local_result = false;
-                    var subBlock = new PCHTMLBlock(Host + ".CopyScript");
-                    subBlock.Label.InnerHtml("Copy script to remote host ");
-                    String Source = Path.Combine(ScriptFolder, THIS.tScriptFile.Text);
-                    String Target = Path.Combine(@"\\" + Host + @"\c$\Windows\temp", THIS.tScriptFile.Text);
-                    String DateTimeStamp = DateTime.Now.ToString("ddMMyyyyHHmmss");
-                    String LogFile = Target + "." + DateTimeStamp + ".log";
-                    subBlock.Div.Add("Copy " + Source + " to " + Target);
-                    try
-                    {
-                        File.Copy(Source, Target, true);
-                        local_result = true;
-                        subBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
-                    }
-                    catch (Exception e) { subBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); subBlock.Div.Add(_BRLF + e.Message); }
-                    finally { block.Div.Add(subBlock.ToString()); }
-                    if (local_result)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        local_result = false;
-                        var WMIBlock = new PCHTMLBlock(Host + ".WMI");
-                        WMIBlock.Label.InnerHtml("Execute remote script ");
-                        try
-                        {
-                            ProcessWMI WMIProcess = new ProcessWMI();
-                            int timer = Convert.ToInt32(THIS.tTimeout.Text) * 1000;
-                            String TMPFolder = @"c:\windows\temp\";
+//        //************************************************************
+//        static void Do_Copy(int Index, CancellationToken cancellationToken) {
+//            //************************************************************
+//            RunningThreadCount++;
+//            bool result = false;
+//            string Host = THIS.chkList_PC.Items[(int)Index].ToString();
+//#if DEBUG
+//            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId + " start: " + Host/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
+//#endif
+//            var block = new PCHTMLBlock(Host);
+//            try
+//            {
+//                cancellationToken.ThrowIfCancellationRequested();
+//                block.Div.Add("Ping ");
+//                bool local_result = false;
+//                try
+//                {
+//                    if (Ping(Host)) local_result = true;
+//                }
+//                catch { }
+//                if (!local_result)
+//                    block.Div.Add(HTMLSpanFAULT());
+//                else
+//                {
+//                    block.Div.Add(HTMLSpanOK() + _BRLF);
+//                    cancellationToken.ThrowIfCancellationRequested();
+//                    local_result = false;
+//                    var subBlock = new PCHTMLBlock(Host + ".CopyScript");
+//                    subBlock.Label.InnerHtml("Copy script to remote host ");
+//                    String Source = Path.Combine(ScriptFolder, THIS.tScriptFile.Text);
+//                    String Target = Path.Combine(@"\\" + Host + @"\c$\Windows\temp", THIS.tScriptFile.Text);
+//                    String DateTimeStamp = DateTime.Now.ToString("ddMMyyyyHHmmss");
+//                    String LogFile = Target + "." + DateTimeStamp + ".log";
+//                    subBlock.Div.Add("Copy " + Source + " to " + Target);
+//                    try
+//                    {
+//                        File.Copy(Source, Target, true);
+//                        local_result = true;
+//                        subBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
+//                    }
+//                    catch (Exception e) { subBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); subBlock.Div.Add(_BRLF + e.Message); }
+//                    finally { block.Div.Add(subBlock.ToString()); }
+//                    if (local_result)
+//                    {
+//                        cancellationToken.ThrowIfCancellationRequested();
+//                        local_result = false;
+//                        var WMIBlock = new PCHTMLBlock(Host + ".WMI");
+//                        WMIBlock.Label.InnerHtml("Execute remote script ");
+//                        try
+//                        {
+//                            ProcessWMI WMIProcess = new ProcessWMI();
+//                            int timer = Convert.ToInt32(THIS.tTimeout.Text) * 1000;
+//                            String TMPFolder = @"c:\windows\temp\";
 
-                            WMIProcess.ExecuteRemoteProcessWMI(Host,
-                                @"c:\Windows\System32\cmd.exe /c " + TMPFolder + THIS.tScriptFile.Text + " " + DateTimeStamp + " " + THIS.tSourceCopy.Text + " " + THIS.tTargetCopy.Text + " >" + TMPFolder + THIS.tScriptFile.Text + "." + DateTimeStamp + ".log 2>&1"
-                                , timer);
-
-
-                            local_result = true;
-                            WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
-                        }
-                        catch (Exception e) { WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); WMIBlock.Div.Add(e.Message+_BRLF); }
-                        finally
-                        {
-                            if (File.Exists(Target))
-                                try
-                                { File.Delete(Target); }
-                                catch { WMIBlock.Div.Add(HTMLTagSpan("Failed to delete script " + Target + _BRLF, CSS_WARM)); }
-                            if (File.Exists(LogFile) )
-                            {
-                                try {
-                                    WMIBlock.Div.Add("<pre>"+File.ReadAllText(LogFile) +"</pre>"+ _BRLF);
-                                    File.Delete(LogFile);
-                                }
-                                catch { WMIBlock.Div.Add(HTMLTagSpan("Failed to delete log " + LogFile + _BRLF, CSS_WARM)); }
-        }
-                            else
-                            { WMIBlock.Div.Add(HTMLTagSpan("No log file" + _BRLF, CSS_WARM)); }
-
-                            block.Div.Add(WMIBlock.ToString());                        
-                        }
-                        if (local_result)
-                        {
-                            /*block.Div.Add(_BRLF+"Copy ");
-                            const string WMINamespace = @"root\cimv2";
-                            ConnectionOptions WMIScopeOptions = new ConnectionOptions();
-                            WMIScopeOptions.Impersonation = System.Management.ImpersonationLevel.Impersonate;
-
-                            #region
-                            ManagementScope WMIScope = new ManagementScope(@"\\"+Host+@"\"+WMINamespace, WMIScopeOptions);
-                            //TODO
-                            //try
-                            //{
-                                WMIScope.Connect();
-                            //}
-                            //catch (Exception e)
-                            //{
-                            //    throw new Exception("Management Connect to remote machine " + remoteComputerName + " as user " + strUserName + " failed with the following error " + e.Message);
-                            //}
+//                            WMIProcess.ExecuteRemoteProcessWMI(Host,
+//                                @"c:\Windows\System32\cmd.exe /c " + TMPFolder + THIS.tScriptFile.Text + " " + DateTimeStamp + " " + THIS.tSourceCopy.Text + " " + THIS.tTargetCopy.Text + " >" + TMPFolder + THIS.tScriptFile.Text + "." + DateTimeStamp + ".log 2>&1"
+//                                , timer);
 
 
-                            ObjectQuery WMIquery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
-                            ManagementObjectSearcher WMIsearcher = new ManagementObjectSearcher(WMIScope, WMIquery);
-                            ManagementObjectCollection WMIqueryCollection = WMIsearcher.Get();
-                            foreach (ManagementObject m in WMIqueryCollection)
-                            {                        
-                                block.Div.Add("Computer Name  : " + m["csname"]+_BRLF);                       
-                            }
-                            #endregion
-                            */
-                            result = true;
-                        }
-                    }                    
-                }
-            }
-            catch (OperationCanceledException e) 
-            {
-#if DEBUG
-                Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
-#endif
-                block.Div.Add(_BRLF + HTMLSpanCANCEL()+" "+e.Message+_BRLF);                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine("Thread Exception " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
-#endif 
-                block.Div.Add(e.Message);
-            }
-            finally
-            {
-                 RunningThreadCount--; 
-                if (result)
-                    block.Label.InnerHtmlBlock.Add(HTMLSpanOK());
-                else
-                    if (cancellationToken.IsCancellationRequested)
-                    block.Label.InnerHtmlBlock.Add(HTMLSpanCANCEL());
-                else
-                    block.Label.InnerHtmlBlock.Add(HTMLSpanFAULT());
+//                            local_result = true;
+//                            WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanOK());
+//                        }
+//                        catch (Exception e) { WMIBlock.Label.InnerHtmlBlock.Add(HTMLSpanFAULT()); WMIBlock.Div.Add(e.Message+_BRLF); }
+//                        finally
+//                        {
+//                            if (File.Exists(Target))
+//                                try
+//                                { File.Delete(Target); }
+//                                catch { WMIBlock.Div.Add(HTMLTagSpan("Failed to delete script " + Target + _BRLF, CSS_WARM)); }
+//                            if (File.Exists(LogFile) )
+//                            {
+//                                try {
+//                                    WMIBlock.Div.Add("<pre>"+File.ReadAllText(LogFile) +"</pre>"+ _BRLF);
+//                                    File.Delete(LogFile);
+//                                }
+//                                catch { WMIBlock.Div.Add(HTMLTagSpan("Failed to delete log " + LogFile + _BRLF, CSS_WARM)); }
+//        }
+//                            else
+//                            { WMIBlock.Div.Add(HTMLTagSpan("No log file" + _BRLF, CSS_WARM)); }
+
+//                            block.Div.Add(WMIBlock.ToString());                        
+//                        }
+//                        if (local_result)
+//                        {
+//                            /*block.Div.Add(_BRLF+"Copy ");
+//                            const string WMINamespace = @"root\cimv2";
+//                            ConnectionOptions WMIScopeOptions = new ConnectionOptions();
+//                            WMIScopeOptions.Impersonation = System.Management.ImpersonationLevel.Impersonate;
+
+//                            #region
+//                            ManagementScope WMIScope = new ManagementScope(@"\\"+Host+@"\"+WMINamespace, WMIScopeOptions);
+//                            //TODO
+//                            //try
+//                            //{
+//                                WMIScope.Connect();
+//                            //}
+//                            //catch (Exception e)
+//                            //{
+//                            //    throw new Exception("Management Connect to remote machine " + remoteComputerName + " as user " + strUserName + " failed with the following error " + e.Message);
+//                            //}
 
 
-                WriteLog(block.ToString());
-#if DEBUG
-                Debug.WriteLine("Thread " + Host + " finally: " + " RunningThreadCount=" + RunningThreadCount.ToString());
-#endif
-            }
-        }
+//                            ObjectQuery WMIquery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
+//                            ManagementObjectSearcher WMIsearcher = new ManagementObjectSearcher(WMIScope, WMIquery);
+//                            ManagementObjectCollection WMIqueryCollection = WMIsearcher.Get();
+//                            foreach (ManagementObject m in WMIqueryCollection)
+//                            {                        
+//                                block.Div.Add("Computer Name  : " + m["csname"]+_BRLF);                       
+//                            }
+//                            #endregion
+//                            */
+//                            result = true;
+//                        }
+//                    }                    
+//                }
+//            }
+//            catch (OperationCanceledException e) 
+//            {
+//#if DEBUG
+//                Debug.WriteLine("Thread OperationCanceledException " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
+//#endif
+//                block.Div.Add(_BRLF + HTMLSpanCANCEL()+" "+e.Message+_BRLF);                //Output.Append("<br>\nCanceled<br>\n" + e.Message + "<br>\n");
+//            }
+//            catch (Exception e)
+//            {
+//#if DEBUG
+//                Debug.WriteLine("Thread Exception " + Host + " RunningThreadCount=" + RunningThreadCount.ToString());
+//#endif 
+//                block.Div.Add(e.Message);
+//            }
+//            finally
+//            {
+//                 RunningThreadCount--; 
+//                if (result)
+//                    block.Label.InnerHtmlBlock.Add(HTMLSpanOK());
+//                else
+//                    if (cancellationToken.IsCancellationRequested)
+//                    block.Label.InnerHtmlBlock.Add(HTMLSpanCANCEL());
+//                else
+//                    block.Label.InnerHtmlBlock.Add(HTMLSpanFAULT());
+
+
+//                WriteLog(block.ToString());
+//#if DEBUG
+//                Debug.WriteLine("Thread " + Host + " finally: " + " RunningThreadCount=" + RunningThreadCount.ToString());
+//#endif
+//            }
+//        }
     }
 }
 

@@ -13,8 +13,9 @@ using System.Threading;
 
 namespace RGE
 {
-    public delegate System.Windows.Forms.HtmlElement delegateCreateElement(string elementTag);
-    public delegate void delegateUpdateElement(HtmlElement htmlElement);
+    public delegate System.Windows.Forms.HtmlElement    delegateCreateElement(string elementTag);
+    public delegate void                                delegateUpdateElement(HtmlElement htmlElement);
+    public delegate System.Windows.Forms.HtmlElement    delegateGetElement(string elementId);
     public  partial class Form1 : Form
     {        
         CancellationTokenSource cts;
@@ -202,8 +203,7 @@ namespace RGE
                 divFile.InnerHtml += " add";
                 divFile = wResult.Document.GetElementById("l2");
                 divFile.InnerHtml += " add2";*/
-                cts = new CancellationTokenSource();
-                
+                cts = new CancellationTokenSource();                
                 CopyFiles();                    
             }
             catch (Exception e)
@@ -298,6 +298,11 @@ namespace RGE
             HtmlElement Result = wResult.Document.CreateElement(elementTag);
             return  (HtmlElement)Result;
         }
+        public HtmlElement GetHtmlElement(String elementId)
+        {
+            HtmlElement Result = wResult.Document.GetElementById(elementId);
+            return (HtmlElement)Result;
+        }
         public void UpdateHtmlElement(HtmlElement div)
         {
             wResult.Document.Body.AppendChild(div);
@@ -306,20 +311,19 @@ namespace RGE
         async void CopyFiles()
         {
             await Task.Run(() =>
-            {
-                
-                
+            {   
                 delegateCreateElement c = new delegateCreateElement(CreateHtmlElement);
-                delegateUpdateElement u = new delegateUpdateElement(UpdateHtmlElement);                
-                /*
-                HtmlElement divFile;
-                divFile = (HtmlElement)THIS.Invoke(c, "div");                
-                divFile.SetAttribute("id", "div.Files");
-                divFile.InnerHtml = "FILES";
-                BeginInvoke(u, divFile);               */
+                delegateUpdateElement u = new delegateUpdateElement(UpdateHtmlElement);
+                delegateGetElement    g = new delegateGetElement(GetHtmlElement);
+        /*
+        HtmlElement divFile;
+        divFile = (HtmlElement)THIS.Invoke(c, "div");                
+        divFile.SetAttribute("id", "div.Files");
+        divFile.InnerHtml = "FILES";
+        BeginInvoke(u, divFile);               */
 
-                CopyFilesQueue CopyQ = new CopyFilesQueue(tSourceCopy.Text, tTargetCopy.Text/*, wResult/*.Document*/, chkList_PC,cts.Token,c,u);
-                //CopyQ.Copy();                
+        CopyFilesQueue CopyQ = new CopyFilesQueue(tSourceCopy.Text, tTargetCopy.Text/*, wResult/*.Document*/, chkList_PC,cts.Token,c,u,g);
+                CopyQ.Copy();                
                 cts.Cancel();                
                 End_Run();
             });
