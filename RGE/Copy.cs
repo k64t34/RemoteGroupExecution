@@ -13,9 +13,7 @@ using System.Management.Instrumentation;
 namespace RGE
 {
     public partial class Form1
-    {
-        
-
+    {      
         async void Run_Copy()
         {
             await Task.Run(() =>

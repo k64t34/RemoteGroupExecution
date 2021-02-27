@@ -89,19 +89,21 @@ namespace RGE
         }
         struct FileInfo
         {
-            public string SourcePath;
-            public string TargetPath;
-            public string Name;
+            //public string SourcePath;
+            //public string TargetPath;
+            public string File;
+            //public string Name;
             public int Count;
-            public int ID;
-            public FileInfo(string SourcePath){this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0;this.ID = -1; }
-            public FileInfo(string SourcePath,int ID) { this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0; this.ID = ID; }
+            //public int ID;
+            //public FileInfo(string SourcePath){this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0;/*this.ID = -1; */}
+            public FileInfo(string File)             {                this.Count = 0;                this.File = File; }
+            //public FileInfo(string SourcePath,int ID) { this.SourcePath = SourcePath; this.Name = SourcePath; this.TargetPath = ""; this.Count = 0; this.ID = ID; }
         }
         public class CopyFilesQueue
         {
             CancellationToken cancellationToken;
             //HtmlDocument Document;
-            WebBrowser Browser;
+            //WebBrowser Browser;
             List<FileInfo> File = new List<FileInfo>();
             List<HostInfo> Host = new List<HostInfo>();
             //HtmlElement divHost;
@@ -110,47 +112,55 @@ namespace RGE
             public delegateCreateElement CreateElement;
             public delegateUpdateElement UpdateElement;
             public delegateGetElement GetElement;
+            String SourceFolder;
             String tmpFolder;
+            String TargetFolder;
             public CopyFilesQueue(string SourceFolder, String TargetFolder/*, WebBrowser Browser*/,
                 CheckedListBox chkList, CancellationToken cancellationToken,
-                delegateCreateElement c,delegateUpdateElement u, delegateGetElement GetElement
+                delegateCreateElement c,delegateUpdateElement u, delegateGetElement g
                )
             {
-                this.cancellationToken = cancellationToken;
-                this.GetElement = GetElement;
-                divFile = (HtmlElement)THIS.Invoke(c, "div");
-                divFile.SetAttribute("id", "div.Files");
+                this.SourceFolder = SourceFolder;
+                this.cancellationToken = cancellationToken;                
+                this.CreateElement=c;
+                this.UpdateElement=u;
+                this.GetElement=g;
+                this.TargetFolder = TargetFolder;
+
+                divFile = (HtmlElement)THIS.Invoke(CreateElement, "div");
+                divFile.SetAttribute("id", "div.Files");                
                 StringBuilder Output = new StringBuilder();
-                GetFolder(SourceFolder, Output);
-                divFile.InnerHtml = Output.ToString();
-                THIS.BeginInvoke(u, divFile);
+                GetFolder(SourceFolder.Length, SourceFolder, Output);
+                divFile.InnerHtml = Output.ToString()+_BRLF;
+                THIS.BeginInvoke(UpdateElement, divFile);
 
-                divHost = (HtmlElement)THIS.Invoke(c, "div");
+                divHost = (HtmlElement)THIS.Invoke(CreateElement, "div");
                 divHost.SetAttribute("id", "div.Hosts");
+                divHost.InnerHtml = HTMLTagSpan("Host list:", CSS_BaseHighLight) + _BRLF;
                 GetHost(chkList);
-                THIS.BeginInvoke(u, divHost);
-
-
+                THIS.BeginInvoke(UpdateElement, divHost);
             }
             void GetHost(CheckedListBox chkList)
             {
                 HTMLBlock1 HTMLblock;
                 StringBuilder Output = new StringBuilder();
                 string s;
+                int Counter = 0;
                 foreach (int indexChecked in chkList.CheckedIndices)
                 {
                     if (cancellationToken.IsCancellationRequested) break;                    
                     s = chkList.Items[indexChecked].ToString();
-                    HTMLblock = new HTMLBlock1("HOST." + s);
-                    HTMLblock.Label.InnerHtml(s);
+                    HTMLblock = new HTMLBlock1("HOST." + Counter);
+                    HTMLblock.Label.InnerHtml(s);                    
                     Output.Append(HTMLblock.ToString());//                    divHost.InnerHtml += HTMLblock.ToString();// s + HTMLBuilder.TagBuilder._BR;
-                    Host.Add(new HostInfo(s));
+                    this.Host.Add(new HostInfo(s));
+                    Counter++;
                 }
-                divHost.InnerHtml = Output.ToString();
+                divHost.InnerHtml+= Output.ToString();
                 //CountDone = Host.Count;
             }
 
-            void GetFolder(string Folder, StringBuilder Output)
+            void GetFolder(int BaseFolderLenght, string Folder, StringBuilder Output)
             {
                 HTMLBlock1 HTMLblock;                
                 try
@@ -159,12 +169,14 @@ namespace RGE
                     {
                         string[] files = System.IO.Directory.GetFiles(Folder);
                         int Count = File.Count;
+                        string Path;
                         foreach (string s in files) 
                          {
-                            if (cancellationToken.IsCancellationRequested) break;                            
-                            this.File.Add(new FileInfo(s, Count));
+                            if (cancellationToken.IsCancellationRequested) break;
+                            Path = s.Substring(BaseFolderLenght);
+                            this.File.Add(new FileInfo(Path));
                             HTMLblock = new HTMLBlock1("file." + Count);
-                            HTMLblock.Label.InnerHtml(s);
+                            HTMLblock.Label.InnerHtml(Path);
                             Count++;
                             Output.Append(HTMLblock.ToString());//                            divFile.InnerHtml += HTMLblock.ToString();//                                s + HTMLBuilder.TagBuilder._BR; 
                           }                        
@@ -172,7 +184,7 @@ namespace RGE
                         foreach (string s in dirs) 
                         {
                             if (cancellationToken.IsCancellationRequested) break; 
-                            GetFolder(s,Output); 
+                            GetFolder(BaseFolderLenght,s, Output); 
                         }
                     }
                 }
@@ -201,9 +213,10 @@ namespace RGE
             //        }
             public void Copy()
             {
+                
                 try
                 {
-                    String tmpFolder = Environment.GetEnvironmentVariable("tmp");
+                    tmpFolder = Environment.GetEnvironmentVariable("tmp");
                     if (String.IsNullOrEmpty(tmpFolder))
                     {
                         tmpFolder = Environment.GetEnvironmentVariable("temp");
@@ -217,21 +230,52 @@ namespace RGE
                             tmpFolder +=  @"\TMP";                            
                         }
                     }
-                    tmpFolder += @"\" + DateTime.Now.ToString("ddMMyyyyHHmmss")+".TMP"; 
-                    System.IO.Directory.CreateDirectory(tmpFolder);
-
-                    foreach (FileInfo f in File)
+                    tmpFolder += @"\" + DateTime.Now.ToString("ddMMyyyyHHmmss")+".TMP\\";
+                    HtmlElement htmltmpfolder = (HtmlElement)THIS.Invoke(CreateElement, "span");
+                    htmltmpfolder.SetAttribute("id","tmpFolder");
+                    htmltmpfolder.InnerHtml = HTMLTagSpan("Temporary folder:", CSS_BaseHighLight) + tmpFolder;
+                    try
                     {
-                        if (!CashFile(f.ID))
+                        System.IO.Directory.CreateDirectory(tmpFolder);
+                    }
+                    catch { htmltmpfolder.InnerHtml += HTMLSpanFAULT() + " " + HTMLTagSpan("Failed to create temporary folder " + tmpFolder, CSS_BaseAlert); }
+                    finally { THIS.Invoke(UpdateElement, htmltmpfolder); }
+                    if (!System.IO.Directory.Exists(tmpFolder)) { throw new System.Exception("Failed to create temporary folder " + tmpFolder); }
+
+                    for (int  idf=0; idf != File.Count; idf++)//foreach (FileInfo f in File)
+                    {
+                        if (cancellationToken.IsCancellationRequested) break;
+                            if (!CashFile(idf))
                         {
-                            divFile = (HtmlElement)THIS.Invoke(GetElement, "l.file." + f.ID);
+                            divFile = (HtmlElement)THIS.Invoke(GetElement, "l.file." + idf);
                             divFile.InnerHtml += HTMLSpanFAULT();
                         }
                         else
                         {
-                            foreach (HostInfo h in Host)
+                            for (int idh = 0; idh != Host.Count; idh++)//                                foreach (HostInfo h in Host)
                             {
-
+                                if (cancellationToken.IsCancellationRequested) break;
+                                divHost = (HtmlElement)THIS.Invoke(GetElement, "d.host." + idh);
+                                StringBuilder Output = new StringBuilder();
+                                Output.Append("Ping ");
+                                bool local_result = false;
+                                try
+                                {
+                                    if (Ping(Host[idh].Name)) local_result = true;                                    
+                                }
+                                catch {  }
+                                if (!local_result) {
+                                    Output.Append(HTMLSpanFAULT());
+                                    divHost.InnerHtml += Output.ToString();
+                                    divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
+                                    divHost.InnerHtml += HTMLSpanFAULT();
+                                }
+                                else
+                                {
+                                    Output.Append(HTMLSpanOK() + _BR);
+                                    divHost.InnerHtml += Output.ToString();
+                                    if (cancellationToken.IsCancellationRequested) break;
+                                }                                
                             }
                         }
                     }
@@ -239,7 +283,14 @@ namespace RGE
                 catch { }
                 finally
                 {
-                    if (System.IO.Directory.Exists(tmpFolder)) System.IO.Directory.Delete(tmpFolder);
+                    if (System.IO.Directory.Exists(tmpFolder))
+                    {
+                        HtmlElement htmltmpfoler = (HtmlElement)THIS.Invoke(GetElement, "tmpFolder");
+                        htmltmpfoler.InnerHtml += " delete";
+                        System.IO.Directory.Delete(tmpFolder,true);                        
+                        if (System.IO.Directory.Exists(tmpFolder)) htmltmpfoler.InnerHtml +=HTMLSpanFAULT();
+                        else htmltmpfoler.InnerHtml += HTMLSpanOK();
+                    }
                 }
             }
             bool CashFile(int ID)
@@ -247,15 +298,22 @@ namespace RGE
                 bool result = false;
                 divFile = (HtmlElement)THIS.Invoke(GetElement, "d.file." + ID);
                 try {
-                    
-
-                    //FileInfo f = File.Find(ID);
-                    //if (f == null)
-                    System.IO.File.Copy("", tmpFolder,true);
-                    result = true;
-                    divFile.InnerHtml += "Cash " + HTMLSpanOK();
+                    int LastSlash = File[ID].File.LastIndexOf("\\");
+                    if (LastSlash != -1)
+                    {
+                        String SubDir = tmpFolder + File[ID].File.Substring(0, LastSlash);
+                        if (!System.IO.Directory.Exists(SubDir))
+                            try { System.IO.Directory.CreateDirectory(SubDir); }
+                            catch { }
+                    }
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        System.IO.File.Copy(System.IO.Path.Combine(SourceFolder, File[ID].File), System.IO.Path.Combine(tmpFolder, File[ID].File), true);
+                        result = true;
+                        divFile.InnerHtml += "Cash " + HTMLSpanOK();
+                    }
                 }
-                catch (Exception e){divFile.InnerHtml += "Cash " + HTMLSpanFAULT() + " "+HTMLTagSpan(e.Message,CSS_BaseAlert);}
+                catch (Exception e){divFile.InnerHtml += "Cash " + HTMLSpanFAULT() + " "+HTMLTagSpan(e.Message,CSS_BaseAlert)+" "+ SourceFolder + File[ID].File+" "+ tmpFolder + File[ID].File; }
                 return result;
 
             }

@@ -57,10 +57,7 @@ namespace RGE
 
         private void bRun_Click(object sender, EventArgs e)
         {
-
             this.tabMainControl.SelectTab(this.tabResult);
-            
-
         }
 
         private void Form1_ResizeEnd(object sender, EventArgs e)
@@ -90,7 +87,6 @@ namespace RGE
             {
                 if (chkList_PC.FindString(tThisPC.Text) == ListBox.NoMatches)
                     chkList_PC.Items.Add(tThisPC.Text, CheckState.Checked);
-
             }
         }
 
@@ -169,7 +165,10 @@ namespace RGE
             StringBuilder Output = new StringBuilder();
             try
             {
-                myHost = System.Net.Dns.GetHostName();// имя хоста                
+
+                if (!tSourceCopy.Text.EndsWith("\\")) tSourceCopy.Text += "\\";
+
+                 myHost = System.Net.Dns.GetHostName();// имя хоста                
                 compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();// IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
                 userNameWin = System.Environment.UserName;
                 compName = System.Environment.MachineName;
@@ -185,6 +184,7 @@ namespace RGE
                     "<body>\n" +
                     D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
                     HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF+
+                    HTMLTagSpan("Source path:", CSS_BaseHighLight) + tSourceCopy.Text + _BRLF +
                     "</body></html>"
                     );
                     WriteLog(Output);                
@@ -308,6 +308,7 @@ namespace RGE
             wResult.Document.Body.AppendChild(div);
             //wResult.Refresh();
         }
+       
         async void CopyFiles()
         {
             await Task.Run(() =>
@@ -374,19 +375,19 @@ namespace RGE
         }
         private void Cancel_Run()
         {
-            MainStatus = 0;
-            if (RunningThreadCount!=0)
+            //MainStatus = 0;            
+            //if (RunningThreadCount!=0)
             {
 #if DEBUG
                 Debug.WriteLine("CANCEL");
 #endif
-                WriteLog(D_T() + HTMLTagSpan(" Cancel", "EVENT") + _BRLF);                
+                wResult.Document.Body.InnerHtml +=                    _BRLF + D_T() + HTMLTagSpanID(" Cancel", "EVENT", "Cancel") + _BRLF;                
                 ToolbGo.Enabled = false;
                 ToolbGo.BackColor = Color.Yellow;
                 ToolbGo.Text = " Waiting.. ";
-                ToolbGo.ForeColor = Color.Black;
-                cts.Cancel();
+                ToolbGo.ForeColor = Color.Black;                
             }
+            cts.Cancel();
         }
         /*static void WriteLog(string message)
         {
