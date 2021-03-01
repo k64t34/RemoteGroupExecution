@@ -165,10 +165,9 @@ namespace RGE
             StringBuilder Output = new StringBuilder();
             try
             {
-
                 if (!tSourceCopy.Text.EndsWith("\\")) tSourceCopy.Text += "\\";
 
-                 myHost = System.Net.Dns.GetHostName();// имя хоста                
+                myHost = System.Net.Dns.GetHostName();// имя хоста                
                 compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();// IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
                 userNameWin = System.Environment.UserName;
                 compName = System.Environment.MachineName;
