@@ -45,7 +45,6 @@ namespace RGE
             this.bAddthisPC = new System.Windows.Forms.Button();
             this.bDeletePCSelected = new System.Windows.Forms.Button();
             this.bAddPCFromDomain = new System.Windows.Forms.Button();
-            this.chkList_PC = new System.Windows.Forms.CheckedListBox();
             this.tabCommandControl = new System.Windows.Forms.TabControl();
             this.tabCommandCopyFileFolder = new System.Windows.Forms.TabPage();
             this.chkCopyOnlyNewer = new System.Windows.Forms.CheckBox();
@@ -73,6 +72,7 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
+            this.chkList_PC = new System.Windows.Forms.CheckedListBox();
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.tabTask.SuspendLayout();
             this.tabCommandControl.SuspendLayout();
@@ -232,51 +232,13 @@ namespace RGE
             // 
             // bAddPCFromDomain
             // 
-            this.bAddPCFromDomain.Enabled = false;
             this.bAddPCFromDomain.Location = new System.Drawing.Point(545, 71);
             this.bAddPCFromDomain.Name = "bAddPCFromDomain";
             this.bAddPCFromDomain.Size = new System.Drawing.Size(209, 34);
             this.bAddPCFromDomain.TabIndex = 6;
             this.bAddPCFromDomain.Text = "Add From Domain";
             this.bAddPCFromDomain.UseVisualStyleBackColor = true;
-            // 
-            // chkList_PC
-            // 
-            this.chkList_PC.CheckOnClick = true;
-            this.chkList_PC.FormattingEnabled = true;
-            this.chkList_PC.HorizontalScrollbar = true;
-            this.chkList_PC.Items.AddRange(new object[] {
-            "192.168.1.100",
-            "m16",
-            "riga",
-            "t90",
-            "10.80.68.220",
-            "skorik10",
-            "dp-print",
-            "pc1",
-            "pc2",
-            "pc3",
-            "motya",
-            "jina",
-            "192.168.1.2",
-            "192.168.1.31",
-            "192.168.1.30",
-            "ak47",
-            "8.8.8.8",
-            "8.8.4.4",
-            "192.168.1.100",
-            "192.168.1.13",
-            "77.88.8.8",
-            "77.88.8.1",
-            "77.88.8.88",
-            "77.88.8.2",
-            "77.88.8.7",
-            "77.88.8.3"});
-            this.chkList_PC.Location = new System.Drawing.Point(23, 71);
-            this.chkList_PC.MultiColumn = true;
-            this.chkList_PC.Name = "chkList_PC";
-            this.chkList_PC.Size = new System.Drawing.Size(490, 280);
-            this.chkList_PC.TabIndex = 5;
+            this.bAddPCFromDomain.Click += new System.EventHandler(this.bAddPCFromDomain_Click);
             // 
             // tabCommandControl
             // 
@@ -323,6 +285,8 @@ namespace RGE
             // chkCopyOverride
             // 
             this.chkCopyOverride.AutoSize = true;
+            this.chkCopyOverride.Checked = true;
+            this.chkCopyOverride.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCopyOverride.Enabled = false;
             this.chkCopyOverride.Location = new System.Drawing.Point(149, 12);
             this.chkCopyOverride.Name = "chkCopyOverride";
@@ -358,7 +322,6 @@ namespace RGE
             this.tTargetCopy.Name = "tTargetCopy";
             this.tTargetCopy.Size = new System.Drawing.Size(1117, 28);
             this.tTargetCopy.TabIndex = 1;
-            this.tTargetCopy.Text = "D:\\tmp\\target";
             // 
             // tSourceCopy
             // 
@@ -366,7 +329,6 @@ namespace RGE
             this.tSourceCopy.Name = "tSourceCopy";
             this.tSourceCopy.Size = new System.Drawing.Size(1117, 28);
             this.tSourceCopy.TabIndex = 1;
-            this.tSourceCopy.Text = "D:\\tmp\\source";
             // 
             // tabComandScript
             // 
@@ -404,7 +366,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 156);
+            this.tCommand.Location = new System.Drawing.Point(173, 168);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -415,7 +377,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 182);
+            this.lCommand.Location = new System.Drawing.Point(66, 194);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -493,7 +455,7 @@ namespace RGE
             this.ToolbGo});
             this.tool.Location = new System.Drawing.Point(0, 0);
             this.tool.Name = "tool";
-            this.tool.Size = new System.Drawing.Size(1184, 27);
+            this.tool.Size = new System.Drawing.Size(1184, 31);
             this.tool.TabIndex = 8;
             this.tool.Text = "toolStrip1";
             // 
@@ -503,7 +465,7 @@ namespace RGE
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(40, 24);
+            this.toolStripButton1.Size = new System.Drawing.Size(40, 28);
             this.toolStripButton1.Text = "Task";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -513,14 +475,14 @@ namespace RGE
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(53, 24);
+            this.toolStripButton2.Size = new System.Drawing.Size(53, 28);
             this.toolStripButton2.Text = "Result";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // toolStripButton3
             // 
@@ -528,13 +490,13 @@ namespace RGE
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton3.Size = new System.Drawing.Size(29, 28);
             this.toolStripButton3.Text = "toolStripButton3";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
             // ToolbGo
             // 
@@ -546,9 +508,47 @@ namespace RGE
             this.ToolbGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolbGo.Name = "ToolbGo";
             this.ToolbGo.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.ToolbGo.Size = new System.Drawing.Size(93, 24);
+            this.ToolbGo.Size = new System.Drawing.Size(93, 28);
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
+            // 
+            // chkList_PC
+            // 
+            this.chkList_PC.CheckOnClick = true;
+            this.chkList_PC.FormattingEnabled = true;
+            this.chkList_PC.HorizontalScrollbar = true;
+            this.chkList_PC.Items.AddRange(new object[] {
+            "192.168.1.100",
+            "m16",
+            "riga",
+            "t90",
+            "10.80.68.220",
+            "skorik10",
+            "dp-print",
+            "pc1",
+            "pc2",
+            "pc3",
+            "motya",
+            "jina",
+            "192.168.1.2",
+            "192.168.1.31",
+            "192.168.1.30",
+            "ak47",
+            "8.8.8.8",
+            "8.8.4.4",
+            "192.168.1.100",
+            "192.168.1.13",
+            "77.88.8.8",
+            "77.88.8.1",
+            "77.88.8.88",
+            "77.88.8.2",
+            "77.88.8.7",
+            "77.88.8.3"});
+            this.chkList_PC.Location = new System.Drawing.Point(23, 71);
+            this.chkList_PC.MultiColumn = true;
+            this.chkList_PC.Name = "chkList_PC";
+            this.chkList_PC.Size = new System.Drawing.Size(490, 280);
+            this.chkList_PC.TabIndex = 5;
             // 
             // Form1
             // 
@@ -566,6 +566,7 @@ namespace RGE
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Remote Group Execution";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.tabTask.ResumeLayout(false);

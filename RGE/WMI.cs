@@ -8,7 +8,42 @@ using System.Management;
 using System.Threading;
 using System.Configuration;
 using System.Diagnostics;
+using System.DirectoryServices;
 
+public class WMI
+{
+    const String __Win32_ComputerSystem = "Win32_ComputerSystem";
+    static public bool IsDomainMember()
+    {
+        ManagementObject ComputerSystem;
+        using (ComputerSystem = new ManagementObject(__Win32_ComputerSystem+".Name='" +Environment.MachineName+"'"))
+        {
+            ComputerSystem.Get();
+            object Result = ComputerSystem["PartOfDomain"];
+            return (Result != null && (bool)Result);
+        }
+    }
+    public static string GetComputerDomainName()
+    {
+        ManagementObject ComputerSystem;
+        using (ComputerSystem = new ManagementObject(__Win32_ComputerSystem + ".Name='" + Environment.MachineName + "'"))
+        {
+            ComputerSystem.Get();
+            object Result = ComputerSystem["Domain"];
+            return (Result.ToString());
+        }
+    }
+    public static string GetComputerWorkgroupName()//https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem
+    {
+        ManagementObject ComputerSystem;
+        using (ComputerSystem = new ManagementObject(__Win32_ComputerSystem+".Name='" + Environment.MachineName + "'"))
+        {
+            ComputerSystem.Get();
+            object Result = ComputerSystem["Workgroup"];
+            return (Result.ToString());
+        }
+    }
+}
 public class ProcessWMI
 {
     const string ROOT_CIMv2 = @"\ROOT\CIMV2";

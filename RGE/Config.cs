@@ -6,11 +6,172 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Xml;
+using System.Windows.Forms;
+using KeyValue = System.Collections.Generic.KeyValuePair<string, string>;//https://stackoverflow.com/questions/52947538/get-multiple-instances-of-the-same-key-within-custom-section
+using System.Collections;
 
 namespace RGE
 {
     class Config
     {
+        public sealed class Hosts : ConfigurationSection //https://docs.microsoft.com/en-us/dotnet/api/system.configuration.configurationproperty?view=dotnet-plat-ext-5.0
+        {
+            private static ConfigurationPropertyCollection _Properties;
+
+            // The FileName property.
+            private static ConfigurationProperty _Host;
+
+            // The Alias property.
+            private static ConfigurationProperty _Checked;
+            static Hosts()// CustomSection constructor.
+            {
+                // Initialize the _FileName property
+                _Host =
+                    new ConfigurationProperty("hostName",
+                    typeof(string), "default.txt");
+
+                // Initialize the _MaxUsers property
+                _Checked =
+                    new ConfigurationProperty("checked",
+                    typeof(bool), false,
+                    ConfigurationPropertyOptions.None);
+                // Initialize the Property collection.
+                _Properties = new ConfigurationPropertyCollection();
+                _Properties.Add(_Host);
+                _Properties.Add(_Checked);
+            }
+            protected override ConfigurationPropertyCollection Properties
+            {
+                get
+                {
+                    return _Properties;
+                }
+            }            
+            public void ClearCollection()// Clear the property.
+            {
+                Properties.Clear();
+            }
+            public void RemoveCollectionElement(string elName)// Remove an element from the property collection.
+            {
+                Properties.Remove(elName);
+            }            
+            public IEnumerator GetCollectionEnumerator() // Get the property collection enumerator.
+            {
+                return (Properties.GetEnumerator());
+            }
+            [StringValidator(InvalidCharacters = " ~!@#$%^&*()[]{}/;'\"|\\",
+            MinLength = 1, MaxLength = 60)]
+            public string FileName
+            {
+                get
+                {
+                    return (string)this["fileName"];
+                }
+                set
+                {
+                    this["fileName"] = value;
+                }
+            }
+        }
+
+
+
+            public sealed class KeyValueHandler : IConfigurationSectionHandler
+        {
+            public object Create(object parent, object configContext, XmlNode section)
+            {
+                var result = new List<KeyValue>();
+                foreach (XmlNode child in section.ChildNodes)
+                {
+                    var key = child.Attributes["key"].Value;
+                    var value = child.Attributes["value"].Value;
+                    result.Add(new KeyValue(key, value));
+                }
+                return result;
+            }
+        }
+        public static void WriteSettings(string key, CheckedListBox chkList)
+        {
+            try
+            {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = configFile.AppSettings.Settings;
+                /*foreach (int i in chkList.Items)
+                {
+                
+                }*/
+                //var indices = chkList.CheckedItems.Cast<string>().ToArray();
+                //configFile.AppSettings.Settings.CheckedItems = string.Join(",", indices);
+                //configFile.AppSettings.Settings.Default.Save();
+
+            }
+            catch (ConfigurationErrorsException)
+            {
+#if DEBUG
+                Debug.WriteLine("Error writing app settings " + key );
+#endif
+            }
+        }
+
+
+        public static void WriteSettings(string key, string value)
+        {
+            try
+            {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None); 
+                var settings = configFile.AppSettings.Settings;
+                if (settings[key] == null)
+                {
+                    settings.Add(key, value);
+                }
+                else
+                {
+                    settings[key].Value = value;
+                }
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            }
+            catch (ConfigurationErrorsException)
+            {
+#if DEBUG
+                Debug.WriteLine("Error writing app settings "+key+" "+value );
+#endif
+            }
+        }
+        public static void WriteSettings(string key, IList<KeyValue> list) // TODO ////https://stackoverflow.com/questions/52947538/get-multiple-instances-of-the-same-key-within-custom-section
+        {
+            /*try
+            {
+                var list = (IList<KeyValue>)ConfigurationManager.GetSection("section1");
+
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = configFile.AppSettings.Settings;
+                if (settings[key] == null)
+                {
+                    settings.Add(key, value);
+                }
+                else
+                {
+                    settings[key].Value = value;
+                }
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            }
+            catch (ConfigurationErrorsException)
+            {
+#if DEBUG
+                Debug.WriteLine("Error writing app settings " + key + " " + value);
+#endif
+            }*/
+        }
+
+
+
+
+        
+
 
 
         static void ReadAllSettings()
@@ -36,23 +197,37 @@ namespace RGE
                 Console.WriteLine("Error reading app settings");
             }
         }
-        static void ReadSetting(string key, ref string variable)
+        public static void ReadSetting(string key, ref string variable)
         {
             try
-            {
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write(key); Console.Write(" ");
+            {                
                 var appSettings = ConfigurationManager.AppSettings;
                 if (appSettings[key] == null) throw new Exception();
-                variable = appSettings[key];
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(variable);
+                variable = appSettings[key];                
             }
-            catch /*(ConfigurationErrorsException)*/
+            catch (Exception e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(variable);
+#if DEBUG
+                Debug.WriteLine("Error get app settings " + key + " " + e.Message);
+#endif
             }
+        }
+        public static String ReadSetting(string key)
+        {
+            String Result = String.Empty;
+            try
+            {
+                var appSettings = ConfigurationManager.AppSettings;
+                if (appSettings[key] == null) throw new Exception();
+                Result = appSettings[key];
+            }
+            catch (Exception e)
+            {
+#if DEBUG
+                Debug.WriteLine("Error get app settings " + key + " " + e.Message);
+#endif
+            }
+            return Result;
         }
     }
 }

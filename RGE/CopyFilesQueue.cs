@@ -160,8 +160,8 @@ namespace RGE
                 StringBuilder Output = new StringBuilder();
                 string s;
                 int Counter = 0;
-                foreach (int indexChecked in chkList.CheckedIndices)
-                {
+                foreach (int indexChecked in chkList.CheckedIndices)                    
+                    {
                     if (cancellationToken.IsCancellationRequested) break;                    
                     s = chkList.Items[indexChecked].ToString();
                     HTMLblock = new HTMLBlock1("HOST." + Counter);
