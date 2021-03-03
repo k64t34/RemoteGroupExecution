@@ -137,7 +137,7 @@ namespace RGE
                 this.GetElement=g;
                 TargetFld = TargetFld.Trim();
                 if (!TargetFld.EndsWith("\\")) TargetFld+= "\\";
-                this.TargetFolder = @"\$"+ TargetFld.Substring(0, 1)+ TargetFld.Substring(2);
+                this.TargetFolder = @"\"+ TargetFld.Substring(0, 1)+ @"$" + TargetFld.Substring(2);
 
                 BaseFolderLenght = SourceFolder.Length;
 
