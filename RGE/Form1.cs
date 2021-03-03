@@ -469,24 +469,14 @@ namespace RGE
         {
             THIS = this;
             bPCSelectAll_Click( sender,  e);
-
-#if !DEBUG
-        __PROCESSOR_COUNT = Environment.ProcessorCount;
-#endif
-            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;
-            //for (int i = 0; i != ThreadCount; i++) Threads.Add(new Thread());
+            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;            
 #if DEBUG
             CheckForIllegalCrossThreadCalls = false;
 #endif
-
-#if DEBUG
-            Debug.WriteLine("Processor count: "+ __PROCESSOR_COUNT.ToString());
-#endif
-            //\\deploy2\tmp\source
-
             #region Read setting
             tSourceCopy.Text = Config.ReadSetting("SourceFolder");
-            tTargetCopy.Text = Config.ReadSetting("TargetFolder");            
+            tTargetCopy.Text = Config.ReadSetting("TargetFolder");
+            Config.ReadSettingsHosts(chkList_PC);
             #endregion
 
 
@@ -556,10 +546,8 @@ namespace RGE
             Config.WriteSettings("Version","1");
             Config.WriteSettings("SourceFolder", tSourceCopy.Text);
             Config.WriteSettings("TargetFolder", tTargetCopy.Text);
-            Config.WriteSettings("Hosts", chkList_PC);            
+            Config.WriteSettingsHosts(chkList_PC);            
         }
-
-       
     }
 
    

@@ -11,12 +11,29 @@ using System.Xml;
 using System.Windows.Forms;
 using KeyValue = System.Collections.Generic.KeyValuePair<string, string>;//https://stackoverflow.com/questions/52947538/get-multiple-instances-of-the-same-key-within-custom-section
 using System.Collections;
+using System.IO;
+using System.Threading;
+using static System.Windows.Forms.CheckedListBox;
 
 namespace RGE
 {
     class Config
     {
-        public sealed class Hosts : ConfigurationSection //https://docs.microsoft.com/en-us/dotnet/api/system.configuration.configurationproperty?view=dotnet-plat-ext-5.0
+        const String FileHostsConfig = "hosts.txt";
+        #region HostsSection
+        /*public class HostsSection : ConfigurationSection //https://docs.microsoft.com/en-us/dotnet/api/system.configuration.configurationelementcollection?view=dotnet-plat-ext-5.0
+        {
+            // Declare the UrlsCollection collection property.
+            [ConfigurationProperty("Hosts", IsDefaultCollection = false)]
+            [ConfigurationCollection(typeof(UrlsCollection),
+                AddItemName = "add",
+                ClearItemsName = "clear",
+                RemoveItemName = "remove")]
+        }*/
+        #endregion
+        #region CustomSection
+        /*
+        public sealed class mycustom : ConfigurationSection //https://docs.microsoft.com/en-us/dotnet/api/system.configuration.configurationproperty?view=dotnet-plat-ext-5.0
         {
             private static ConfigurationPropertyCollection _Properties;
 
@@ -25,7 +42,7 @@ namespace RGE
 
             // The Alias property.
             private static ConfigurationProperty _Checked;
-            static Hosts()// CustomSection constructor.
+            static mycustom()// CustomSection constructor.
             {
                 // Initialize the _FileName property
                 _Host =
@@ -75,9 +92,6 @@ namespace RGE
                 }
             }
         }
-
-
-
             public sealed class KeyValueHandler : IConfigurationSectionHandler
         {
             public object Create(object parent, object configContext, XmlNode section)
@@ -91,30 +105,55 @@ namespace RGE
                 }
                 return result;
             }
-        }
-        public static void WriteSettings(string key, CheckedListBox chkList)
+        }*/
+        #endregion
+
+        public static void WriteSettingsHosts(CheckedListBox chkList)
         {
+            StreamWriter sw;
             try
             {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                var settings = configFile.AppSettings.Settings;
-                /*foreach (int i in chkList.Items)
-                {
-                
-                }*/
-                //var indices = chkList.CheckedItems.Cast<string>().ToArray();
-                //configFile.AppSettings.Settings.CheckedItems = string.Join(",", indices);
-                //configFile.AppSettings.Settings.Default.Save();
-
+                sw = new StreamWriter(Path.Combine(Application.StartupPath+FileHostsConfig), false, Encoding.UTF8);
+                for (int i = 0;i != chkList.Items.Count;i++){sw.WriteLine(chkList.Items[i].ToString() +";"+chkList.GetItemChecked(i).ToString());}
+                sw.Close();
             }
-            catch (ConfigurationErrorsException)
+            catch (Exception e)
             {
 #if DEBUG
-                Debug.WriteLine("Error writing app settings " + key );
+                Debug.WriteLine("Error writing list of hosts "+e.Message);              
 #endif
-            }
+            }            
         }
-
+        public static void ReadSettingsHosts(CheckedListBox chkList)
+        {
+            string cfgFile = Path.Combine(Application.StartupPath + FileHostsConfig);
+            try 
+            {
+                if (File.Exists(cfgFile))
+                {
+                    chkList.Items.Clear();
+                    int i;
+                    using (StreamReader sr = new StreamReader(cfgFile))
+                    {
+                        while (sr.Peek() >= 0)
+                        {
+                            String l = sr.ReadLine();
+                            string[] p = /*new string[2];p=*/l.Split(new Char[] { ';' },2);
+                            i = chkList.Items.Add(p[0]);
+                            bool b;
+                            if ( !Boolean.TryParse(p[1], out b) ) { b = true; }
+                            chkList.SetItemChecked(i, b);
+                        }
+                    }
+                }
+            }
+                catch (Exception e)
+                {
+#if DEBUG
+                    Debug.WriteLine("Error writing list of hosts " + e.Message);
+#endif
+                } 
+            }
 
         public static void WriteSettings(string key, string value)
         {
@@ -166,14 +205,7 @@ namespace RGE
 #endif
             }*/
         }
-
-
-
-
         
-
-
-
         static void ReadAllSettings()
         {
             try
