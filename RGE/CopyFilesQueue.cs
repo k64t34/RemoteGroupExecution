@@ -18,8 +18,9 @@ namespace RGE
         struct HostInfo
         {
             public string Name;
-            public bool Ping;
-            public bool Done;
+            //public bool Ping;
+            //public bool Done;
+            public int Status; // 0-u
             public HostInfo(string Name) { this.Name = Name.Trim(); this.Ping = false; this.Done = false; }
         }
 
@@ -145,6 +146,7 @@ namespace RGE
                 divFile.SetAttribute("id", "div.Files");                
                 StringBuilder Output = new StringBuilder();
                 GetFolder(SourceFolder, Output);
+                Output.Append("Total " + File.Count + " files<br>");
                 divFile.InnerHtml = Output.ToString()+_BRLF;
                 THIS.BeginInvoke(UpdateElement, divFile);
 
@@ -206,6 +208,7 @@ namespace RGE
             {                
                 try
                 {
+                    //TODO: Если исходные файлв не на локальном ПК
                     #region Temporary folder
                     tmpFolder = Environment.GetEnvironmentVariable("tmp");
                     if (String.IsNullOrEmpty(tmpFolder))
@@ -248,55 +251,49 @@ namespace RGE
                             {
                                 if (cancellationToken.IsCancellationRequested) break;
                                 divHost = (HtmlElement)THIS.Invoke(GetElement, "d.host." + idh);
-                                StringBuilder Output = new StringBuilder();
-                                Output.Append("Ping ");
+                                StringBuilder Output = new StringBuilder();                                
                                 bool local_result = false;
-                                try
-                                {
-                                    if (Ping(Host[idh].Name)) local_result = true;                                    
-                                }
-                                catch {  }
+                                try{if (Ping(Host[idh].Name))local_result = true;}catch {}
                                 if (!local_result) {
-                                    Output.Append(HTMLSpanFAULT());
+                                    Output.Append("Ping "+HTMLSpanFAULT()+_BRLF);
                                     divHost.InnerHtml += Output.ToString();
                                     divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
                                     divHost.InnerHtml += HTMLSpanFAULT();
                                     continue;
-                                }
-                                local_result = false;
-                                divHost = (HtmlElement)THIS.Invoke(GetElement, "d.host." + idh);
-                                Output.Clear();                                    
+                                }                                                                                              
                                 String FullTargetFolder = @"\\" + Host[idh].Name + this.TargetFolder+File[idf].Path;
                                 Output.Append("Copy " + this.SourceFolder + File[idf].Path + File[idf].File + " to " + FullTargetFolder + File[idf].File);
                                 if (!System.IO.Directory.Exists(FullTargetFolder))
+                                {
+                                    local_result = false;
                                     try
                                     {
                                         System.IO.Directory.CreateDirectory(FullTargetFolder);
                                         local_result = System.IO.Directory.Exists(FullTargetFolder);
                                     }
-                                        catch (Exception e){ Output.Append(HTMLSpanFAULT() + e.Message +_BR); }
-                                if (!local_result)
-                                {                                    
-                                    divHost.InnerHtml += Output.ToString();
-                                    divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
-                                    divHost.InnerHtml += HTMLSpanFAULT();
-                                    continue;
+                                    catch (Exception e) { Output.Append(HTMLSpanFAULT() + HTMLTagSpan(e.Message,CSS_BaseAlert) + _BRLF); }
+                                    if (!local_result)
+                                    {
+                                        divHost.InnerHtml += Output.ToString();
+                                        divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
+                                        divHost.InnerHtml += HTMLSpanFAULT();
+                                        continue;
+                                    }
                                 }
                                 local_result = false;
                                 try
-                                  { System.IO.File.Copy(tmpFolder + File[idf].Path + File[idf].File,FullTargetFolder + File[idf].File)                                        ;
+                                  { System.IO.File.Copy(tmpFolder + File[idf].Path + File[idf].File,FullTargetFolder + File[idf].File,true)                                        ;
                                     local_result = true;
                                     Output.Append(HTMLSpanOK());                                    
                                 }
-                                catch (Exception e) { Output.Append(HTMLSpanFAULT() + e.Message); }
-                                Output.Append(_BR);
+                                catch (Exception e) { Output.Append(HTMLSpanFAULT() + HTMLTagSpan(e.Message, CSS_BaseAlert)); }
+                                Output.Append(_BRLF);
                                 divHost.InnerHtml += Output.ToString();
                                 if (!local_result)
                                 {
                                     divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
                                     divHost.InnerHtml += HTMLSpanFAULT();
                                 }
-
                             }
                         }
                     }

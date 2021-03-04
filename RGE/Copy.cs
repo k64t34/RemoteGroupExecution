@@ -14,58 +14,58 @@ namespace RGE
 {
     public partial class Form1
     {      
-        async void Run_Copy()
-        {
-            await Task.Run(() =>
-            {
-            //try {
-                StringBuilder Output = new StringBuilder();
-                Output.Append(HTMLTagSpan(" Copy from:", CSS_BaseHighLight) + tSourceCopy.Text);
-                if (!Directory.Exists(tSourceCopy.Text))
-                {
-                    Output.Append(HTMLTagSpan(" Folder doesn't exist", CSS_FAULT) + _BRLF);
-                    WriteLog(Output);
-                    goto Run_Copy_End_Run;                //return;
-                }
-                Output.Append(HTMLSpanOK() + _BRLF);
-                Output.Append(HTMLTagSpan("Copy to  :", CSS_BaseHighLight) + tTargetCopy.Text + _BRLF);
-                Output.Append(HTMLTagSpan("Override:", CSS_BaseHighLight) + chkCopyOverride.Checked + _BRLF);
-                if (chkCopyOverride.Checked) Output.Append(HTMLTagSpan("Only newer:", CSS_BaseHighLight) + chkCopyOnlyNewer.Checked + _BRLF);
-                Output.Append(HTMLTagSpan("Hosts:", CSS_BaseHighLight) + _BRLF);
-                RunningThreadCount = 0;
-                foreach (int indexChecked in chkList_PC.CheckedIndices)
-                {
-                    Output.Append(String.Format("{0}.{1}<br>\n", ++RunningThreadCount, chkList_PC.Items[indexChecked].ToString()));
-                }
-                Output.Append(_BRLF);
-                WriteLog(Output);
+//        async void Run_Copy()
+//        {
+//            await Task.Run(() =>
+//            {
+//            //try {
+//                StringBuilder Output = new StringBuilder();
+//                Output.Append(HTMLTagSpan(" Copy from:", CSS_BaseHighLight) + tSourceCopy.Text);
+//                if (!Directory.Exists(tSourceCopy.Text))
+//                {
+//                    Output.Append(HTMLTagSpan(" Folder doesn't exist", CSS_FAULT) + _BRLF);
+//                    WriteLog(Output);
+//                    goto Run_Copy_End_Run;                //return;
+//                }
+//                Output.Append(HTMLSpanOK() + _BRLF);
+//                Output.Append(HTMLTagSpan("Copy to  :", CSS_BaseHighLight) + tTargetCopy.Text + _BRLF);
+//                Output.Append(HTMLTagSpan("Override:", CSS_BaseHighLight) + chkCopyOverride.Checked + _BRLF);
+//                if (chkCopyOverride.Checked) Output.Append(HTMLTagSpan("Only newer:", CSS_BaseHighLight) + chkCopyOnlyNewer.Checked + _BRLF);
+//                Output.Append(HTMLTagSpan("Hosts:", CSS_BaseHighLight) + _BRLF);
+//                RunningThreadCount = 0;
+//                foreach (int indexChecked in chkList_PC.CheckedIndices)
+//                {
+//                    Output.Append(String.Format("{0}.{1}<br>\n", ++RunningThreadCount, chkList_PC.Items[indexChecked].ToString()));
+//                }
+//                Output.Append(_BRLF);
+//                WriteLog(Output);
 
-                RunningThreadCount = 0;
-                Task task;
-                foreach (int indexChecked in chkList_PC.CheckedIndices)
-                {
-                    if (MainStatus == 0) { break; }
-                    //task = new Task(() => Do_Copy(indexChecked, cts.Token));
-                    //task.Start();
-                    //Thread.Sleep(1);
-                }
-                Thread.Sleep(1000);
-                while (RunningThreadCount != 0)
-                {
-#if DEBUG
-                    Debug.WriteLine("Wait Thread finish: " + RunningThreadCount.ToString());
-#endif
-                    Thread.Sleep(1000);
-                }
-                WriteLog(_BRLF);
-#if DEBUG
-                Debug.WriteLine("All Thread finished");
-#endif
-            Run_Copy_End_Run: End_Run();
-            });
-        //}
-        //catch {}
-        }
+//                RunningThreadCount = 0;
+//                Task task;
+//                foreach (int indexChecked in chkList_PC.CheckedIndices)
+//                {
+//                    if (MainStatus == 0) { break; }
+//                    //task = new Task(() => Do_Copy(indexChecked, cts.Token));
+//                    //task.Start();
+//                    //Thread.Sleep(1);
+//                }
+//                Thread.Sleep(1000);
+//                while (RunningThreadCount != 0)
+//                {
+//#if DEBUG
+//                    Debug.WriteLine("Wait Thread finish: " + RunningThreadCount.ToString());
+//#endif
+//                    Thread.Sleep(1000);
+//                }
+//                WriteLog(_BRLF);
+//#if DEBUG
+//                Debug.WriteLine("All Thread finished");
+//#endif
+//            Run_Copy_End_Run: End_Run();
+//            });
+//        //}
+//        //catch {}
+//        }
 //        //************************************************************
 //        static void Do_Copy(int Index, CancellationToken cancellationToken) {
 //            //************************************************************

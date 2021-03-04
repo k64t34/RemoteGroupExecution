@@ -86,11 +86,14 @@ namespace RGE
 
         private void bAddthisPC_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i != chkList_PC.Items.Count; i++)
-            {
+            //bool Unique = false;
+            //for (int i = 0; i != chkList_PC.Items.Count; i++)
+            //{
                 if (chkList_PC.FindString(tThisPC.Text) == ListBox.NoMatches)
-                    chkList_PC.Items.Add(tThisPC.Text, CheckState.Checked);
-            }
+                    
+            //}
+            //if (Unique) 
+                chkList_PC.Items.Add(tThisPC.Text, CheckState.Checked);
         }
 
         private void tabCommandControl_DrawItem(object sender, DrawItemEventArgs e)
