@@ -20,8 +20,9 @@ namespace RGE
             public string Name;
             //public bool Ping;
             //public bool Done;
-            public int Status; // 0-u
-            public HostInfo(string Name) { this.Name = Name.Trim(); this.Ping = false; this.Done = false; }
+            public int Status; // 0-unknown;1-OK;2-FAIL
+            public int FCount;
+            public HostInfo(string Name) { this.Name = Name.Trim(); /*this.Ping = false;*//* this.Done = false; */this.Status = 0; this.FCount = -1; }
         }
 
         class HostQueue
@@ -41,8 +42,8 @@ namespace RGE
                     if (reply.Status.ToString() == "Success") resultPing = true;
                 }
                 catch { }
-                try { Host.Ping = resultPing; }
-                catch { }
+                //try { Host.Ping = resultPing; }
+                //catch { }
 #if DEBUG
                 Debug.WriteLine("\t\t\tThread " + Thread.CurrentThread.ManagedThreadId + "Ping End: " + Host.Name/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
 #endif
@@ -155,6 +156,10 @@ namespace RGE
                 divHost.InnerHtml = HTMLTagSpan("Host list:", CSS_BaseHighLight) + _BRLF;
                 GetHost(chkList);
                 THIS.BeginInvoke(UpdateElement, divHost);
+
+                //for (int idh = 0; idh != Host.Count; idh++) Host[idh].FCount = File.Count;
+                foreach (HostInfo H in Host) H as  = File.Count;
+
             }
             void GetHost(CheckedListBox chkList)
             {
