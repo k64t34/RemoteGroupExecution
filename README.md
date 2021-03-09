@@ -1,2 +1,2 @@
 # RemoteGroupExecution
-GUI to copying files to remote computers in Windows workgroupo or domain.
+GUI to copying files to remote computers in Windows workgroup or domain.
