@@ -73,7 +73,9 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
+            this.statusStrip1.SuspendLayout();
             this.tabTask.SuspendLayout();
             this.tabCommandControl.SuspendLayout();
             this.tabCommandCopyFileFolder.SuspendLayout();
@@ -101,10 +103,12 @@ namespace RGE
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 740);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 739);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1184, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1184, 23);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -131,7 +135,7 @@ namespace RGE
             this.tabTask.Location = new System.Drawing.Point(4, 31);
             this.tabTask.Name = "tabTask";
             this.tabTask.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTask.Size = new System.Drawing.Size(1176, 705);
+            this.tabTask.Size = new System.Drawing.Size(1176, 704);
             this.tabTask.TabIndex = 0;
             this.tabTask.Text = "Task";
             this.tabTask.UseVisualStyleBackColor = true;
@@ -232,6 +236,7 @@ namespace RGE
             // 
             // bAddPCFromDomain
             // 
+            this.bAddPCFromDomain.Enabled = false;
             this.bAddPCFromDomain.Location = new System.Drawing.Point(545, 71);
             this.bAddPCFromDomain.Name = "bAddPCFromDomain";
             this.bAddPCFromDomain.Size = new System.Drawing.Size(209, 34);
@@ -377,7 +382,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 180);
+            this.tCommand.Location = new System.Drawing.Point(173, 186);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -388,7 +393,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 206);
+            this.lCommand.Location = new System.Drawing.Point(66, 212);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -438,7 +443,7 @@ namespace RGE
             this.tabMainControl.Location = new System.Drawing.Point(0, 0);
             this.tabMainControl.Name = "tabMainControl";
             this.tabMainControl.SelectedIndex = 0;
-            this.tabMainControl.Size = new System.Drawing.Size(1184, 740);
+            this.tabMainControl.Size = new System.Drawing.Size(1184, 739);
             this.tabMainControl.TabIndex = 7;
             // 
             // saveFileDialog1
@@ -524,6 +529,11 @@ namespace RGE
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
             // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 15);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -543,6 +553,8 @@ namespace RGE
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.tabTask.ResumeLayout(false);
             this.tabTask.PerformLayout();
             this.tabCommandControl.ResumeLayout(false);
@@ -604,6 +616,7 @@ namespace RGE
         private System.Windows.Forms.TextBox tTimeout;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tScriptFile;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
     }
 }
 

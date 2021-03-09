@@ -113,7 +113,7 @@ namespace RGE
             StreamWriter sw;
             try
             {
-                sw = new StreamWriter(Path.Combine(Application.StartupPath+FileHostsConfig), false, Encoding.UTF8);
+                sw = new StreamWriter(Path.Combine(Application.StartupPath + @"\" + FileHostsConfig), false, Encoding.UTF8);
                 for (int i = 0;i != chkList.Items.Count;i++){sw.WriteLine(chkList.Items[i].ToString() +";"+chkList.GetItemChecked(i).ToString());}
                 sw.Close();
             }
@@ -126,7 +126,7 @@ namespace RGE
         }
         public static void ReadSettingsHosts(CheckedListBox chkList)
         {
-            string cfgFile = Path.Combine(Application.StartupPath + FileHostsConfig);
+            string cfgFile = Path.Combine(Application.StartupPath +@"\"+ FileHostsConfig);
             try 
             {
                 if (File.Exists(cfgFile))

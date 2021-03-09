@@ -19,6 +19,7 @@ namespace RGE
     public delegate System.Windows.Forms.HtmlElement    delegateCreateElement(string elementTag);
     public delegate void                                delegateUpdateElement(HtmlElement htmlElement);
     public delegate System.Windows.Forms.HtmlElement    delegateGetElement(string elementId);
+    public delegate void delegateProgressBar(int Value);
     public  partial class Form1 : Form
     {        
         CancellationTokenSource cts;
@@ -165,7 +166,7 @@ namespace RGE
             ToolbGo.BackColor = Color.Red;
             ToolbGo.Text = "    Stop    ";
             ToolbGo.ForeColor = Color.White;
-            tabMainControl.SelectTab(this.tabResult);
+            tabMainControl.SelectTab(this.tabResult);            
             FileReport = Environment.CurrentDirectory + "\\" + DateTime.Now.ToString("ddMMyyyy-HHmmss") + ".html";
             string userNameWin, compName, compIP, myHost;
             StringBuilder Output = new StringBuilder();
@@ -313,7 +314,14 @@ namespace RGE
             wResult.Document.Body.AppendChild(div);
             //wResult.Refresh();
         }
-       
+        public void SetProgressBarMaximum(int value) { toolStripProgressBar1.Value = 0; toolStripProgressBar1.Maximum = value;
+        }
+        public void SetProgressBarValue(int value) { toolStripProgressBar1.Value += value;
+#if DEBUG
+            Debug.WriteLine("ProgressBar.Value=" + toolStripProgressBar1.Value + "/"+ toolStripProgressBar1.Maximum);
+#endif
+        }
+
         async void CopyFiles()
         {
             await Task.Run(() =>
@@ -321,14 +329,17 @@ namespace RGE
                 delegateCreateElement c = new delegateCreateElement(CreateHtmlElement);
                 delegateUpdateElement u = new delegateUpdateElement(UpdateHtmlElement);
                 delegateGetElement    g = new delegateGetElement(GetHtmlElement);
-        /*
-        HtmlElement divFile;
-        divFile = (HtmlElement)THIS.Invoke(c, "div");                
-        divFile.SetAttribute("id", "div.Files");
-        divFile.InnerHtml = "FILES";
-        BeginInvoke(u, divFile);               */
+                delegateProgressBar PM = new delegateProgressBar(SetProgressBarMaximum);
+                delegateProgressBar PV = new delegateProgressBar(SetProgressBarValue);
 
-        CopyFilesQueue CopyQ = new CopyFilesQueue(tSourceCopy.Text, tTargetCopy.Text/*, wResult/*.Document*/, chkList_PC,cts.Token,c,u,g);
+                /*
+                HtmlElement divFile;
+                divFile = (HtmlElement)THIS.Invoke(c, "div");                
+                divFile.SetAttribute("id", "div.Files");
+                divFile.InnerHtml = "FILES";
+                BeginInvoke(u, divFile);               */
+
+                CopyFilesQueue CopyQ = new CopyFilesQueue(tSourceCopy.Text, tTargetCopy.Text/*, wResult/*.Document*/, chkList_PC,cts.Token,c,u,g,PM,PV);
                 CopyQ.Copy();                
                 cts.Cancel();                
                 End_Run();
@@ -470,21 +481,20 @@ namespace RGE
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            THIS = this;
-            bPCSelectAll_Click( sender,  e);
-            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;            
-#if DEBUG
-            CheckForIllegalCrossThreadCalls = false;
-#endif
             #region Read setting
             tSourceCopy.Text = Config.ReadSetting("SourceFolder");
             tTargetCopy.Text = Config.ReadSetting("TargetFolder");
             Config.ReadSettingsHosts(chkList_PC);
             #endregion
 
-
-
-        }
+            THIS = this;            
+            bPCSelectAll_Click( sender,  e);
+            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;            
+#if DEBUG
+            CheckForIllegalCrossThreadCalls = false;
+            bAddPCFromDomain.Enabled = true;
+#endif
+           }
         static Boolean Ping(String Host)
         {
             bool Ping = false;
@@ -500,29 +510,32 @@ namespace RGE
       
         private void bDeletePCSelected_Click(object sender, EventArgs e)
         {
-            //https://docs.microsoft.com/ru-ru/dotnet/api/system.console.beep?view=net-5.0
 
-            /*Note[] Major ={
-                new Note(Tone.C, Duration.SIXTEENTH),
-                new Note(Tone.E, Duration.SIXTEENTH),
-                new Note(Tone.G, Duration.SIXTEENTH),
-                new Note(Tone.E, Duration.SIXTEENTH),
-                new Note(Tone.C, Duration.HALF)
-            };Play(Major);
-            Note[] Minor ={
-                new Note(Tone.E, Duration.SIXTEENTH),
-                new Note(Tone.E, Duration.SIXTEENTH),
-                new Note(Tone.E, Duration.SIXTEENTH),
-                new Note(Tone.C, Duration.EIGHTH),                
-            }; Play(Minor);*/
-            Note[] Start ={
-                new Note(Tone.C, Duration.SIXTEENTH),
-                new Note(Tone.E, Duration.SIXTEENTH),
-                new Note(Tone.F, Duration.SIXTEENTH),
-                new Note(Tone.G, Duration.EIGHTH),
-            }; Beep.Play(Start);
-            
-        }
+            foreach (string item in chkList_PC.CheckedItems.OfType<string>().ToList())
+            {
+                chkList_PC.Items.Remove(item);
+            }
+                //https://docs.microsoft.com/ru-ru/dotnet/api/system.console.beep?view=net-5.0
+                /*Note[] Major ={
+                    new Note(Tone.C, Duration.SIXTEENTH),
+                    new Note(Tone.E, Duration.SIXTEENTH),
+                    new Note(Tone.G, Duration.SIXTEENTH),
+                    new Note(Tone.E, Duration.SIXTEENTH),
+                    new Note(Tone.C, Duration.HALF)
+                };Play(Major);
+                Note[] Minor ={
+                    new Note(Tone.E, Duration.SIXTEENTH),
+                    new Note(Tone.E, Duration.SIXTEENTH),
+                    new Note(Tone.E, Duration.SIXTEENTH),
+                    new Note(Tone.C, Duration.EIGHTH),                
+                }; Play(Minor);*/
+                /*Note[] Start ={
+                    new Note(Tone.C, Duration.SIXTEENTH),
+                    new Note(Tone.E, Duration.SIXTEENTH),
+                    new Note(Tone.F, Duration.SIXTEENTH),
+                    new Note(Tone.G, Duration.EIGHTH),
+                }; Beep.Play(Start);*/
+            }
         static public string ConvertLocalDiskLetterToUNC(string Path, string Host)        {           return @"\\" + Host + @"\$" + Path.Substring(0, 1) + Path.Substring(2);         }
 
         private void bAddPCFromDomain_Click(object sender, EventArgs e)

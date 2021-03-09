@@ -15,14 +15,16 @@ namespace RGE
     {
 
 
-        struct HostInfo
+        class HostInfo
         {
             public string Name;
             //public bool Ping;
             //public bool Done;
-            public int Status; // 0-unknown;1-OK;2-FAIL
-            public int FCount;
-            public HostInfo(string Name) { this.Name = Name.Trim(); /*this.Ping = false;*//* this.Done = false; */this.Status = 0; this.FCount = -1; }
+            public int Status=0; // 0-unknown;1-OK;2-FAIL
+            public int FCount=-1;
+              
+
+public HostInfo(string Name) { this.Name = Name.Trim(); /*this.Ping = false;*//* this.Done = false; *//*this.Status = 0; this.FCount = -1;*/ }
         }
 
         class HostQueue
@@ -61,10 +63,10 @@ namespace RGE
                     {
                         H = Host[iH];
                         if (cancellationToken.IsCancellationRequested) break;
-                        if (!H.Done)
-                        {
-                            Task task = new Task(() => this.Ping(H)); task.Start();
-                        }
+                        //if (!H.Done)
+                        //{
+                        //    Task task = new Task(() => this.Ping(H)); task.Start();
+                        //}
                     }
                     //if (cancellationToken.IsCancellationRequested) break;
                 }
@@ -123,15 +125,19 @@ namespace RGE
             public delegateCreateElement CreateElement;
             public delegateUpdateElement UpdateElement;
             public delegateGetElement GetElement;
+            public delegateProgressBar SetProgressBarMaximum;
+            public delegateProgressBar SetProgressBarValue;
             String SourceFolder;
             String tmpFolder;
             String TargetFolder;
             int BaseFolderLenght;
             public CopyFilesQueue(string SourceFld, String TargetFld/*, WebBrowser Browser*/,
                 CheckedListBox chkList, CancellationToken cancellationToken,
-                delegateCreateElement c,delegateUpdateElement u, delegateGetElement g
+                delegateCreateElement c,delegateUpdateElement u, delegateGetElement g, delegateProgressBar PM, delegateProgressBar PV
                )
             {
+                this.SetProgressBarMaximum = PM;
+                this.SetProgressBarValue = PV;
                 this.SourceFolder = SourceFld;
                 this.cancellationToken = cancellationToken;                
                 this.CreateElement=c;
@@ -143,7 +149,7 @@ namespace RGE
 
                 BaseFolderLenght = SourceFolder.Length;
 
-            divFile = (HtmlElement)THIS.Invoke(CreateElement, "div");
+                divFile = (HtmlElement)THIS.Invoke(CreateElement, "div");
                 divFile.SetAttribute("id", "div.Files");                
                 StringBuilder Output = new StringBuilder();
                 GetFolder(SourceFolder, Output);
@@ -156,9 +162,9 @@ namespace RGE
                 divHost.InnerHtml = HTMLTagSpan("Host list:", CSS_BaseHighLight) + _BRLF;
                 GetHost(chkList);
                 THIS.BeginInvoke(UpdateElement, divHost);
-
-                //for (int idh = 0; idh != Host.Count; idh++) Host[idh].FCount = File.Count;
-                foreach (HostInfo H in Host) H as  = File.Count;
+                THIS.BeginInvoke(UpdateElement, divFile);
+                Host.ForEach(h => h.FCount = File.Count);
+                THIS.BeginInvoke(SetProgressBarMaximum,File.Count*Host.Count);
 
             }
             void GetHost(CheckedListBox chkList)
@@ -249,23 +255,25 @@ namespace RGE
                         {
                             divFile = (HtmlElement)THIS.Invoke(GetElement, "l.file." + idf);
                             divFile.InnerHtml += HTMLSpanFAULT();
+                            THIS.BeginInvoke(SetProgressBarValue, Host.Count);
                         }
                         else
                         {
                             for (int idh = 0; idh != Host.Count; idh++)//                                foreach (HostInfo h in Host)
                             {
+                                THIS.BeginInvoke(SetProgressBarValue,1);
                                 if (cancellationToken.IsCancellationRequested) break;
                                 divHost = (HtmlElement)THIS.Invoke(GetElement, "d.host." + idh);
                                 StringBuilder Output = new StringBuilder();                                
                                 bool local_result = false;
-                                try{if (Ping(Host[idh].Name))local_result = true;}catch {}
-                                if (!local_result) {
-                                    Output.Append("Ping "+HTMLSpanFAULT()+_BRLF);
-                                    divHost.InnerHtml += Output.ToString();
-                                    divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
-                                    divHost.InnerHtml += HTMLSpanFAULT();
-                                    continue;
-                                }                                                                                              
+                                //try{if (Ping(Host[idh].Name))local_result = true;}catch {}
+                                //if (!local_result) {
+                                //    Output.Append("Ping "+HTMLSpanFAULT()+_BRLF);
+                                //    divHost.InnerHtml += Output.ToString();
+                                //    divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
+                                //    divHost.InnerHtml += HTMLSpanFAULT();
+                                //    continue;
+                                //}                                                                                              
                                 String FullTargetFolder = @"\\" + Host[idh].Name + this.TargetFolder+File[idf].Path;
                                 Output.Append("Copy " + this.SourceFolder + File[idf].Path + File[idf].File + " to " + FullTargetFolder + File[idf].File);
                                 if (!System.IO.Directory.Exists(FullTargetFolder))
@@ -280,8 +288,12 @@ namespace RGE
                                     if (!local_result)
                                     {
                                         divHost.InnerHtml += Output.ToString();
-                                        divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
-                                        divHost.InnerHtml += HTMLSpanFAULT();
+                                        if (Host[idh].Status == 0)
+                                        {                                            
+                                            divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
+                                            divHost.InnerHtml += HTMLSpanFAULT();
+                                            Host[idh].Status = 2;
+                                        }                                        
                                         continue;
                                     }
                                 }
@@ -296,8 +308,23 @@ namespace RGE
                                 divHost.InnerHtml += Output.ToString();
                                 if (!local_result)
                                 {
-                                    divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
-                                    divHost.InnerHtml += HTMLSpanFAULT();
+                                    if (Host[idh].Status == 0)
+                                    {
+                                        divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
+                                        divHost.InnerHtml += HTMLSpanFAULT();
+                                        Host[idh].Status = 2;
+                                    }
+
+                                }
+                                else
+                                {
+                                    Host[idh].FCount--;
+                                    if (Host[idh].FCount == 0 && Host[idh].Status == 0) 
+                                    {
+                                        divHost = (HtmlElement)THIS.Invoke(GetElement, "l.host." + idh);
+                                        divHost.InnerHtml += HTMLSpanOK();
+                                        Host[idh].Status = 1;
+                                    }
                                 }
                             }
                         }
