@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
 using System.DirectoryServices;
+using System.Reflection;
 
 namespace RGE
 {
@@ -172,7 +173,7 @@ namespace RGE
             StringBuilder Output = new StringBuilder();
             try
             {
-                if (!tSourceCopy.Text.EndsWith("\\")) tSourceCopy.Text += "\\";
+                if (!tSourceCopy.Text.EndsWith("\\")) tSourceCopy.Text += "\\";                
 
                 myHost = System.Net.Dns.GetHostName();// имя хоста                
                 compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();// IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
@@ -186,13 +187,34 @@ namespace RGE
                     "\t\t<meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\">\n" +
                     //"\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"default.css\">\n" +
                     "\t</head>\n" +
-                    "<style>\n" + File.ReadAllText("default.css") + "\n</style>\n" +
-                    "<body>\n" +
+                    "<style>\n");
+
+
+                const string CSSFile = "default.css";
+                String FileCSS = Path.Combine(Application.StartupPath + @"\" + CSSFile);
+                if (File.Exists(FileCSS)) Output.Append(File.ReadAllText(FileCSS));
+                else
+                {
+                    Assembly ResourceAssembly = Assembly.GetExecutingAssembly();
+                    using (StreamReader ResourceStream = new StreamReader(ResourceAssembly.GetManifestResourceStream("RGE." + CSSFile))) //https://overcoder.net/q/1041/%D0%BA%D0%B0%D0%BA-%D1%87%D0%B8%D1%82%D0%B0%D1%82%D1%8C-%D0%B2%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D1%81%D1%83%D1%80%D1%81%D0%BD%D1%8B%D0%B9-%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9-%D1%84%D0%B0%D0%B9%D0%BB
+                    //using (StreamReader reader = new StreamReader(ResourceStream))
+                    {
+                        Output.Append(ResourceStream.ReadToEnd());
+                    }
+                    /*Assembly assm = Assembly.GetExecutingAssembly();
+                    StreamReader aread = new StreamReader(assm.GetManifestResourceStream("RGE."+ CSSFile));
+                    Output.Append(aread.ReadToEnd());
+                    aread.Close();*/
+                }
+
+
+                    Output.Append("\n</style>\n"+
+                        "<body>\n" +
                     D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
-                    HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF+
+                    HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF +
                     HTMLTagSpan("Source path:", CSS_BaseHighLight) + tSourceCopy.Text + _BRLF +
                     "</body></html>"
-                    );
+                    ); ; ; ; ; ;
                     WriteLog(Output);                
                     wResult.Document.Body.ScrollIntoView(false);
 

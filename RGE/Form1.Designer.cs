@@ -32,6 +32,7 @@ namespace RGE
             System.Windows.Forms.ComboBox comboBox_LogLevel;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabTask = new System.Windows.Forms.TabPage();
             this.tTimeout = new System.Windows.Forms.TextBox();
@@ -73,7 +74,6 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.tabTask.SuspendLayout();
@@ -111,6 +111,11 @@ namespace RGE
             this.statusStrip1.Size = new System.Drawing.Size(1184, 23);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 15);
             // 
             // openFileDialog1
             // 
@@ -382,7 +387,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 186);
+            this.tCommand.Location = new System.Drawing.Point(173, 192);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -393,7 +398,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 212);
+            this.lCommand.Location = new System.Drawing.Point(66, 218);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -417,7 +422,7 @@ namespace RGE
             this.tabResult.Location = new System.Drawing.Point(4, 31);
             this.tabResult.Name = "tabResult";
             this.tabResult.Padding = new System.Windows.Forms.Padding(3);
-            this.tabResult.Size = new System.Drawing.Size(1176, 705);
+            this.tabResult.Size = new System.Drawing.Size(1176, 704);
             this.tabResult.TabIndex = 1;
             this.tabResult.Text = " Result ";
             this.tabResult.UseVisualStyleBackColor = true;
@@ -431,7 +436,7 @@ namespace RGE
             this.wResult.Name = "wResult";
             this.wResult.ScriptErrorsSuppressed = true;
             this.wResult.ScrollBarsEnabled = false;
-            this.wResult.Size = new System.Drawing.Size(1170, 699);
+            this.wResult.Size = new System.Drawing.Size(1170, 698);
             this.wResult.TabIndex = 1;
             this.wResult.Url = new System.Uri("about:blank", System.UriKind.Absolute);
             // 
@@ -529,11 +534,6 @@ namespace RGE
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
             // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 15);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -549,7 +549,7 @@ namespace RGE
             this.MinimumSize = new System.Drawing.Size(1200, 800);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Remote Group Execution";
+            this.Text = "Multi Synchro File Copier";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
