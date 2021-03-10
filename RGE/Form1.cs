@@ -50,7 +50,6 @@ namespace RGE
 #else
         const int __THREAD_MULTI = 8;
 #endif
-
         static int RunningThreadCount = 0;
         int ThreadCount = 8;
         static String ScriptFullPathName = Application.ExecutablePath;
@@ -141,7 +140,26 @@ namespace RGE
         private void ToolbGo_Click(object sender, EventArgs e)
         {
             if (MainStatus == 0)
-            {                       
+            {
+                #region Validate Input
+                tSourceCopy.Text = tSourceCopy.Text.Trim();                
+                if (String.IsNullOrEmpty(tSourceCopy.Text)) { MessageBox.Show("Source folder is empty", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                if (!tSourceCopy.Text.EndsWith("\\")) tSourceCopy.Text += "\\";
+                if (tSourceCopy.Text.Length < 5) { MessageBox.Show("Lengh of source folder is to small", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                if (!Directory.Exists(tSourceCopy.Text)) { MessageBox.Show("Source folder does not exist", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                
+                tTargetCopy.Text = tTargetCopy.Text.Trim();
+                if (String.IsNullOrEmpty(tTargetCopy.Text)) { MessageBox.Show("Target folder is empty", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                if (!tTargetCopy.Text.EndsWith("\\")) tTargetCopy.Text += "\\";
+                if (tTargetCopy.Text.Length < 5) { MessageBox.Show("Lengh of target folder is to small", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+                char driveletter = tTargetCopy.Text.Substring(0, 1)[0];
+                if (!('a' <= driveletter && driveletter<='z' || 'A' <= driveletter && driveletter <= 'Z') ||
+                    tTargetCopy.Text.Substring(1, 1)[0]!=':' ||
+                    tTargetCopy.Text.Substring(2, 1)[0] != '\\' 
+                    ) { MessageBox.Show("Invalid target folder", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error); return; }
+
+
+                #endregion
                 Begin_Run();
             }
             else if (MainStatus == 1)
@@ -173,7 +191,7 @@ namespace RGE
             StringBuilder Output = new StringBuilder();
             try
             {
-                if (!tSourceCopy.Text.EndsWith("\\")) tSourceCopy.Text += "\\";                
+                               
 
                 myHost = System.Net.Dns.GetHostName();// имя хоста                
                 compIP = System.Net.Dns.GetHostEntry(myHost).AddressList[1].ToString();// IP по имени хоста, выдает список, можно обойти в цикле весь, здесь берется первый адрес
@@ -201,36 +219,19 @@ namespace RGE
                     {
                         Output.Append(ResourceStream.ReadToEnd());
                     }
-                    /*Assembly assm = Assembly.GetExecutingAssembly();
-                    StreamReader aread = new StreamReader(assm.GetManifestResourceStream("RGE."+ CSSFile));
-                    Output.Append(aread.ReadToEnd());
-                    aread.Close();*/
+                    ///*Assembly assm = Assembly.GetExecutingAssembly();                    StreamReader aread = new StreamReader(assm.GetManifestResourceStream("RGE."+ CSSFile));                    Output.Append(aread.ReadToEnd());                    aread.Close();*/
                 }
 
 
-                    Output.Append("\n</style>\n"+
-                        "<body>\n" +
-                    D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
-                    HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF +
-                    HTMLTagSpan("Source path:", CSS_BaseHighLight) + tSourceCopy.Text + _BRLF +
-                    "</body></html>"
-                    ); ; ; ; ; ;
-                    WriteLog(Output);                
-                    wResult.Document.Body.ScrollIntoView(false);
-
-
-                /*HtmlElement divFile = wResult.Document.CreateElement("div");
-                divFile.SetAttribute("id", "l1");
-                divFile.InnerHtml = "Level 1";
-                HtmlElement divFile2 = wResult.Document.CreateElement("div");
-                divFile2.SetAttribute("id", "l2");
-                divFile2.InnerHtml = "Level 2";
-                divFile.AppendChild(divFile2);
-                wResult.Document.Body.AppendChild(divFile);
-                divFile = wResult.Document.GetElementById("l1");
-                divFile.InnerHtml += " add";
-                divFile = wResult.Document.GetElementById("l2");
-                divFile.InnerHtml += " add2";*/
+                Output.Append("\n</style>\n"+
+                    "<body>\n" +
+                D_T() + HTMLTagSpan(" Start", "EVENT") + _BRLF +
+                HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF +
+                HTMLTagSpan("Source path:", CSS_BaseHighLight) + tSourceCopy.Text + _BRLF +
+                "</body></html>"
+                ); ; ; ; ; ;
+                WriteLog(Output);                
+                wResult.Document.Body.ScrollIntoView(false);                
                 cts = new CancellationTokenSource();                
                 CopyFiles();                    
             }
