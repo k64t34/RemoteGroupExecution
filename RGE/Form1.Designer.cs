@@ -35,6 +35,7 @@ namespace RGE
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabTask = new System.Windows.Forms.TabPage();
+            this.bPCLoad = new System.Windows.Forms.Button();
             this.tTimeout = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -74,6 +75,9 @@ namespace RGE
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.tabTask.SuspendLayout();
@@ -84,6 +88,7 @@ namespace RGE
             this.tabResult.SuspendLayout();
             this.tabMainControl.SuspendLayout();
             this.tool.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox_LogLevel
@@ -123,6 +128,8 @@ namespace RGE
             // 
             // tabTask
             // 
+            this.tabTask.Controls.Add(this.pictureBox1);
+            this.tabTask.Controls.Add(this.bPCLoad);
             this.tabTask.Controls.Add(this.tTimeout);
             this.tabTask.Controls.Add(this.label2);
             this.tabTask.Controls.Add(this.label1);
@@ -144,6 +151,19 @@ namespace RGE
             this.tabTask.TabIndex = 0;
             this.tabTask.Text = "Task";
             this.tabTask.UseVisualStyleBackColor = true;
+            // 
+            // bPCLoad
+            // 
+            this.bPCLoad.BackColor = System.Drawing.Color.Transparent;
+            this.bPCLoad.FlatAppearance.BorderSize = 0;
+            this.bPCLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bPCLoad.Image = global::RGE.Properties.Resources.Open;
+            this.bPCLoad.Location = new System.Drawing.Point(23, 42);
+            this.bPCLoad.Name = "bPCLoad";
+            this.bPCLoad.Size = new System.Drawing.Size(24, 24);
+            this.bPCLoad.TabIndex = 15;
+            this.bPCLoad.UseVisualStyleBackColor = false;
+            this.bPCLoad.Click += new System.EventHandler(this.bPCLoad_Click);
             // 
             // tTimeout
             // 
@@ -387,7 +407,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 192);
+            this.tCommand.Location = new System.Drawing.Point(173, 210);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -398,7 +418,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 218);
+            this.lCommand.Location = new System.Drawing.Point(66, 236);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -474,7 +494,9 @@ namespace RGE
             this.toolStripSeparator1,
             this.toolStripButton3,
             this.toolStripSeparator2,
-            this.ToolbGo});
+            this.ToolbGo,
+            this.toolStripButton4,
+            this.toolStripButton5});
             this.tool.Location = new System.Drawing.Point(0, 0);
             this.tool.Name = "tool";
             this.tool.Size = new System.Drawing.Size(1184, 27);
@@ -534,6 +556,32 @@ namespace RGE
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(934, 109);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 116);
+            this.pictureBox1.TabIndex = 16;
+            this.pictureBox1.TabStop = false;
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
+            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton4.Text = "toolStripButton4";
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton5.Image = global::RGE.Properties.Resources.Open;
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(29, 24);
+            this.toolStripButton5.Text = "toolStripButton5";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
@@ -568,6 +616,7 @@ namespace RGE
             this.tabMainControl.ResumeLayout(false);
             this.tool.ResumeLayout(false);
             this.tool.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -617,6 +666,10 @@ namespace RGE
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tScriptFile;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.Button bPCLoad;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripButton toolStripButton5;
     }
 }
 

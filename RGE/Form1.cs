@@ -587,6 +587,14 @@ namespace RGE
             Config.WriteSettings("TargetFolder", tTargetCopy.Text);
             Config.WriteSettingsHosts(chkList_PC);            
         }
+
+        private void bPCLoad_Click(object sender, EventArgs e)
+        {
+            foreach (int indexChecked in chkList_PC.CheckedIndices)
+            {
+                chkList_PC.SetItemChecked(indexChecked, false);
+            }
+        }
     }
 
    

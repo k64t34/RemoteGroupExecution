@@ -159,7 +159,9 @@ namespace RGE
         {
             try
             {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None); 
+                System.Configuration.ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
+                fileMap.ExeConfigFilename = Path.GetDirectoryName(Application.ExecutablePath)+"\\"+ System.Environment.UserName+".xml" ;
+                System.Configuration.Configuration configFile = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);                //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel./*PerUserRoamingAndLocal*/None); 
                 var settings = configFile.AppSettings.Settings;
                 if (settings[key] == null)
                 {
@@ -249,9 +251,12 @@ namespace RGE
             String Result = String.Empty;
             try
             {
-                var appSettings = ConfigurationManager.AppSettings;
+                System.Configuration.ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
+                fileMap.ExeConfigFilename = Path.GetDirectoryName(Application.ExecutablePath) + "\\" + System.Environment.UserName + ".xml";
+                System.Configuration.Configuration configFile = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);                //var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel./*PerUserRoamingAndLocal*/None); 
+                var appSettings = configFile.AppSettings.Settings;                
                 if (appSettings[key] == null) throw new Exception();
-                Result = appSettings[key];
+                Result = appSettings[key].Value;
             }
             catch (Exception e)
             {

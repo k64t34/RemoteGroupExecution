@@ -75,7 +75,9 @@
   <ItemGroup>
     <Compile Include="Beep.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="CopyFilesQueue.cs" />
+    <Compile Include="CopyFilesQueue.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="HTMLBlock.cs" />
     <Compile Include="TagBuilder.cs" />
     <Compile Include="Copy.cs">
@@ -101,6 +103,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -119,6 +122,9 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Open.ico" />
+    <None Include="Resources\PCSave.ico" />
+    <None Include="Resources\PCLoad.ico" />
     <EmbeddedResource Include="default.css" />
     <Content Include="Icon1.ico" />
   </ItemGroup>
