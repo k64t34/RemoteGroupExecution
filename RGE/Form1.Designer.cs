@@ -29,12 +29,15 @@ namespace RGE
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ComboBox comboBox_LogLevel;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.openFileDialogPCList = new System.Windows.Forms.OpenFileDialog();
             this.tabTask = new System.Windows.Forms.TabPage();
+            this.bPCSave = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bPCLoad = new System.Windows.Forms.Button();
             this.tTimeout = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -72,15 +75,13 @@ namespace RGE
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolbGo = new System.Windows.Forms.ToolStripButton();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             comboBox_LogLevel = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.tabTask.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabCommandControl.SuspendLayout();
             this.tabCommandCopyFileFolder.SuspendLayout();
             this.tabComandScript.SuspendLayout();
@@ -88,7 +89,6 @@ namespace RGE
             this.tabResult.SuspendLayout();
             this.tabMainControl.SuspendLayout();
             this.tool.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox_LogLevel
@@ -99,7 +99,7 @@ namespace RGE
             "Sucess",
             "Errors",
             "Debug"});
-            comboBox_LogLevel.Location = new System.Drawing.Point(545, 228);
+            comboBox_LogLevel.Location = new System.Drawing.Point(887, 236);
             comboBox_LogLevel.Name = "comboBox_LogLevel";
             comboBox_LogLevel.Size = new System.Drawing.Size(209, 30);
             comboBox_LogLevel.TabIndex = 9;
@@ -122,12 +122,15 @@ namespace RGE
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 15);
             // 
-            // openFileDialog1
+            // openFileDialogPCList
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialogPCList.DefaultExt = "txt";
+            this.openFileDialogPCList.FileName = "openFileDialogPCList";
+            this.openFileDialogPCList.Filter = "Text|*.txt|CSV|*.csv|All|*.*";
             // 
             // tabTask
             // 
+            this.tabTask.Controls.Add(this.bPCSave);
             this.tabTask.Controls.Add(this.pictureBox1);
             this.tabTask.Controls.Add(this.bPCLoad);
             this.tabTask.Controls.Add(this.tTimeout);
@@ -152,23 +155,48 @@ namespace RGE
             this.tabTask.Text = "Task";
             this.tabTask.UseVisualStyleBackColor = true;
             // 
+            // bPCSave
+            // 
+            this.bPCSave.BackColor = System.Drawing.Color.Transparent;
+            this.bPCSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bPCSave.FlatAppearance.BorderSize = 0;
+            this.bPCSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bPCSave.Image = ((System.Drawing.Image)(resources.GetObject("bPCSave.Image")));
+            this.bPCSave.Location = new System.Drawing.Point(36, 6);
+            this.bPCSave.Name = "bPCSave";
+            this.bPCSave.Size = new System.Drawing.Size(24, 24);
+            this.bPCSave.TabIndex = 17;
+            this.toolTip1.SetToolTip(this.bPCSave, "Save the list of hosts to file");
+            this.bPCSave.UseVisualStyleBackColor = false;
+            this.bPCSave.Click += new System.EventHandler(this.bPCSave_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(1064, 380);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 116);
+            this.pictureBox1.TabIndex = 16;
+            this.pictureBox1.TabStop = false;
+            // 
             // bPCLoad
             // 
             this.bPCLoad.BackColor = System.Drawing.Color.Transparent;
+            this.bPCLoad.Cursor = System.Windows.Forms.Cursors.Hand;
             this.bPCLoad.FlatAppearance.BorderSize = 0;
             this.bPCLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bPCLoad.Image = global::RGE.Properties.Resources.Open;
-            this.bPCLoad.Location = new System.Drawing.Point(23, 42);
+            this.bPCLoad.Image = ((System.Drawing.Image)(resources.GetObject("bPCLoad.Image")));
+            this.bPCLoad.Location = new System.Drawing.Point(6, 6);
             this.bPCLoad.Name = "bPCLoad";
             this.bPCLoad.Size = new System.Drawing.Size(24, 24);
             this.bPCLoad.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.bPCLoad, "Open file with list of hosts");
             this.bPCLoad.UseVisualStyleBackColor = false;
             this.bPCLoad.Click += new System.EventHandler(this.bPCLoad_Click);
             // 
             // tTimeout
             // 
             this.tTimeout.Enabled = false;
-            this.tTimeout.Location = new System.Drawing.Point(633, 273);
+            this.tTimeout.Location = new System.Drawing.Point(975, 281);
             this.tTimeout.Name = "tTimeout";
             this.tTimeout.Size = new System.Drawing.Size(121, 28);
             this.tTimeout.TabIndex = 14;
@@ -177,7 +205,7 @@ namespace RGE
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(541, 273);
+            this.label2.Location = new System.Drawing.Point(883, 281);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 24);
             this.label2.TabIndex = 13;
@@ -186,7 +214,7 @@ namespace RGE
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(541, 201);
+            this.label1.Location = new System.Drawing.Point(883, 209);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 24);
             this.label1.TabIndex = 12;
@@ -194,7 +222,7 @@ namespace RGE
             // 
             // tThisPC
             // 
-            this.tThisPC.Location = new System.Drawing.Point(545, 115);
+            this.tThisPC.Location = new System.Drawing.Point(887, 92);
             this.tThisPC.Name = "tThisPC";
             this.tThisPC.Size = new System.Drawing.Size(129, 28);
             this.tThisPC.TabIndex = 8;
@@ -203,7 +231,7 @@ namespace RGE
             // tPCMaskSelect
             // 
             this.tPCMaskSelect.Enabled = false;
-            this.tPCMaskSelect.Location = new System.Drawing.Point(245, 6);
+            this.tPCMaskSelect.Location = new System.Drawing.Point(887, 138);
             this.tPCMaskSelect.Name = "tPCMaskSelect";
             this.tPCMaskSelect.Size = new System.Drawing.Size(129, 28);
             this.tPCMaskSelect.TabIndex = 8;
@@ -212,7 +240,7 @@ namespace RGE
             // bPCSelectOnMask
             // 
             this.bPCSelectOnMask.Enabled = false;
-            this.bPCSelectOnMask.Location = new System.Drawing.Point(380, 3);
+            this.bPCSelectOnMask.Location = new System.Drawing.Point(1022, 132);
             this.bPCSelectOnMask.Name = "bPCSelectOnMask";
             this.bPCSelectOnMask.Size = new System.Drawing.Size(142, 34);
             this.bPCSelectOnMask.TabIndex = 7;
@@ -221,27 +249,35 @@ namespace RGE
             // 
             // bPCUnSelectAll
             // 
-            this.bPCUnSelectAll.Location = new System.Drawing.Point(119, 4);
+            this.bPCUnSelectAll.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bPCUnSelectAll.FlatAppearance.BorderSize = 0;
+            this.bPCUnSelectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bPCUnSelectAll.Image = global::RGE.Properties.Resources.UnSelectAll;
+            this.bPCUnSelectAll.Location = new System.Drawing.Point(96, 6);
             this.bPCUnSelectAll.Name = "bPCUnSelectAll";
-            this.bPCUnSelectAll.Size = new System.Drawing.Size(120, 34);
+            this.bPCUnSelectAll.Size = new System.Drawing.Size(24, 24);
             this.bPCUnSelectAll.TabIndex = 7;
-            this.bPCUnSelectAll.Text = "Unselect All";
+            this.toolTip1.SetToolTip(this.bPCUnSelectAll, "Select none");
             this.bPCUnSelectAll.UseVisualStyleBackColor = true;
             this.bPCUnSelectAll.Click += new System.EventHandler(this.bPCUnSelectAll_Click);
             // 
             // bPCSelectAll
             // 
-            this.bPCSelectAll.Location = new System.Drawing.Point(6, 6);
+            this.bPCSelectAll.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bPCSelectAll.FlatAppearance.BorderSize = 0;
+            this.bPCSelectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bPCSelectAll.Image = global::RGE.Properties.Resources.SelectAll;
+            this.bPCSelectAll.Location = new System.Drawing.Point(66, 6);
             this.bPCSelectAll.Name = "bPCSelectAll";
-            this.bPCSelectAll.Size = new System.Drawing.Size(107, 34);
+            this.bPCSelectAll.Size = new System.Drawing.Size(24, 24);
             this.bPCSelectAll.TabIndex = 7;
-            this.bPCSelectAll.Text = "Select All";
+            this.toolTip1.SetToolTip(this.bPCSelectAll, "Select All");
             this.bPCSelectAll.UseVisualStyleBackColor = true;
             this.bPCSelectAll.Click += new System.EventHandler(this.bPCSelectAll_Click);
             // 
             // bAddthisPC
             // 
-            this.bAddthisPC.Location = new System.Drawing.Point(680, 109);
+            this.bAddthisPC.Location = new System.Drawing.Point(1022, 92);
             this.bAddthisPC.Name = "bAddthisPC";
             this.bAddthisPC.Size = new System.Drawing.Size(74, 34);
             this.bAddthisPC.TabIndex = 6;
@@ -251,18 +287,22 @@ namespace RGE
             // 
             // bDeletePCSelected
             // 
-            this.bDeletePCSelected.Location = new System.Drawing.Point(545, 149);
+            this.bDeletePCSelected.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.bDeletePCSelected.FlatAppearance.BorderSize = 0;
+            this.bDeletePCSelected.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bDeletePCSelected.Image = global::RGE.Properties.Resources.Delete;
+            this.bDeletePCSelected.Location = new System.Drawing.Point(126, 6);
             this.bDeletePCSelected.Name = "bDeletePCSelected";
-            this.bDeletePCSelected.Size = new System.Drawing.Size(209, 34);
+            this.bDeletePCSelected.Size = new System.Drawing.Size(24, 24);
             this.bDeletePCSelected.TabIndex = 6;
-            this.bDeletePCSelected.Text = "Delete Selected";
+            this.toolTip1.SetToolTip(this.bDeletePCSelected, "Delete selected hosts");
             this.bDeletePCSelected.UseVisualStyleBackColor = true;
             this.bDeletePCSelected.Click += new System.EventHandler(this.bDeletePCSelected_Click);
             // 
             // bAddPCFromDomain
             // 
             this.bAddPCFromDomain.Enabled = false;
-            this.bAddPCFromDomain.Location = new System.Drawing.Point(545, 71);
+            this.bAddPCFromDomain.Location = new System.Drawing.Point(887, 172);
             this.bAddPCFromDomain.Name = "bAddPCFromDomain";
             this.bAddPCFromDomain.Size = new System.Drawing.Size(209, 34);
             this.bAddPCFromDomain.TabIndex = 6;
@@ -275,10 +315,10 @@ namespace RGE
             this.chkList_PC.CheckOnClick = true;
             this.chkList_PC.FormattingEnabled = true;
             this.chkList_PC.HorizontalScrollbar = true;
-            this.chkList_PC.Location = new System.Drawing.Point(23, 71);
+            this.chkList_PC.Location = new System.Drawing.Point(6, 35);
             this.chkList_PC.MultiColumn = true;
             this.chkList_PC.Name = "chkList_PC";
-            this.chkList_PC.Size = new System.Drawing.Size(490, 280);
+            this.chkList_PC.Size = new System.Drawing.Size(816, 441);
             this.chkList_PC.TabIndex = 5;
             // 
             // tabCommandControl
@@ -407,7 +447,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 210);
+            this.tCommand.Location = new System.Drawing.Point(173, 288);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -418,7 +458,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 236);
+            this.lCommand.Location = new System.Drawing.Point(66, 314);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -492,11 +532,8 @@ namespace RGE
             this.toolStripButton1,
             this.toolStripButton2,
             this.toolStripSeparator1,
-            this.toolStripButton3,
             this.toolStripSeparator2,
-            this.ToolbGo,
-            this.toolStripButton4,
-            this.toolStripButton5});
+            this.ToolbGo});
             this.tool.Location = new System.Drawing.Point(0, 0);
             this.tool.Name = "tool";
             this.tool.Size = new System.Drawing.Size(1184, 27);
@@ -528,15 +565,6 @@ namespace RGE
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
             // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(29, 24);
-            this.toolStripButton3.Text = "toolStripButton3";
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -555,32 +583,6 @@ namespace RGE
             this.ToolbGo.Size = new System.Drawing.Size(93, 24);
             this.ToolbGo.Text = "     Go     ";
             this.ToolbGo.Click += new System.EventHandler(this.ToolbGo_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(934, 109);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 116);
-            this.pictureBox1.TabIndex = 16;
-            this.pictureBox1.TabStop = false;
-            // 
-            // toolStripButton4
-            // 
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(29, 24);
-            this.toolStripButton4.Text = "toolStripButton4";
-            // 
-            // toolStripButton5
-            // 
-            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton5.Image = global::RGE.Properties.Resources.Open;
-            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(29, 24);
-            this.toolStripButton5.Text = "toolStripButton5";
             // 
             // Form1
             // 
@@ -605,6 +607,7 @@ namespace RGE
             this.statusStrip1.PerformLayout();
             this.tabTask.ResumeLayout(false);
             this.tabTask.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabCommandControl.ResumeLayout(false);
             this.tabCommandCopyFileFolder.ResumeLayout(false);
             this.tabCommandCopyFileFolder.PerformLayout();
@@ -616,7 +619,6 @@ namespace RGE
             this.tabMainControl.ResumeLayout(false);
             this.tool.ResumeLayout(false);
             this.tool.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -624,7 +626,7 @@ namespace RGE
 
         #endregion
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialogPCList;
         private System.Windows.Forms.TabPage tabTask;
         private System.Windows.Forms.TextBox tPCMaskSelect;
         private System.Windows.Forms.Button bPCSelectOnMask;
@@ -657,7 +659,6 @@ namespace RGE
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripButton ToolbGo;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.TabPage tabCommandInstall;
         public System.Windows.Forms.WebBrowser wResult;
@@ -668,8 +669,8 @@ namespace RGE
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.Button bPCLoad;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ToolStripButton toolStripButton4;
-        private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.Button bPCSave;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

@@ -113,7 +113,7 @@ namespace RGE
             StreamWriter sw;
             try
             {
-                sw = new StreamWriter(Path.Combine(Application.StartupPath + @"\" + FileHostsConfig), false, Encoding.UTF8);
+                sw = new StreamWriter(Path.Combine(Application.StartupPath + @"\" + Environment.UserName + "."+ FileHostsConfig), false, Encoding.UTF8);
                 for (int i = 0;i != chkList.Items.Count;i++){sw.WriteLine(chkList.Items[i].ToString() +";"+chkList.GetItemChecked(i).ToString());}
                 sw.Close();
             }
@@ -124,10 +124,9 @@ namespace RGE
 #endif
             }            
         }
-        public static void ReadSettingsHosts(CheckedListBox chkList)
+        public static void ReadSettingsHosts(CheckedListBox chkList,String cfgFile)
         {
-            string cfgFile = Path.Combine(Application.StartupPath +@"\"+ FileHostsConfig);
-            try 
+            try
             {
                 if (File.Exists(cfgFile))
                 {
@@ -138,22 +137,26 @@ namespace RGE
                         while (sr.Peek() >= 0)
                         {
                             String l = sr.ReadLine();
-                            string[] p = /*new string[2];p=*/l.Split(new Char[] { ';' },2);
+                            string[] p;
+                            if (l.IndexOf(';') != -1) p = /*new string[2];p=*/l.Split(new Char[] { ';' }, 2);
+                            else if (l.IndexOf(',') != -1) p = /*new string[2];p=*/l.Split(new Char[] { ',' }, 2);
+                            else p = new string[] { l, "True" };
                             i = chkList.Items.Add(p[0]);
                             bool b;
-                            if ( !Boolean.TryParse(p[1], out b) ) { b = true; }
+                            if (!Boolean.TryParse(p[1], out b)) { b = true; }
                             chkList.SetItemChecked(i, b);
                         }
                     }
                 }
             }
-                catch (Exception e)
-                {
+            catch (Exception e)
+            {
 #if DEBUG
-                    Debug.WriteLine("Error writing list of hosts " + e.Message);
+                Debug.WriteLine("Error writing list of hosts " + e.Message);
 #endif
-                } 
             }
+        }
+        public static void ReadSettingsHosts(CheckedListBox chkList)        {            ReadSettingsHosts(chkList, Path.Combine(Application.StartupPath + @"\" + FileHostsConfig));        }
 
         public static void WriteSettings(string key, string value)
         {

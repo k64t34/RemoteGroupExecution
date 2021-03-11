@@ -590,10 +590,15 @@ namespace RGE
 
         private void bPCLoad_Click(object sender, EventArgs e)
         {
-            foreach (int indexChecked in chkList_PC.CheckedIndices)
-            {
-                chkList_PC.SetItemChecked(indexChecked, false);
-            }
+            openFileDialogPCList.Title = "Select file with list of hosts";
+            openFileDialogPCList.InitialDirectory = Application.StartupPath;            //openFileDialogPCList.FileName = Environment.UserName + ".Hosts*";            //openFileDialogPCList.DefaultExt = "txt";
+            if (openFileDialogPCList.ShowDialog() == DialogResult.OK)                            Config.ReadSettingsHosts(chkList_PC, openFileDialogPCList.FileName);            
+               
+        }
+
+        private void bPCSave_Click(object sender, EventArgs e)
+        {
+            //DateTime.Now.ToString("ddMMyyyy-HHmmss");
         }
     }
 

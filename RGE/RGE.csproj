@@ -122,9 +122,14 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Delete.png" />
+    <None Include="Resources\UnSelectAll.png" />
+    <None Include="Resources\SelectAll.png" />
+    <None Include="Resources\Save.png" />
+    <None Include="Resources\Open.png" />
+    <None Include="Resources\Open.bmp" />
+    <None Include="Resources\Close.ico" />
     <None Include="Resources\Open.ico" />
-    <None Include="Resources\PCSave.ico" />
-    <None Include="Resources\PCLoad.ico" />
     <EmbeddedResource Include="default.css" />
     <Content Include="Icon1.ico" />
   </ItemGroup>
@@ -140,6 +145,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>$(ProjectDir)PreBuildEvent.cmd $(ConfigurationName)</PreBuildEvent>
