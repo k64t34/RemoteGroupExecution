@@ -2,4 +2,4 @@
 
 GUI to copying files to remote computers in Windows workgroup or domain.
 
-(https://github.com/k64t34/RemoteGroupExecution/raw/master/Wiki/Schema.png)
+![Schema](https://github.com/k64t34/RemoteGroupExecution/raw/master/Wiki/Schema.png)
