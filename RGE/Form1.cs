@@ -50,7 +50,7 @@ namespace RGE
 #else
         const int __THREAD_MULTI = 8;
 #endif
-        static int RunningThreadCount = 0;
+        //static int RunningThreadCount = 0;
         int ThreadCount = 8;
         static String ScriptFullPathName = Application.ExecutablePath;
         static String ScriptFolder = Path.GetDirectoryName(ScriptFullPathName); 
@@ -118,6 +118,7 @@ namespace RGE
                 tTargetCopy.Text = folderBrowserDialog1.SelectedPath;*/
             saveFileDialog1.Title = "Target path";
             saveFileDialog1.FileName = "Save Here";
+            saveFileDialog1.Filter = "Directory | directory";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 tTargetCopy.Text = Path.GetDirectoryName(saveFileDialog1.FileName);
         }
@@ -127,7 +128,9 @@ namespace RGE
             /*if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 tTargetCopy.Text = folderBrowserDialog1.SelectedPath;*/
             saveFileDialog1.Title = "Source path";
-            saveFileDialog1.FileName = "From Here";
+            saveFileDialog1.FileName = "From Here";                        
+            saveFileDialog1.Filter = "Directory | directory";            
+
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 tSourceCopy.Text = Path.GetDirectoryName(saveFileDialog1.FileName);            
         }
@@ -598,7 +601,11 @@ namespace RGE
 
         private void bPCSave_Click(object sender, EventArgs e)
         {
-            //DateTime.Now.ToString("ddMMyyyy-HHmmss");
+            saveFileDialog1.Title = "Select file to save current list of hosts";
+            saveFileDialog1.InitialDirectory = Application.StartupPath;
+            saveFileDialog1.FileName= /*Application.StartupPath + @"\" + */Environment.UserName + "." + Config.FileHostsConfig+"."+DateTime.Now.ToString("ddMMyyyy-HHmmss")+".txt";
+            saveFileDialog1.Filter = "Text|*.txt|CSV|*.csv|All|*.*";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK) Config.WriteSettingsHosts(chkList_PC, saveFileDialog1.FileName);
         }
     }
 

@@ -31,10 +31,11 @@ public HostInfo(string Name) { this.Name = Name.Trim(); /*this.Ping = false;*//*
         {
             List<HostInfo> Host = new List<HostInfo>();
             int CountDone;
-            void Ping(HostInfo Host)
+            /*void Ping(HostInfo Host)
             {
 #if DEBUG
-                Debug.WriteLine("\t\t\tThread " + Thread.CurrentThread.ManagedThreadId + " Ping start: " + Host.Name/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
+                Debug.WriteLine("\t\t\tThread " + Thread.CurrentThread.ManagedThreadId + " Ping start: " + Host.Name//+ " FreeThreadCount="+ FreeThreadCount.ToString()
+            );
 #endif
                 bool resultPing = false;
                 try
@@ -47,9 +48,10 @@ public HostInfo(string Name) { this.Name = Name.Trim(); /*this.Ping = false;*//*
                 //try { Host.Ping = resultPing; }
                 //catch { }
 #if DEBUG
-                Debug.WriteLine("\t\t\tThread " + Thread.CurrentThread.ManagedThreadId + "Ping End: " + Host.Name/*+ " FreeThreadCount="+ FreeThreadCount.ToString()*/);
+                Debug.WriteLine("\t\t\tThread " + Thread.CurrentThread.ManagedThreadId + "Ping End: " + Host.Name//
+            *+ " FreeThreadCount="+ FreeThreadCount.ToString());
 #endif
-            }
+            }*/
             public void Pinging(CancellationToken cancellationToken)
             {
 #if DEBUG

@@ -19,7 +19,7 @@ namespace RGE
 {
     class Config
     {
-        const String FileHostsConfig = "hosts.txt";
+        public const String FileHostsConfig = "hosts.txt";
         #region HostsSection
         /*public class HostsSection : ConfigurationSection //https://docs.microsoft.com/en-us/dotnet/api/system.configuration.configurationelementcollection?view=dotnet-plat-ext-5.0
         {
@@ -108,22 +108,23 @@ namespace RGE
         }*/
         #endregion
 
-        public static void WriteSettingsHosts(CheckedListBox chkList)
+        public static void WriteSettingsHosts(CheckedListBox chkList, String cfgFile)
         {
             StreamWriter sw;
             try
             {
-                sw = new StreamWriter(Path.Combine(Application.StartupPath + @"\" + Environment.UserName + "."+ FileHostsConfig), false, Encoding.UTF8);
-                for (int i = 0;i != chkList.Items.Count;i++){sw.WriteLine(chkList.Items[i].ToString() +";"+chkList.GetItemChecked(i).ToString());}
+                sw = new StreamWriter(cfgFile, false, Encoding.UTF8);
+                for (int i = 0; i != chkList.Items.Count; i++) { sw.WriteLine(chkList.Items[i].ToString() + ";" + chkList.GetItemChecked(i).ToString()); }
                 sw.Close();
             }
             catch (Exception e)
             {
 #if DEBUG
-                Debug.WriteLine("Error writing list of hosts "+e.Message);              
+                Debug.WriteLine("Error writing list of hosts " + e.Message);
 #endif
-            }            
+            }
         }
+        public static void WriteSettingsHosts(CheckedListBox chkList)            {            WriteSettingsHosts(chkList,Path.Combine(Application.StartupPath + @"\" + Environment.UserName + "." + FileHostsConfig));        }
         public static void ReadSettingsHosts(CheckedListBox chkList,String cfgFile)
         {
             try
@@ -156,7 +157,7 @@ namespace RGE
 #endif
             }
         }
-        public static void ReadSettingsHosts(CheckedListBox chkList)        {            ReadSettingsHosts(chkList, Path.Combine(Application.StartupPath + @"\" + FileHostsConfig));        }
+        public static void ReadSettingsHosts(CheckedListBox chkList)        {            ReadSettingsHosts(chkList, Path.Combine(Application.StartupPath + @"\" + Environment.UserName + "." + FileHostsConfig));        }
 
         public static void WriteSettings(string key, string value)
         {

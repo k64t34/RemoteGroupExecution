@@ -447,7 +447,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 288);
+            this.tCommand.Location = new System.Drawing.Point(173, 294);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -458,7 +458,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 314);
+            this.lCommand.Location = new System.Drawing.Point(66, 320);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -510,10 +510,6 @@ namespace RGE
             this.tabMainControl.SelectedIndex = 0;
             this.tabMainControl.Size = new System.Drawing.Size(1184, 739);
             this.tabMainControl.TabIndex = 7;
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.Filter = "\"Directory | directory\"";
             // 
             // process1
             // 
