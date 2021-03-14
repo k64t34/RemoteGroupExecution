@@ -515,12 +515,19 @@ namespace RGE
 
             THIS = this;            
             bPCSelectAll_Click( sender,  e);
-            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;            
+            ThreadCount = __PROCESSOR_COUNT * __THREAD_MULTI;
 #if DEBUG
             CheckForIllegalCrossThreadCalls = false;
             bAddPCFromDomain.Enabled = true;
+#else
+            bAddPCFromDomain.Visible=false;
 #endif
-           }
+            this.Text += " v "+Application.ProductVersion;
+
+        #region Check for update
+        //https://api.github.com/repos/k64t34/RemoteGroupExecution/releases
+            #endregion
+        }
         static Boolean Ping(String Host)
         {
             bool Ping = false;
