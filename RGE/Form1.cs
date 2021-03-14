@@ -232,7 +232,7 @@ namespace RGE
                 HTMLTagSpan("Report file:", CSS_BaseHighLight) + FileReport + _BRLF +
                 HTMLTagSpan("Source path:", CSS_BaseHighLight) + tSourceCopy.Text + _BRLF +
                 "</body></html>"
-                ); ; ; ; ; ;
+                );
                 WriteLog(Output);                
                 wResult.Document.Body.ScrollIntoView(false);                
                 cts = new CancellationTokenSource();                
@@ -523,9 +523,16 @@ namespace RGE
             bAddPCFromDomain.Visible=false;
 #endif
             this.Text += " v "+Application.ProductVersion;
+            #region Show git project            
+            tabMainControl.SelectTab(this.tabResult);
+            wResult.DocumentText= "<html><head><meta charset=\"utf-8\"><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\"><style>\n.center {text-align: center;}</style></head><body bgcolor=\"silver\"><p class=\"center\"><img height=\"" + wResult.ClientSize.Height + "\"src=\"https://github.com/k64t34/RemoteGroupExecution/raw/master/Wiki/Schema.png\"></p></body></html>";
+            //this.tabResult.Show();
+            //Thread.Sleep(5000);
+            //tabMainControl.SelectTab(this.tabTask);
+            #endregion
 
-        #region Check for update
-        //https://api.github.com/repos/k64t34/RemoteGroupExecution/releases
+            #region Check for update
+            //https://api.github.com/repos/k64t34/RemoteGroupExecution/releases
             #endregion
         }
         static Boolean Ping(String Host)

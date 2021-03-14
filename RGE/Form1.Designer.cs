@@ -447,7 +447,7 @@ namespace RGE
             // tCommand
             // 
             this.tCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tCommand.Location = new System.Drawing.Point(173, 300);
+            this.tCommand.Location = new System.Drawing.Point(173, 306);
             this.tCommand.Multiline = true;
             this.tCommand.Name = "tCommand";
             this.tCommand.Size = new System.Drawing.Size(926, 81);
@@ -458,7 +458,7 @@ namespace RGE
             // 
             this.lCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lCommand.AutoSize = true;
-            this.lCommand.Location = new System.Drawing.Point(66, 326);
+            this.lCommand.Location = new System.Drawing.Point(66, 332);
             this.lCommand.Name = "lCommand";
             this.lCommand.Size = new System.Drawing.Size(98, 24);
             this.lCommand.TabIndex = 3;
@@ -497,7 +497,6 @@ namespace RGE
             this.wResult.ScriptErrorsSuppressed = true;
             this.wResult.Size = new System.Drawing.Size(1170, 698);
             this.wResult.TabIndex = 1;
-            this.wResult.Url = new System.Uri("http://about", System.UriKind.Absolute);
             // 
             // tabMainControl
             // 
