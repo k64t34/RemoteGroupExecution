@@ -525,10 +525,7 @@ namespace RGE
             this.Text += " v "+Application.ProductVersion;
             #region Show git project            
             tabMainControl.SelectTab(this.tabResult);
-            wResult.DocumentText= "<html><head><meta charset=\"utf-8\"><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\"><style>\n.center {text-align: center;}</style></head><body bgcolor=\"silver\"><p class=\"center\"><img height=\"" + wResult.ClientSize.Height + "\"src=\"https://github.com/k64t34/RemoteGroupExecution/raw/master/Wiki/Schema.png\"></p></body></html>";
-            //this.tabResult.Show();
-            //Thread.Sleep(5000);
-            //tabMainControl.SelectTab(this.tabTask);
+            wResult.DocumentText= "<html><head><meta charset=\"utf-8\"><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\"><style>\n.center {text-align: center;}</style></head><body bgcolor=\"silver\"><p class=\"center\"><img height=\"" + wResult.ClientSize.Height + "\"src=\"https://github.com/k64t34/RemoteGroupExecution/raw/master/Wiki/Schema.png\"></p></body></html>";      
             #endregion
 
             #region Check for update
