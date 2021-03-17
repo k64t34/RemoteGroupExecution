@@ -325,23 +325,11 @@ namespace RGE
 
             
         }
-        public  HtmlElement CreateHtmlElement(String elementTag)
-        {
-            HtmlElement Result = wResult.Document.CreateElement(elementTag);
-            return  (HtmlElement)Result;
-        }
-        public HtmlElement GetHtmlElement(String elementId)
-        {
-            HtmlElement Result = wResult.Document.GetElementById(elementId);
-            return (HtmlElement)Result;
-        }
-        public void UpdateHtmlElement(HtmlElement div)
-        {
-            wResult.Document.Body.AppendChild(div);
-            //wResult.Refresh();
-        }
-        public void SetProgressBarMaximum(int value) { toolStripProgressBar1.Value = 0; toolStripProgressBar1.Maximum = value;
-        }
+        public  HtmlElement CreateHtmlElement(String elementTag){HtmlElement Result = wResult.Document.CreateElement(elementTag);return  (HtmlElement)Result;}
+        public HtmlElement GetHtmlElement(String elementId){HtmlElement Result = wResult.Document.GetElementById(elementId);return (HtmlElement)Result;}
+        public void UpdateHtmlElement(HtmlElement div){wResult.Document.Body.AppendChild(div);            //wResult.Refresh();
+                                                                                                          }
+        public void SetProgressBarMaximum(int value) { toolStripProgressBar1.Value = 0; toolStripProgressBar1.Maximum = value;        }
         public void SetProgressBarValue(int value) { toolStripProgressBar1.Value += value;
 #if DEBUG
             Debug.WriteLine("ProgressBar.Value=" + toolStripProgressBar1.Value + "/"+ toolStripProgressBar1.Maximum);
@@ -410,10 +398,13 @@ namespace RGE
             }
             //sw.Close();
             MainStatus = 0;
+            Invoke(new Action(() =>
+            {            
             ToolbGo.BackColor = Color.Lime;
             ToolbGo.Text = "     Go     ";
             ToolbGo.ForeColor = Color.Black;
             ToolbGo.Enabled = true;
+            }));
         }
         private void Cancel_Run()
         {
